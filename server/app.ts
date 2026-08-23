@@ -49,6 +49,7 @@ import { ToolFactory } from './services/tool-factory.js'
 import { ReleasePackager } from './services/release-packager.js'
 import { HsdsService } from './services/hsds.js'
 import { UesCoreRuntime } from './services/ues-core-runtime.js'
+import { UesAdvancedPipeline } from './services/ues-advanced-pipeline.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -99,6 +100,7 @@ const prototypePipelineSchema=z.object({projectId:z.string(),prompt:z.string().m
 const hsdsCreateSchema=z.object({divineProjectId:z.string(),device:z.object({viewportWidth:z.number().int().min(1).max(16384),viewportHeight:z.number().int().min(1).max(16384),bandwidthMbps:z.number().positive().max(10000).optional(),latencyMs:z.number().nonnegative().max(60000).optional(),decodeTier:z.enum(['low','balanced','high']).optional(),saveData:z.boolean().optional()})})
 const hsdsInputSchema=z.object({type:z.enum(['pointer','keyboard','gamepad','touch']),dx:z.number().min(-100).max(100).optional(),dy:z.number().min(-100).max(100).optional(),zoom:z.number().min(.1).max(10).optional(),key:z.enum(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown']).optional()})
 const uesCoreBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),seed:z.string().min(1).max(500)})
+const uesAdvancedBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),prompt:z.string().min(3).max(5000)})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -153,11 +155,14 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const divineSettings=new DivineEngineSettingsService(store)
   const hsds=new HsdsService(store)
   const uesCore=new UesCoreRuntime(store,artifactGraph)
+  const uesAdvanced=new UesAdvancedPipeline(store,artifactGraph)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.webgl-prototype',name:'SNB WebGL Prototype Builder',version:'1.0.0',capabilities:['gameplay.prototype','game.build.web','build.verify'],outputs:{build:'self-contained HTML'},verifier:'html-offline-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.experimental-4d',name:'SNB Experimental 4D Runtime',version:'1.0.0',capabilities:['math.4d','geometry.4d','projection.4d-3d','visualization.4d'],outputs:{geometry:'snb-4d-geometry-v1',build:'offline HTML canvas'},verifier:'tesseract-topology-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.core-runtime',name:'UES Owned Core Runtime',version:'1.1.0',capabilities:['world.generate','physics.simulate','3d.retopology','rig.character','animation.motion','audio.synthesize','vfx.simulate','3d.optimize'],outputs:{artifact:'runtime.ues-core'},verifier:'ues-core-multisystem-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.advanced-pipeline',name:'UES Advanced Internal Pipeline',version:'1.0.0',capabilities:['3d.semantic','3d.generate','physics.broadphase','physics.raycast','animation.ik','animation.fk','animation.retarget','3d.lod','quality.critics'],outputs:{artifact:'production.ues-advanced'},verifier:'ues-advanced-production-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -313,6 +318,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/divine-engine/experimental-4d',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await experimental4d.create(request.userId,experimental4dSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
+  app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())
+  app.post('/api/v1/ues/advanced/build',{preHandler:authenticated,config:{rateLimit:{max:10,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesAdvanced.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.get('/api/v1/hsds/capabilities',{preHandler:authenticated},async()=>hsds.capabilities())
   app.get('/api/v1/hsds/sessions',{preHandler:authenticated},async request=>({data:hsds.list(request.userId,(request.query as {projectId?:string}).projectId)}))
   app.post('/api/v1/hsds/sessions',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(hsds.create(request.userId,hsdsCreateSchema.parse(request.body))))

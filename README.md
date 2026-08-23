@@ -172,6 +172,7 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 - [Capability Fabric](docs/CAPABILITY-FABRIC.md)
 - [UES / Divine Engine](docs/DIVINE-ENGINE.md)
 - [UES Core Runtime](docs/UES-CORE-RUNTIME.md)
+- [UES Advanced Internal Pipeline](docs/UES-ADVANCED-PIPELINE.md)
 - [HSDS lightweight interactive streaming](docs/HSDS.md)
 - [Divine OS](docs/DIVINE-OS.md)
 - [Experimental 4D](docs/EXPERIMENTAL-4D.md)

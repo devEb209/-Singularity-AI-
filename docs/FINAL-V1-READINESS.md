@@ -1,11 +1,11 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-23T21:46:29.013Z
+Generated: 2026-08-23T22:10:45.173Z
 
 ## Scope status
 
 - SNB orchestration/auth/projects/memory/files/missions/workers/tools/research: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, plus HSDS SVG/SSE interactive streaming baseline: operational within declared lightweight scope.
+- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, plus HSDS SVG/SSE interactive streaming baseline: operational within declared lightweight scope.
 - DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
 
 ## Divine systems
@@ -30,19 +30,19 @@ Generated: 2026-08-23T21:46:29.013Z
 ## Remaining gaps only
 
 {
-  "PARTIAL": 13,
+  "PARTIAL": 15,
   "INFRASTRUCTURE_REQUIRED": 10,
   "ADAPTER_REQUIRED": 4,
-  "PLANNED": 4
+  "PLANNED": 2
 }
 
 ### UES gaps
-- **Semantic text/image-to-3D** — PARTIAL; dependency: UES-owned semantic decomposition, geometry synthesis and quality evaluation beyond the verified procedural baseline; activation: Adapter + artifact + geometry benchmarks
+- **Semantic text/image-to-3D** — PARTIAL; dependency: UES Advanced now executes semantic part graphs and parametric meshes; specialist-derived arbitrary geometry, anatomy constraints and visual benchmarks remain; activation: Arbitrary semantic corpus artifacts + geometry/anatomy critic benchmarks
 - **Automatic retopology** — PARTIAL; dependency: UES Core has verified vertex-cluster remeshing; semantic edge-flow constraints, manifold repair and deformation corpus remain; activation: Topology verifier and deformation tests
 - **Advanced semantic rigging and skinning** — PARTIAL; dependency: UES Core has verified bounds-derived bones and normalized weights; anatomy inference and deformation quality remain; activation: Skeleton/weights artifact verification
-- **Semantic animation and retargeting** — PARTIAL; dependency: UES Core has keyframes, interpolation and joint limits; source/target skeleton mapping and contact solver remain; activation: Foot contact, limits and continuity tests
+- **Semantic animation and retargeting** — PARTIAL; dependency: UES Advanced adds FK, iterative IK, segment preservation and mapped retargeting; joint constraints, foot locking, blending and motion corpus remain; activation: Foot contact, limits and continuity tests
 - **Advanced semantic world generation** — PARTIAL; dependency: UES Core has deterministic heightfields, biomes and chunk metadata; semantic roads, cities, vegetation and runtime streaming remain; activation: World graph artifacts and streaming tests
-- **Advanced physics runtime** — PARTIAL; dependency: UES Core has deterministic fixed-step gravity and AABB/ground response; broadphase, joints, raycasts and rotational dynamics remain; activation: Deterministic simulation tests
+- **Advanced physics runtime** — PARTIAL; dependency: UES Advanced adds sweep-and-prune, AABB impulses, friction, quaternion angular integration, distance joints, triggers and raycasts; convex narrowphase, CCD and solver islands remain; activation: Deterministic simulation tests
 - **Advanced NPC society runtime** — PARTIAL; dependency: UES Core has needs, goals, bounded memory and deterministic ticks; navigation, relationships, economy and scale remain; activation: Artificial-player/runtime benchmarks
 - **Audio generation and runtime** — PARTIAL; dependency: UES Core has verified PCM waveform synthesis; mixer, spatial graph, event synchronization, asset codecs and loudness gates remain; activation: Audio artifacts, loudness/loop/codec checks
 - **Advanced VFX production/runtime** — PARTIAL; dependency: UES Core has deterministic particle state simulation; renderer shaders, fluid/smoke models and performance gates remain; activation: Effect artifacts and performance gates
@@ -50,11 +50,11 @@ Generated: 2026-08-23T21:46:29.013Z
 - **Godot/Unity/Unreal/Roblox adapters** — INFRASTRUCTURE_REQUIRED; dependency: Installed engines/plugins/licensed tooling; activation: Import/build/launch integration tests
 - **Remote GPU compute fabric** — INFRASTRUCTURE_REQUIRED; dependency: GPU workers/provider; activation: Lease, receipt, artifact and cleanup tests
 - **CPU/GPU profiler** — PARTIAL; dependency: Runtime metrics adapters; activation: Measured frame/resource telemetry
-- **Quality-preserving optimization loop** — PARTIAL; dependency: UES Core has dependency-safe deduplication and rollback; profiler-driven visual regression loop remains; activation: Before/after benchmark with rollback
+- **Quality-preserving optimization loop** — PARTIAL; dependency: UES Advanced adds verified multi-LOD clustering and structured performance critics; measured renderer telemetry and perceptual regression remain; activation: Before/after benchmark with rollback
 - **Multi-target build matrix** — ADAPTER_REQUIRED; dependency: Target build workers; activation: Reproducible build and launch receipts
 - **Reference Intelligence** — PARTIAL; dependency: Vision analysis and rights policy; activation: Reference-derived constraint artifacts
-- **SNB Super Resolution** — PLANNED; dependency: Renderer, motion/depth buffers and GPU benchmarks; activation: Native-vs-reconstructed benchmark
-- **SNB FrameFlow** — PLANNED; dependency: Renderer motion/depth and frame pacing; activation: Real/generated FPS and latency report
+- **SNB Super Resolution** — PARTIAL; dependency: UES-owned reconstruction filters, motion/depth production and objective native-vs-reconstructed benchmarks remain; activation: Native-vs-reconstructed benchmark
+- **SNB FrameFlow** — PARTIAL; dependency: UES-owned motion/depth buffers, interpolation and measured frame-pacing implementation remain; activation: Real/generated FPS and latency report
 - **HSDS GPU audiovisual streaming** — INFRASTRUCTURE_REQUIRED; dependency: GPU render worker, framebuffer/audio capture, AV1/VP9/H.264 + Opus encoders and WebRTC STUN/TURN; activation: Framebuffer → encode → WebRTC playback → input → next-frame latency/quality test with provider receipt
 
 ### DsOS gaps

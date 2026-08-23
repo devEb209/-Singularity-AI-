@@ -10,7 +10,7 @@ Generated: ${new Date().toISOString()}
 ## Scope status
 
 - SNB orchestration/auth/projects/memory/files/missions/workers/tools/research: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, plus HSDS SVG/SSE interactive streaming baseline: operational within declared lightweight scope.
+- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, plus HSDS SVG/SSE interactive streaming baseline: operational within declared lightweight scope.
 - DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
 
 ## Divine systems
