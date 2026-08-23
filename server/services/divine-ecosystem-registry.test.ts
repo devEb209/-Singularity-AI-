@@ -1,0 +1,3 @@
+import { describe,expect,it } from 'vitest'
+import { divineSystemConcepts } from './divine-ecosystem-registry.js'
+describe('Divine ecosystem concept registry',()=>{it('tracks 30 Engine and 30 OS systems with unique IDs',()=>{expect(divineSystemConcepts).toHaveLength(60);expect(divineSystemConcepts.filter(item=>item.area==='engine')).toHaveLength(30);expect(divineSystemConcepts.filter(item=>item.area==='os')).toHaveLength(30);expect(new Set(divineSystemConcepts.map(item=>item.id)).size).toBe(60)});it('does not present planned concepts as operational',()=>{expect(divineSystemConcepts.filter(item=>item.status==='operational').map(item=>item.id)).toEqual(['engine-03']);expect(divineSystemConcepts.filter(item=>item.status==='planned').length).toBeGreaterThan(30)})})
