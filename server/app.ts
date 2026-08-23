@@ -40,6 +40,7 @@ import { ArtifactGraphService } from './services/artifact-graph.js'
 import { ProceduralPbrProvider } from './services/procedural-pbr.js'
 import { DivinePrototypePipeline } from './services/divine-prototype-pipeline.js'
 import { DivineEngineSettingsService } from './services/divine-engine-settings.js'
+import { divineSystemConcepts } from './services/divine-ecosystem-registry.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -260,6 +261,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/divine-os/projects/:id/modules',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineOs.addModule(request.userId,(request.params as {id:string}).id,divineOsModuleSchema.parse(request.body))))
   app.get('/api/v1/divine-os/projects/:id/module-graph',{preHandler:authenticated},async request=>divineOs.analyzeModules(request.userId,(request.params as {id:string}).id))
 
+  app.get('/api/v1/divine-ecosystem/systems',{preHandler:authenticated},async request=>{const area=(request.query as {area?:'engine'|'os'}).area,data=area?divineSystemConcepts.filter(item=>item.area===area):divineSystemConcepts;return{data,summary:{total:data.length,foundation:data.filter(item=>item.status==='foundation').length,operational:data.filter(item=>item.status==='operational').length,planned:data.filter(item=>item.status==='planned').length}}})
   app.get('/api/v1/divine-engine/projects',{preHandler:authenticated},async request=>({data:divineEngine.list(request.userId)}))
   app.post('/api/v1/divine-engine/projects',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineEngine.create(request.userId,divineProjectSchema.parse(request.body))))
   app.get('/api/v1/divine-engine/projects/:id',{preHandler:authenticated},async request=>divineEngine.detail(request.userId,(request.params as {id:string}).id))
