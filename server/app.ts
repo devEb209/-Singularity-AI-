@@ -47,6 +47,7 @@ import { v1Gaps } from './services/v1-gap-registry.js'
 import { ExternalJobAdapterRegistry } from './services/external-job-adapter.js'
 import { ToolFactory } from './services/tool-factory.js'
 import { ReleasePackager } from './services/release-packager.js'
+import { HsdsService } from './services/hsds.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -94,6 +95,8 @@ const divineOsBaseSchema=z.object({baseManifest:z.record(z.string(),z.unknown())
 const divineOsResourceSchema=z.object({ramMB:z.number().int().min(256).max(1048576),cpuCores:z.number().int().min(1).max(1024),storageMB:z.number().int().min(128),batteryPowered:z.boolean()})
 const pbrSchema=z.object({prompt:z.string().min(1).max(5000),projectId:z.string(),name:z.string().max(120).optional(),resolution:z.number().int().min(16).max(256).optional()})
 const prototypePipelineSchema=z.object({projectId:z.string(),prompt:z.string().min(1).max(5000),name:z.string().min(1).max(80)})
+const hsdsCreateSchema=z.object({divineProjectId:z.string(),device:z.object({viewportWidth:z.number().int().min(1).max(16384),viewportHeight:z.number().int().min(1).max(16384),bandwidthMbps:z.number().positive().max(10000).optional(),latencyMs:z.number().nonnegative().max(60000).optional(),decodeTier:z.enum(['low','balanced','high']).optional(),saveData:z.boolean().optional()})})
+const hsdsInputSchema=z.object({type:z.enum(['pointer','keyboard','gamepad','touch']),dx:z.number().min(-100).max(100).optional(),dy:z.number().min(-100).max(100).optional(),zoom:z.number().min(.1).max(10).optional(),key:z.enum(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown']).optional()})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -146,6 +149,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const proceduralPbr=new ProceduralPbrProvider(store)
   const prototypePipeline=new DivinePrototypePipeline(store,artifactGraph,procedural3d,proceduralPbr)
   const divineSettings=new DivineEngineSettingsService(store)
+  const hsds=new HsdsService(store)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
@@ -304,6 +308,12 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/procedural-pbr/generate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await proceduralPbr.generate(request.userId,pbrSchema.parse(request.body))))
   app.post('/api/v1/divine-engine/prototype-pipeline',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await prototypePipeline.build(request.userId,prototypePipelineSchema.parse(request.body))))
   app.post('/api/v1/divine-engine/experimental-4d',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await experimental4d.create(request.userId,experimental4dSchema.parse(request.body))))
+  app.get('/api/v1/hsds/capabilities',{preHandler:authenticated},async()=>hsds.capabilities())
+  app.get('/api/v1/hsds/sessions',{preHandler:authenticated},async request=>({data:hsds.list(request.userId,(request.query as {projectId?:string}).projectId)}))
+  app.post('/api/v1/hsds/sessions',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(hsds.create(request.userId,hsdsCreateSchema.parse(request.body))))
+  app.post('/api/v1/hsds/sessions/:id/input',{preHandler:authenticated,config:{rateLimit:{max:120,timeWindow:'1 minute'}}},async request=>hsds.input(request.userId,(request.params as {id:string}).id,hsdsInputSchema.parse(request.body)))
+  app.post('/api/v1/hsds/sessions/:id/close',{preHandler:authenticated},async request=>hsds.close(request.userId,(request.params as {id:string}).id))
+  app.get('/api/v1/hsds/sessions/:id/stream',{preHandler:authenticated},async(request,reply)=>{const sessionId=(request.params as {id:string}).id,frames=Array.from({length:3},()=>hsds.frame(request.userId,sessionId)),body=`retry: 500\n${frames.map(frame=>`event: frame\ndata: ${JSON.stringify(frame)}\n`).join('\n')}\nevent: batch-complete\ndata: ${JSON.stringify({nextAfterMs:Math.max(67,Math.round(3000/frames.length))})}\n\n`;return reply.type('text/event-stream').header('cache-control','no-cache, no-transform').header('x-accel-buffering','no').send(body)})
   app.get('/api/v1/artifact-graph/:projectId',{preHandler:authenticated},async request=>artifactGraph.graph(request.userId,(request.params as {projectId:string}).projectId))
 
   app.get('/api/v1/capability-fabric',{preHandler:authenticated},async request=>({data:capabilityFabric.list({status:(request.query as {status?:'discovered'|'testing'|'active'|'unavailable'|'disabled'}).status,capability:(request.query as {capability?:string}).capability})}))

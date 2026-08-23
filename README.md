@@ -171,6 +171,7 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 - [Research Swarm](docs/RESEARCH-SWARM.md)
 - [Capability Fabric](docs/CAPABILITY-FABRIC.md)
 - [UES / Divine Engine](docs/DIVINE-ENGINE.md)
+- [HSDS lightweight interactive streaming](docs/HSDS.md)
 - [Divine OS](docs/DIVINE-OS.md)
 - [Experimental 4D](docs/EXPERIMENTAL-4D.md)
 - [Workers and model health](docs/WORKERS-AND-HEALTH.md)

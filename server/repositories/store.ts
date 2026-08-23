@@ -1,4 +1,5 @@
 import type { ApprovalRequest, ArtifactRecord, DivineEngineCommand, DivineEngineSettings, BenchmarkCampaign, BenchmarkJob, CapabilityManifest, CircuitState, Conversation, DivineOsModule, DivineOsProject, DivineProject, EvidenceLink, EvidenceSource, ExternalModel, FileAsset, KnowledgeClaim, Memory, Message, Mission, MissionContract, MissionEvent, MissionTask, ModelEvaluation, ModelHealthSample, Project, ProjectCheckpoint, PuterExecutionReport, TaskLease, ToolExecution, WorkerRecord } from '../domain.js'
+import type { HsdsSession } from '../services/hsds.js'
 
 export interface StoredUser { id: string; email: string; name: string; passwordHash: string; createdAt: string }
 export interface StoredRefreshToken { id: string; userId: string; tokenHash: string; expiresAt: string; revokedAt?: string; createdAt: string }
@@ -94,6 +95,10 @@ export interface Store {
   upsertDivineEngineSettings(settings:DivineEngineSettings):DivineEngineSettings
   createDivineEngineCommand(command:DivineEngineCommand):DivineEngineCommand
   listDivineEngineCommands(projectId:string,userId:string):DivineEngineCommand[]
+  createHsdsSession(session:HsdsSession):HsdsSession
+  getHsdsSession(sessionId:string,userId:string):HsdsSession
+  listHsdsSessions(userId:string,projectId?:string):HsdsSession[]
+  updateHsdsSession(session:HsdsSession):void
   createArtifact(record:ArtifactRecord):ArtifactRecord
   getArtifact(artifactId:string,userId:string):ArtifactRecord
   listArtifacts(userId:string,projectId?:string):ArtifactRecord[]

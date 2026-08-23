@@ -19,6 +19,7 @@ export const v1Gaps:V1Gap[]=[
 {id:'ues-reference-ai',area:'UES',name:'Reference Intelligence',state:'PARTIAL',dependency:'Vision analysis and rights policy',activation:'Reference-derived constraint artifacts'},
 {id:'ues-super-resolution',area:'UES',name:'SNB Super Resolution',state:'PLANNED',dependency:'Renderer, motion/depth buffers and GPU benchmarks',activation:'Native-vs-reconstructed benchmark'},
 {id:'ues-frameflow',area:'UES',name:'SNB FrameFlow',state:'PLANNED',dependency:'Renderer motion/depth and frame pacing',activation:'Real/generated FPS and latency report'},
+{id:'ues-hsds-av',area:'UES',name:'HSDS GPU audiovisual streaming',state:'INFRASTRUCTURE_REQUIRED',dependency:'GPU render worker, framebuffer/audio capture, AV1/VP9/H.264 + Opus encoders and WebRTC STUN/TURN',activation:'Framebuffer → encode → WebRTC playback → input → next-frame latency/quality test with provider receipt'},
 {id:'dsos-source',area:'DsOS',name:'Source checkout workspace',state:'ADAPTER_REQUIRED',dependency:'Isolated Git/source worker',activation:'Pinned source checksum and provenance'},
 {id:'dsos-rootfs',area:'DsOS',name:'Reproducible Linux rootfs',state:'INFRASTRUCTURE_REQUIRED',dependency:'Linux toolchain/container worker',activation:'Image hash reproducibility'},
 {id:'dsos-qemu',area:'DsOS',name:'QEMU boot test',state:'INFRASTRUCTURE_REQUIRED',dependency:'QEMU runtime and image',activation:'Boot/console health receipt'},

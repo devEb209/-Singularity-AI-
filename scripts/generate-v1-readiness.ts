@@ -10,7 +10,7 @@ Generated: ${new Date().toISOString()}
 ## Scope status
 
 - SNB orchestration/auth/projects/memory/files/missions/workers/tools/research: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D: operational within declared lightweight scope.
+- UES studio/runtime patch/settings/artifact graph/procedural 3D/PBR/scene/WebGL/experimental 4D plus HSDS SVG/SSE interactive streaming baseline: operational within declared lightweight scope.
 - DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
 
 ## Divine systems
@@ -33,6 +33,20 @@ ${v1Gaps.filter(item=>item.area==='DsOS').map(item=>`- **${item.name}** — ${it
 
 ### Infrastructure gaps
 ${v1Gaps.filter(item=>item.area==='SNB Infrastructure').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')}
+
+## Honest directional completion ranges
+
+These are engineering ranges, not automatically promoted capability states. The denominator is the complete user-defined V1 scope; external execution counts as incomplete even when its contract exists.
+
+- SNB local platform: **75–85%**
+- UES architecture/contracts: **65–75%**
+- UES integration: **35–45%**
+- UES real production capability: **15–25%**
+- DsOS: **20–30%**
+- Production infrastructure: **35–45%**
+- Total V1: **40–50%**
+
+The ranges remain deliberately broad because semantic 3D, rigging, motion, physics, audiovisual GPU streaming and bootable OS work are large unevidenced production slices. Architecture or adapters do not receive production credit.
 
 ## Verification command
 
