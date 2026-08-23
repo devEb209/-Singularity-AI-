@@ -8,8 +8,10 @@ The UES now contains an owned, deterministic, lightweight runtime baseline. It e
 
 - seeded heightfield and biome world chunks;
 - fixed-step rigid-body gravity and ground/AABB response;
+- vertex-cluster retopology with compacted indices and degenerate-face verification;
 - bounds-derived bone hierarchy and normalized per-vertex skin weights;
 - procedural keyframes with monotonic timing and joint limits;
+- bounded PCM waveform synthesis with peak, RMS, clipping and finiteness checks;
 - NPC needs, goal selection, bounded memory and simulation ticks;
 - deterministic particle-state VFX;
 - dependency-safe resource deduplication with rollback when references would break.

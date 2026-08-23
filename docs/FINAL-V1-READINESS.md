@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-23T21:44:32.697Z
+Generated: 2026-08-23T21:46:29.013Z
 
 ## Scope status
 
@@ -38,13 +38,13 @@ Generated: 2026-08-23T21:44:32.697Z
 
 ### UES gaps
 - **Semantic text/image-to-3D** — PARTIAL; dependency: UES-owned semantic decomposition, geometry synthesis and quality evaluation beyond the verified procedural baseline; activation: Adapter + artifact + geometry benchmarks
-- **Automatic retopology** — PARTIAL; dependency: UES-owned topology remeshing, edge-flow constraints and deformation corpus; activation: Topology verifier and deformation tests
+- **Automatic retopology** — PARTIAL; dependency: UES Core has verified vertex-cluster remeshing; semantic edge-flow constraints, manifold repair and deformation corpus remain; activation: Topology verifier and deformation tests
 - **Advanced semantic rigging and skinning** — PARTIAL; dependency: UES Core has verified bounds-derived bones and normalized weights; anatomy inference and deformation quality remain; activation: Skeleton/weights artifact verification
 - **Semantic animation and retargeting** — PARTIAL; dependency: UES Core has keyframes, interpolation and joint limits; source/target skeleton mapping and contact solver remain; activation: Foot contact, limits and continuity tests
 - **Advanced semantic world generation** — PARTIAL; dependency: UES Core has deterministic heightfields, biomes and chunk metadata; semantic roads, cities, vegetation and runtime streaming remain; activation: World graph artifacts and streaming tests
 - **Advanced physics runtime** — PARTIAL; dependency: UES Core has deterministic fixed-step gravity and AABB/ground response; broadphase, joints, raycasts and rotational dynamics remain; activation: Deterministic simulation tests
 - **Advanced NPC society runtime** — PARTIAL; dependency: UES Core has needs, goals, bounded memory and deterministic ticks; navigation, relationships, economy and scale remain; activation: Artificial-player/runtime benchmarks
-- **Audio generation and runtime** — PARTIAL; dependency: UES-owned mixer, spatial graph, procedural waveform generation and codec verification are not yet implemented; activation: Audio artifacts, loudness/loop/codec checks
+- **Audio generation and runtime** — PARTIAL; dependency: UES Core has verified PCM waveform synthesis; mixer, spatial graph, event synchronization, asset codecs and loudness gates remain; activation: Audio artifacts, loudness/loop/codec checks
 - **Advanced VFX production/runtime** — PARTIAL; dependency: UES Core has deterministic particle state simulation; renderer shaders, fluid/smoke models and performance gates remain; activation: Effect artifacts and performance gates
 - **Multiplayer runtime** — PARTIAL; dependency: UES-owned authority, replication, reconciliation and adversarial network simulation are not yet implemented; activation: Network simulation and security tests
 - **Godot/Unity/Unreal/Roblox adapters** — INFRASTRUCTURE_REQUIRED; dependency: Installed engines/plugins/licensed tooling; activation: Import/build/launch integration tests
