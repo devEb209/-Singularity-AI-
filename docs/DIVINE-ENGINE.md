@@ -53,6 +53,12 @@ The Beta includes `snb.procedural-3d`, a deterministic local fallback that write
 
 It is deliberately limited to a 24-vertex/12-triangle cube whose name and material color are derived from the prompt. It is not described as semantic text-to-3D, character generation, retopology or rigging. It proves the execution → artifact → verification path while external advanced providers remain capability gaps.
 
+## Real lightweight prototype pipeline
+
+The internal fallback can now execute a complete small pipeline: procedural GLB → six PNG PBR maps → material manifest → scene manifest → self-contained offline WebGL build → artifact dependency graph. This produces ten verified artifacts with no external library or network dependency. It is intentionally a primitive proof pipeline, not an AAA game claim.
+
+All generated textures are capped at 64×64 by the low-device prototype and generally remain under 10 KB each. Heavy future providers run remotely; the user device receives progressive artifacts and previews.
+
 ## Deliberately deferred
 
 SNB Super Resolution, FrameFlow, renderer, physics runtime, world streaming runtime and physical compute providers are architecture targets, not current operational claims. They must be implemented as remote capabilities/artifacts and benchmarked before activation.

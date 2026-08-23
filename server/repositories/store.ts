@@ -1,4 +1,4 @@
-import type { ApprovalRequest, BenchmarkCampaign, BenchmarkJob, CapabilityManifest, CircuitState, Conversation, DivineOsModule, DivineOsProject, DivineProject, EvidenceLink, EvidenceSource, ExternalModel, FileAsset, KnowledgeClaim, Memory, Message, Mission, MissionContract, MissionEvent, MissionTask, ModelEvaluation, ModelHealthSample, Project, ProjectCheckpoint, PuterExecutionReport, TaskLease, ToolExecution, WorkerRecord } from '../domain.js'
+import type { ApprovalRequest, ArtifactRecord, BenchmarkCampaign, BenchmarkJob, CapabilityManifest, CircuitState, Conversation, DivineOsModule, DivineOsProject, DivineProject, EvidenceLink, EvidenceSource, ExternalModel, FileAsset, KnowledgeClaim, Memory, Message, Mission, MissionContract, MissionEvent, MissionTask, ModelEvaluation, ModelHealthSample, Project, ProjectCheckpoint, PuterExecutionReport, TaskLease, ToolExecution, WorkerRecord } from '../domain.js'
 
 export interface StoredUser { id: string; email: string; name: string; passwordHash: string; createdAt: string }
 export interface StoredRefreshToken { id: string; userId: string; tokenHash: string; expiresAt: string; revokedAt?: string; createdAt: string }
@@ -90,6 +90,10 @@ export interface Store {
   getDivineProject(divineId:string,userId:string):DivineProject
   listDivineProjects(userId:string):DivineProject[]
   updateDivineProject(project:DivineProject):void
+  createArtifact(record:ArtifactRecord):ArtifactRecord
+  getArtifact(artifactId:string,userId:string):ArtifactRecord
+  listArtifacts(userId:string,projectId?:string):ArtifactRecord[]
+  updateArtifact(record:ArtifactRecord):void
   createDivineOsProject(project:DivineOsProject):DivineOsProject
   getDivineOsProject(projectId:string,userId:string):DivineOsProject
   listDivineOsProjects(userId:string):DivineOsProject[]

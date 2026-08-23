@@ -147,6 +147,10 @@ export interface ModelEvaluation {
   createdAt: string
 }
 
+export interface ArtifactRecord {
+  id:string;userId:string;projectId:string;fileId:string;type:string;version:number;parentId?:string;producer:string;inputs:string[];dependencies:string[];verification:Record<string,unknown>;metadata:Record<string,unknown>;license:string;status:'created'|'verified'|'rejected'|'superseded';createdAt:string
+}
+
 export interface DivineOsProject {
   id:string;userId:string;projectId:string;missionId:string;name:string;variant:'core'|'droid'|'linux'|'win-compat';status:'created'|'configured'|'blocked'|'building'|'verified'|'failed';architecture:string[];baseManifest:Record<string,unknown>;configuration:Record<string,unknown>;compliance:Record<string,unknown>;createdAt:string;updatedAt:string
 }

@@ -43,6 +43,10 @@ PATCH /api/v1/divine-os/projects/:id/base
 POST  /api/v1/divine-os/projects/:id/modules
 ```
 
+## Module dependency analyzer
+
+Divine OS modules now produce a graph report with missing dependencies, cycles, blocked permissions and deterministic load order. This reuses the shared project/module store and prevents concurrent critical work from bypassing declared dependencies.
+
 ## Next incremental work
 
 Adapters should be added only after selecting mature, licensed foundations. The next real milestones are source checkout into an isolated build workspace, dependency/license report artifacts, reproducible Linux rootfs image, QEMU boot test and signed receipts. Android and compatibility targets follow after those common foundations are verified.

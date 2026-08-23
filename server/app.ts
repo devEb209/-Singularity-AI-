@@ -36,6 +36,9 @@ import { CapabilityFabric } from './services/capability-fabric.js'
 import { DivineEngineService } from './services/divine-engine.js'
 import { Procedural3DProvider } from './services/procedural-3d.js'
 import { DivineOsService } from './services/divine-os.js'
+import { ArtifactGraphService } from './services/artifact-graph.js'
+import { ProceduralPbrProvider } from './services/procedural-pbr.js'
+import { DivinePrototypePipeline } from './services/divine-prototype-pipeline.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -80,6 +83,8 @@ const procedural3dSchema=z.object({prompt:z.string().min(1).max(5000),name:z.str
 const divineOsSchema=z.object({name:z.string().min(1).max(120),variant:z.enum(['core','droid','linux','win-compat']),baseManifest:z.record(z.string(),z.unknown()).optional(),configuration:z.record(z.string(),z.unknown()).optional()})
 const divineOsModuleSchema=z.object({name:z.string().min(1).max(160),version:z.string().min(1).max(80),capabilities:z.array(z.string().max(160)).max(100),dependencies:z.array(z.string().max(200)).max(200),permissions:z.array(z.string().max(100)).max(100),manifest:z.record(z.string(),z.unknown()).default({})})
 const divineOsBaseSchema=z.object({baseManifest:z.record(z.string(),z.unknown())})
+const pbrSchema=z.object({prompt:z.string().min(1).max(5000),projectId:z.string(),name:z.string().max(120).optional(),resolution:z.number().int().min(16).max(256).optional()})
+const prototypePipelineSchema=z.object({projectId:z.string(),prompt:z.string().min(1).max(5000),name:z.string().min(1).max(80)})
 const receiptSchema = z.object({ receipt: z.string().min(32).max(500) })
 const workerRegistrationSchema = z.object({ id:z.string().max(120).optional(),name:z.string().min(1).max(120),capabilities:z.array(z.string().min(1).max(100)).min(1).max(100) })
 const workerLeaseSchema = z.object({ taskId:z.string().min(1),leaseToken:z.string().min(32).max(500) })
@@ -116,7 +121,13 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const capabilityFabric=new CapabilityFabric(store)
   if(appConfig.NODE_ENV!=='test')await capabilityFabric.discoverEnvironment()
   const procedural3d=new Procedural3DProvider(store)
+  const artifactGraph=new ArtifactGraphService(store)
+  const proceduralPbr=new ProceduralPbrProvider(store)
+  const prototypePipeline=new DivinePrototypePipeline(store,artifactGraph,procedural3d,proceduralPbr)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb.webgl-prototype',name:'SNB WebGL Prototype Builder',version:'1.0.0',capabilities:['gameplay.prototype','game.build.web','build.verify'],outputs:{build:'self-contained HTML'},verifier:'html-offline-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -243,6 +254,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.get('/api/v1/divine-os/projects/:id',{preHandler:authenticated},async request=>divineOs.detail(request.userId,(request.params as {id:string}).id))
   app.patch('/api/v1/divine-os/projects/:id/base',{preHandler:authenticated},async request=>{const value=divineOsBaseSchema.parse(request.body);return divineOs.setBase(request.userId,(request.params as {id:string}).id,value.baseManifest)})
   app.post('/api/v1/divine-os/projects/:id/modules',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineOs.addModule(request.userId,(request.params as {id:string}).id,divineOsModuleSchema.parse(request.body))))
+  app.get('/api/v1/divine-os/projects/:id/module-graph',{preHandler:authenticated},async request=>divineOs.analyzeModules(request.userId,(request.params as {id:string}).id))
 
   app.get('/api/v1/divine-engine/projects',{preHandler:authenticated},async request=>({data:divineEngine.list(request.userId)}))
   app.post('/api/v1/divine-engine/projects',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineEngine.create(request.userId,divineProjectSchema.parse(request.body))))
@@ -250,6 +262,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/divine-engine/projects/:id/prototype-3d',{preHandler:authenticated},async request=>divineEngine.createProceduralPrototype(request.userId,(request.params as {id:string}).id,(request.body as {prompt?:string}|undefined)?.prompt))
   app.post('/api/v1/procedural-3d/generate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await procedural3d.generate(request.userId,procedural3dSchema.parse(request.body))))
   app.get('/api/v1/procedural-3d/:fileId/verify',{preHandler:authenticated},async request=>procedural3d.verifyFile(request.userId,(request.params as {fileId:string}).fileId))
+  app.post('/api/v1/procedural-pbr/generate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await proceduralPbr.generate(request.userId,pbrSchema.parse(request.body))))
+  app.post('/api/v1/divine-engine/prototype-pipeline',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await prototypePipeline.build(request.userId,prototypePipelineSchema.parse(request.body))))
+  app.get('/api/v1/artifact-graph/:projectId',{preHandler:authenticated},async request=>artifactGraph.graph(request.userId,(request.params as {projectId:string}).projectId))
 
   app.get('/api/v1/capability-fabric',{preHandler:authenticated},async request=>({data:capabilityFabric.list({status:(request.query as {status?:'discovered'|'testing'|'active'|'unavailable'|'disabled'}).status,capability:(request.query as {capability?:string}).capability})}))
   app.post('/api/v1/capability-fabric/pipeline/3d',{preHandler:authenticated},async request=>capabilityFabric.synthesize3D(pipeline3dSchema.parse(request.body).goal))

@@ -121,6 +121,8 @@ class ApiClient {
   createDivineProject(input:{name:string;brief:string;target:string;executionPolicy:string;deviceProfile:Record<string,unknown>}){return this.request<any>('/api/v1/divine-engine/projects',{method:'POST',body:JSON.stringify(input)})}
   divineProject(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}`)}
   generateDivinePrototype(id:string,prompt?:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/prototype-3d`,{method:'POST',body:JSON.stringify({prompt})})}
+  buildDivinePrototype(projectId:string,prompt:string,name:string){return this.request<any>('/api/v1/divine-engine/prototype-pipeline',{method:'POST',body:JSON.stringify({projectId,prompt,name})})}
+  artifactGraph(projectId:string){return this.request<any>(`/api/v1/artifact-graph/${projectId}`)}
   synthesize3DPipeline(goal:string){return this.request<{goal:string;pipeline:string;executable:boolean;stages:{id:string;capability:string;status:string;selected?:{name:string;version:string};candidates:{name:string;status:string}[]}[];gaps:string[];rule:string}>('/api/v1/capability-fabric/pipeline/3d',{method:'POST',body:JSON.stringify({goal})})}
   capabilityManifests(){return this.request<{data:{id:string;name:string;version:string;type:string;capabilities:string[];status:string;license:string;reliability:number}[]}>('/api/v1/capability-fabric')}
   researchPlan(query:string,modelCount=4){return this.request<{query:string;policy:string;eligibleTotal:number;researchers:{key:string;id:string;provider:string;name?:string}[];synthesizer:{key:string;id:string;provider:string;name?:string};warning:string}>('/api/v1/research/plan',{method:'POST',body:JSON.stringify({query,modelCount})})}
