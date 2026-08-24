@@ -129,6 +129,11 @@ import { UesGenesisService } from './services/ues-genesis/service.js'
 import { UesRasterService } from './services/ues-raster/service.js'
 import { UesWorldKnowledgeService } from './services/ues-world-knowledge/service.js'
 import { UesScalePolicyService } from './services/ues-scale-policy/service.js'
+import { UesLightService } from './services/ues-light/service.js'
+import { UesTextureService } from './services/ues-texture/service.js'
+import { UesShadowService } from './services/ues-shadow/service.js'
+import { UesPostService } from './services/ues-post/service.js'
+import { UesRadianceService } from './services/ues-radiance/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -336,6 +341,11 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesRaster=new UesRasterService(store,artifactGraph)
   const uesWorldKnowledge=new UesWorldKnowledgeService(store,artifactGraph)
   const uesScalePolicy=new UesScalePolicyService(store,artifactGraph)
+  const uesLight=new UesLightService(store,artifactGraph)
+  const uesTexture=new UesTextureService(store,artifactGraph)
+  const uesShadow=new UesShadowService(store,artifactGraph)
+  const uesPost=new UesPostService(store,artifactGraph)
+  const uesRadiance=new UesRadianceService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -624,6 +634,11 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/ues/raster/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesRaster.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/ues/knowledge/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesWorldKnowledge.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/ues/scale-policy/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesScalePolicy.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/light/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesLight.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/texture/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesTexture.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/shadow/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesShadow.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/post/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesPost.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/radiance/build',{preHandler:authenticated,config:{rateLimit:{max:4,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesRadiance.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())

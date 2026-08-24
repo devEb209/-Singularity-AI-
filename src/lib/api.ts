@@ -196,6 +196,11 @@ class ApiClient {
   buildUesGenesis(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/genesis/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileUesRaster(projectId:string,name:string){return this.request<any>('/api/v1/ues/raster/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   compileUesKnowledge(projectId:string,name:string){return this.request<any>('/api/v1/ues/knowledge/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesLight(projectId:string,name:string){return this.request<any>('/api/v1/ues/light/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesTexture(projectId:string,name:string){return this.request<any>('/api/v1/ues/texture/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesShadow(projectId:string,name:string){return this.request<any>('/api/v1/ues/shadow/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesPost(projectId:string,name:string){return this.request<any>('/api/v1/ues/post/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  buildUesRadiance(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/radiance/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

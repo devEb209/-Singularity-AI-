@@ -32,7 +32,7 @@ export const generationLedger: GenerationItem[] = [
   { id: 'world.live-earth', axis: 'world', name: 'Terra fotogramétrica live', state: 'ADAPTER', weight: 4, note: 'HLOD próprio; dataset live adapter' },
   { id: 'ship.runtime', axis: 'shipping', name: 'Runtime UES + HSDS SVG', state: 'OPERATIONAL', weight: 5, note: 'Leve; GPU/WebRTC adapter' },
   { id: 'ship.package', axis: 'shipping', name: 'Release packager + quality gates', state: 'OPERATIONAL', weight: 4, note: 'Só artifacts verificados' },
-  { id: 'ship.gpu', axis: 'shipping', name: 'Renderer GPU / shaders / SPH', state: 'PARTIAL', weight: 6, note: 'Raster real + bytecode de shader executam; WebGPU/Vulkan/SPH ampliam' },
+  { id: 'ship.gpu', axis: 'shipping', name: 'Renderer GPU / shaders / SPH', state: 'PARTIAL', weight: 6, note: 'Raster + PBR por fragmento + sombra/IBL/ACES executam no fallback CPU; WebGPU/Vulkan/SPH/Nanite/Lumen ampliam. Não supera Unreal.' },
   { id: 'ship.multiplayer', axis: 'shipping', name: 'Multiplayer conectado', state: 'ADAPTER', weight: 5, note: 'Simulação autoritativa existe; WebRTC/UDP externo' },
   { id: 'ship.platforms', axis: 'shipping', name: 'Ship desktop/mobile/console', state: 'PARTIAL', weight: 6, note: 'Web/HSDS real; stores/consoles não' },
 ]

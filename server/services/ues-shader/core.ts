@@ -5,6 +5,7 @@ import { defaultGraph } from './graph.js'
 import { lowerGraph } from './ir.js'
 import { cachedCompile, executeProgram } from './bytecode.js'
 import { cpuEval, optimizeIr } from './optimize.js'
+import { emitPbrWgsl } from './pbr-emit.js'
 
 export class UesShaderCore {
   private thesis = new DThesisCore()
@@ -24,7 +25,7 @@ export class UesShaderCore {
       { module: 'shader', accepted: !optimized.some(op => op.id === 'unused'), note: 'DCE' },
       { module: 'represent', accepted: true, note: 'IR not backend' },
       { module: 'd-o15', accepted: optimized.some(op => op.id === 'six' && op.op === 'imm' && op.imm === 6), note: 'fold 2*3' },
-      { module: 'execute', accepted: wgsl.includes('6.') && !wgsl.includes('unused') && executed === value, note: 'wgsl + bytecode' },
+      { module: 'execute', accepted: wgsl.includes('6.') && !wgsl.includes('unused') && executed === value && emitPbrWgsl().includes('ues_cook_torrance'), note: 'wgsl + bytecode + pbr' },
       { module: 'verify', accepted: value > 0 && value < 1 && again.cacheHit, note: 'cpu eval + cache' },
       { module: 'refine', accepted: true, note: 'SPIR-V/HLSL remain adapters' },
     ])
@@ -40,6 +41,7 @@ export class UesShaderCore {
       ir: ir.length,
       optimized: optimized.length,
       wgsl,
+      pbrWgsl: emitPbrWgsl(),
       cpu: value,
       program: { stage: fragment.program.stage, bindings: fragment.program.bindings.length, cacheHit: again.cacheHit },
       kernel,

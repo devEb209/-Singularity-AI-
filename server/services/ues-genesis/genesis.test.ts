@@ -16,5 +16,8 @@ describe('UES V1 Genesis close chain', () => {
     expect(result.knowledge.earthIsLimit).toBe(false)
     expect(result.scale.fixedCap).toBe(false)
     expect(result.image3d.learnedVision).toBe(false)
+    expect(result.radiance.written).toBeGreaterThan(200)
+    expect(result.radiance.beatsUnreal).toBe(false)
+    expect(result.radiance.hardwareGpu).toBe(false)
   })
 })

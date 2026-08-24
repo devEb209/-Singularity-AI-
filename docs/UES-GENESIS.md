@@ -13,6 +13,7 @@ V1 Gênesis is the first **complete competitive generation**. V2 exists to surpa
 
 | Module | Operational now | Honest limit |
 | --- | --- | --- |
+| `ues-radiance` | Per-fragment Cook-Torrance + PCF + IBL + ACES frame | Not Unreal / not Nanite / not Lumen |
 | `ues-raster` | Real barycentric raster + depth + deterministic pixels | Hardware WebGPU device |
 | `ues-gpu` | Own GPU API + compute + raster fallback that **executes** | WebGPU/Vulkan adapters |
 | `ues-shader` | Material graph → IR → DCE/fold → WGSL/GLSL + CPU eval | Not DXC/SPIR-V |
