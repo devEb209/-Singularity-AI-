@@ -179,6 +179,8 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 - [UES Living World](docs/UES-LIVING-WORLD.md)
 - [UES World Emulation](docs/UES-WORLD-EMULATION.md)
 - [UES Realis / real-data chain](docs/UES-REALIS.md)
+- [UES shared kernel](docs/UES-KERNEL.md)
+- [UES Atelier](docs/UES-ATELIER.md)
 - [UES 3D Tiles HLOD](docs/UES-3D-TILES.md)
 - [UES GIS adapters](docs/UES-GIS-ADAPTERS.md)
 - [TITKO PBR](docs/UES-TITKO-PBR.md)

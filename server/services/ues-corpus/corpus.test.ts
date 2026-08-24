@@ -14,9 +14,12 @@ describe('UES semantic corpus', () => {
     }
     expect(byPrompt('personagem humano').kind).toBe('humanoid')
     expect(byPrompt('cadeira de madeira').kind).toBe('chair')
-    const result = new UesCorpusCore().process()
+    const result = new UesCorpusCore().process('artefato hexagonal com antena')
     expect(result.verification.valid).toBe(true)
     expect(result.verification.specialistDerived).toBe(false)
+    expect(result.verification.catalogOnly).toBe(false)
     expect(result.count).toBe(9)
+    expect(result.openClass.valid).toBe(true)
+    expect(result.openClass.catalogBound).toBe(false)
   })
 })

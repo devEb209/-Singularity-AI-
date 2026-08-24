@@ -182,6 +182,15 @@ class ApiClient {
   v1Generation(){return this.request<any>('/api/v1/v1-generation')}
   rollbackArtifact(artifactId:string){return this.request<any>(`/api/v1/artifacts/${artifactId}/rollback`,{method:'POST'})}
   evaluateUesShip(projectId:string,name='ship'){return this.request<any>(`/api/v1/projects/${projectId}/ship-gate`,{method:'POST',body:JSON.stringify({name})})}
+  buildUesClose(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/close/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileUesSemantic3d(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/semantic-3d/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileUesSolid(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/solid/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  simulateUesDynamics(projectId:string,name:string){return this.request<any>('/api/v1/ues/dynamics/simulate',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesStudio(projectId:string,name:string){return this.request<any>('/api/v1/ues/studio/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesMeshNav(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/mesh-nav/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  simulateUesLives(projectId:string,name:string){return this.request<any>('/api/v1/ues/lives/simulate',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileSnbConsensus(projectId:string,name:string){return this.request<any>('/api/v1/snb/consensus/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  buildUesAtelier(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/atelier/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}
