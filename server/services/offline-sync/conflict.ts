@@ -1,0 +1,1 @@
+import type{OfflineOperation,SyncDocument}from'./types.js';export const conflictFields=(document:SyncDocument,operation:OfflineOperation)=>operation.baseRevision===document.revision?[]:Object.keys(operation.patch).filter(key=>Object.prototype.hasOwnProperty.call(document.content,key))
