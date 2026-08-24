@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T16:25:38.273Z
+Generated: 2026-08-24T16:29:30.528Z
 
 ## Scope status
 
@@ -63,7 +63,7 @@ These states cover only each documented implemented scope; they do not mark the 
 - **Multiplayer runtime** — PARTIAL; dependency: Authoritative tick, prediction, snapshot reconcile and adversarial reject (speed-hack/spoof/duplicate) now execute in CPU simulation; WebRTC/UDP transport remains external; activation: Network simulation and security tests
 - **CPU/GPU profiler** — PARTIAL; dependency: CPU hrtime section profiler now measures world/society work; GPU/frame telemetry remains infrastructure-specific; activation: Measured frame/resource telemetry
 - **Quality-preserving optimization loop** — PARTIAL; dependency: Measured D-O15 loop now chooses perceptual equivalents and rolls back past the quality frontier; renderer image regression remains; activation: Before/after benchmark with rollback
-- **Reference Intelligence** — PARTIAL; dependency: Vision analysis and rights policy; activation: Reference-derived constraint artifacts
+- **Reference Intelligence** — PARTIAL; dependency: Structured reference cards, constraint extraction and license rights policy now execute; vision analysis remains; activation: Reference-derived constraint artifacts
 - **SNB Super Resolution** — PARTIAL; dependency: Bilinear+unsharp reconstruction and PSNR vs native now execute; learned SR and production image codecs remain; activation: Native-vs-reconstructed benchmark
 - **SNB FrameFlow** — PARTIAL; dependency: Block-match interpolation and pacing metrics now execute; GPU motion vectors and measured display FPS remain; activation: Real/generated FPS and latency report
 
