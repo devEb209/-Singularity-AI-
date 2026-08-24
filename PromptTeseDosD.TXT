@@ -1,0 +1,125 @@
+PROMPT COMPLEMENTAR — TESE DOS D
+MÓDULO UNIVERSAL DE REALIDADE, SIMULAÇÃO, CONSTRUÇÃO E OTIMIZAÇÃO DA UES/SNB
+
+IMPORTANTE: Este documento é um complemento à Tese dos D original.
+Ele não substitui, redefine ou reduz nenhum dos conceitos anteriormente estabelecidos.
+
+A Tese dos D continua sendo o sistema universal de raciocínio e organização da UES/SNB.
+
+Este complemento estabelece uma extensão fundamental:
+
+A Tese dos D deve utilizar, sempre que tecnicamente viável e relevante, princípios, relações, comportamentos e conhecimentos provenientes do mundo real como fundamentos para construir, simular, representar, otimizar e validar sistemas digitais.
+
+A aplicação da Tese dos D não deve ser limitada a gráficos, física ou geração procedural.
+
+Seu objetivo é permitir que a UES utilize o máximo possível do conhecimento do mundo real em praticamente qualquer domínio necessário à criação de um jogo, software, simulação, mundo virtual ou outro sistema digital.
+
+1. PRINCÍPIO UNIVERSAL
+A UES deve tratar o mundo real como uma das maiores fontes de conhecimento estrutural disponíveis.
+Quando um sistema digital precisar representar algum fenômeno existente no mundo real, a UES deve poder:
+observar → pesquisar → compreender → abstrair → modelar → simular → integrar → validar → otimizar.
+A realidade não deve ser utilizada apenas como referência visual.
+
+2. NÃO LIMITAR A REALIDADE A UMA LISTA FIXA DE MÓDULOS
+A UES não deve possuir uma interpretação fechada de “módulos Real Life”.
+Os módulos devem ser extensíveis.
+
+3. REAL LIFE NÃO SIGNIFICA REALISMO OBRIGATÓRIO
+A utilização da realidade deve ser tratada como fundamento, não como restrição criativa.
+O usuário pode solicitar realidade, fantasia, ficção científica, cartoon, anime, estilização, surrealismo, mundos impossíveis ou regras inventadas.
+A Tese dos D deve conseguir utilizar princípios reais para construir realidades alternativas coerentes.
+
+4. REAL LIFE GRAPHICS
+O objetivo não é “fazer uma imagem parecer uma fotografia”.
+O objetivo é modelar e representar os fenômenos que fazem o mundo produzir a aparência visual percebida.
+
+5. REAL LIFE PHYSICS
+Arquitetura física própria orientada pela Tese dos D, sem ficar limitada à realidade.
+O usuário poderá definir novas leis. A UES deve entender as regras → construir o modelo → manter consistência → simular → otimizar.
+
+6. REAL LIFE ENVIRONMENT
+O ambiente deve ser tratado como um sistema interdependente:
+clima ↔ água ↔ solo ↔ vegetação ↔ fauna ↔ atividade humana ↔ iluminação ↔ materiais ↔ atmosfera.
+
+7. DADOS DO MUNDO REAL
+Quando apropriado, interpretar dados (não simplesmente copiá-los) de acordo com o objetivo e com a Tese dos D.
+Fontes externas permanecem sujeitas a permissão, licença e verificação. Elas não bloqueiam a V1 interna.
+
+8. API GRÁFICA PRÓPRIA DA UES
+As APIs gráficas existentes são backends de compatibilidade, não a arquitetura conceitual da UES.
+
+9. D-O15 COMO OTIMIZADOR UNIVERSAL
+Não “reduzir qualidade”. Encontrar a representação mais eficiente que preserve o objetivo.
+
+10. PERCEPTUAL EQUIVALENCE
+Se uma representação cara e uma mais barata produzem praticamente a mesma experiência, D-O15 prefere a eficiente.
+
+11. HARDWARE ADAPTATION
+Maximizar a experiência possível dentro das capacidades do hardware.
+Adaptação não significa simplesmente “diminuir gráficos”.
+
+12. TUDO O QUE FOR TECNICAMENTE VIÁVEL
+Não limitar antecipadamente a aplicação da Tese dos D aos domínios atualmente imaginados.
+
+13. INTEGRAÇÃO TOTAL
+Nenhum módulo deve existir isoladamente quando houver relações úteis entre eles.
+
+14. NÃO É UMA ENGINE DE SIMULAÇÃO PURA
+Simular o que importa para o objetivo.
+
+15. REALIDADE COMO BASE PARA CRIATIVIDADE
+A realidade serve tanto para reproduzir quanto para inventar, com coerência interna.
+
+16. PRINCÍPIO FINAL
+Se a realidade possui um princípio útil, a UES deve poder estudá-lo, abstraí-lo, adaptá-lo e utilizá-lo.
+Se o usuário deseja uma realidade diferente, a UES deve construir novas regras sem abandonar a coerência.
+Se existe uma maneira significativamente mais eficiente de representar um sistema sem comprometer seu objetivo, o D-O15 deve procurá-la.
+
+---
+
+PROMPT COMPLEMENTAR — NMN
+NATURAL MINDSET OF NPCs
+
+Complemento da Tese dos D e dos módulos Real-Life. Não substitui os princípios anteriores.
+Não afirma consciência, sentimentos ou experiência subjetiva.
+
+O NPC não deve ser definido apenas por falas, animações, scripts, rotinas ou árvores de diálogo.
+Deve possuir identidade, personalidade, conhecimentos, experiências, memórias, objetivos, necessidades, valores, relações, hábitos, estado emocional simulado, percepção contextual, decisão, aprendizagem e histórico.
+
+A mesma guerra não faz todos os civis fugirem.
+A decisão depende de personalidade + conhecimento + experiência + relações + localização + recursos + medo + objetivos + contexto + percepção + histórico + regras do mundo.
+
+Comportamento não determinístico sem perder coerência: variabilidade baseada em contexto, não aleatoriedade pura.
+Conhecimento individual e assimetria de informação.
+Percepção diferencia o que aconteceu do que o personagem sabe que aconteceu.
+Memória hierárquica: ativa, recente, importante, consolidada, histórica.
+File manager persistente por personagem.
+Histórias autónomas e interconectadas.
+SNB é camada de inteligência; a identidade persistente pertence ao NMN/UES.
+Voice AI é contrato/adapter, não dependência de milhares de gravações.
+D-Causal + D-Emergence + D-O15 (fidelidade sustentável).
+Não simular o desnecessário.
+Personalidade não é um script.
+Coerência: mudanças exigem causa.
+
+Princípio central: não escrever tudo o que o NPC fará; definir quem ele é e deixar o comportamento ser produzido.
+
+---
+
+UES AUTONOMOUS DEVELOPMENT & KNOWLEDGE ARCHITECTURE
+
+Complemento arquitetural. Não substitui a Tese dos D.
+
+A UES deve executar autonomamente projetos complexos após uma intenção suficientemente definida.
+Hierarquia: objetivos absolutos → restrições → preferências → decisões delegadas → autonomia.
+Silêncio do usuário NÃO significa autorização ilimitada.
+Ciclo contínuo até o objetivo, intervenção, limite de permissão, limite técnico ou segurança.
+Janela de decisão de 5 minutos e 30 segundos.
+SNB como camada de inteligência; rede de especialistas; colaboração multi-modelo.
+Conhecimento global com camada de verificação. A Web não vira fato automaticamente.
+Memória ativa vs persistente. File manager integrado.
+D-O15 também otimiza aquisição de conhecimento.
+Team instance com isolamento de projeto. Sem treino global automático a partir de projetos privados.
+D-Universal Module Generation e D-Genesis: spec → teste → validação. Sem execução silenciosa de código gerado.
+Autonomia com controle humano: pausar, continuar, alterar, rejeitar, aprovar, revisar, assumir, devolver.
+“Qualquer coisa viável” = computacionalmente representável, tecnicamente viável e compatível com os recursos. Não é magia.

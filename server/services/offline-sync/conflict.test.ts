@@ -1,0 +1,1 @@
+import{describe,expect,it}from'vitest';import{conflictFields}from'./conflict.js';describe('sync conflicts',()=>it('detects overlapping stale fields',()=>{const doc={key:'p',revision:2,content:{name:'server'},contentHash:'x',updatedAt:'x'};expect(conflictFields(doc,{id:'o',deviceId:'d',key:'p',baseRevision:1,patch:{name:'client'},createdAt:'x'})).toEqual(['name'])}))
