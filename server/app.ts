@@ -311,6 +311,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.continuum',name:'UES Continuum Pipeline',version:'1.0.0',capabilities:['physics.gjk','vfx.fluid','nav.mesh','society.census','reference.constraints','audio.spatial','animation.match'],outputs:{artifact:'production.ues-continuum'},verifier:'ues-continuum-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.forge',name:'UES Forge Pipeline',version:'1.0.0',capabilities:['3d.corpus','quality.critics','physics.constraints','image.regress','world.stream'],outputs:{artifact:'production.ues-forge'},verifier:'ues-forge-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.emulation',name:'UES World Emulation',version:'1.0.0',capabilities:['world.planet','world.hydro','world.synthesize','material.titko','animation.umotion','water.fnws'],outputs:{artifact:'production.ues-emulation'},verifier:'ues-emulation-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.realis',name:'UES Realis Data Chain',version:'1.0.0',capabilities:['world.gis','tiles.hlod','world.scale','material.pbr','animation.apply','nav.terrain','physics.ik'],outputs:{artifact:'production.ues-realis'},verifier:'ues-realis-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
