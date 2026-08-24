@@ -56,6 +56,8 @@ Canonical Puter model outputs can be recorded through `POST /api/v1/master-intel
 
 A running `critic:*` task can review a handoff through `POST /api/v1/master-intelligence/handoffs/:id/reviews`. The originating model cannot review itself; duplicate reviews from the same model are rejected. Reviews persist `accept`, `revise` or `reject`, structured findings and a separate receipt. This is real collaboration state, but not provider attestation.
 
+A `revise` verdict can be promoted into an idempotent correction loop after the critic task completes. `POST /api/v1/master-intelligence/handoffs/:id/schedule-correction` transactionally adds a specialist correction task carrying the original handoff and findings plus a second independent `critic:correction` task. A corrected handoff must declare this lineage through its task input. `verify-correction` compares stable output hashes and keys, checks that error codes were addressed, requires independent acceptance and emits `snb-correction-verification-hmac`. It does not pretend that changed output is automatically better.
+
 ## Verification and safety
 
 A cognitive artifact is rejected when blocking contradictions exist. The compiler records assumptions rather than silently guessing, preserves original memories, stores a bounded context digest, predicts failure classes, inserts security review for high-impact work and never claims provider execution. The Emergent Intelligence Laboratory produces hypotheses and metrics only; it does not self-modify the platform.

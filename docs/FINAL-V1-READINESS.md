@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T00:35:35.964Z
+Generated: 2026-08-24T00:46:42.040Z
 
 ## Scope status
 
@@ -50,7 +50,7 @@ These states cover only each documented implemented scope; they do not mark the 
 - **End-to-end specialist model execution** — PARTIAL; dependency: Canonical Puter specialist outputs now have persistent client-reported handoffs, independent-model reviews and HMAC receipts; automatic revision execution, multi-round consensus and final integration receipts remain; activation: 2–6 real specialist outputs → critique → correction → verified integrated artifact
 - **Advanced adaptive workflow branching** — PARTIAL; dependency: Transactional task insertion/cancellation, cycle validation, audit, retry and recovery execute; conditional branches, compensating actions and distributed fan-out remain; activation: Concurrent branching, compensation and distributed recovery tests
 - **Versioned semantic memory and context** — PARTIAL; dependency: Scoped lexical retrieval, importance, compression digest and decision memory execute; embeddings, versions, expiry, invalidation and semantic preservation metrics remain; activation: Isolation, expiry, version lineage and retrieval benchmark
-- **Universal critic correction executor** — PARTIAL; dependency: Critic contracts and correction DAG stages exist; generalized model/tool correction execution and regression rollback remain; activation: Finding → correction → re-test → rollback/accept receipts across domains
+- **Autonomous multi-domain correction execution** — PARTIAL; dependency: Revision findings now generate idempotent correction + independent re-review tasks and verified lineage receipts; automatic Puter invocation, artifact-level regression metrics and rollback remain; activation: Autonomous finding → model/tool correction → artifact re-test → rollback/accept across domains
 - **Automation and plugin runtime** — PARTIAL; dependency: Tool/capability manifests and workers exist; schedules, triggers, plugin lifecycle, sandbox and signed updates remain; activation: Persistent trigger and plugin install/disable/update/rollback tests
 - **Universal document production** — PARTIAL; dependency: Text/JSON/CSV/file artifacts exist; PDF, DOCX, XLSX and PPTX production plus structural validators remain; activation: Real files opened, parsed and structurally verified
 - **Offline queue and conflict-aware synchronization** — PARTIAL; dependency: Local persistence works; client operation queue, resumable transfer and conflict resolution remain; activation: Disconnect/edit/reconnect/conflict integration tests
