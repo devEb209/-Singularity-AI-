@@ -80,6 +80,12 @@ import { UesNavmeshService } from './services/ues-navmesh/service.js'
 import { UesCityService } from './services/ues-city/service.js'
 import { UesReferenceService } from './services/ues-reference/service.js'
 import { UesContinuumService } from './services/ues-continuum/service.js'
+import { UesCorpusService } from './services/ues-corpus/service.js'
+import { UesCriticService } from './services/ues-critic/service.js'
+import { UesConstraintsService } from './services/ues-constraints/service.js'
+import { UesRegressService } from './services/ues-regress/service.js'
+import { UesStreamService } from './services/ues-stream/service.js'
+import { UesForgeService } from './services/ues-forge/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -238,6 +244,12 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesCity=new UesCityService(store,artifactGraph)
   const uesReference=new UesReferenceService(store,artifactGraph)
   const uesContinuum=new UesContinuumService(store,artifactGraph)
+  const uesCorpus=new UesCorpusService(store,artifactGraph)
+  const uesCritic=new UesCriticService(store,artifactGraph)
+  const uesConstraints=new UesConstraintsService(store,artifactGraph)
+  const uesRegress=new UesRegressService(store,artifactGraph)
+  const uesStream=new UesStreamService(store,artifactGraph)
+  const uesForge=new UesForgeService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -268,6 +280,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.optimizer',name:'UES Measured D-O15 Loop',version:'1.0.0',capabilities:['profile.cpu','optimize.perceptual','optimize.rollback'],outputs:{artifact:'analysis.ues-optimize'},verifier:'ues-optimize-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.living-world',name:'UES Living World',version:'1.0.0',capabilities:['world.generate','nav.grid','society.population','audio.mix','profile.cpu'],outputs:{artifact:'runtime.ues-living-world'},verifier:'ues-living-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.craft',name:'UES Craft Pipeline',version:'1.0.0',capabilities:['3d.retopology','rig.anatomy','net.authority','image.reconstruct','animation.frameflow'],outputs:{artifact:'production.ues-craft'},verifier:'ues-craft-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.continuum',name:'UES Continuum Pipeline',version:'1.0.0',capabilities:['physics.gjk','vfx.fluid','nav.mesh','society.census','reference.constraints','audio.spatial','animation.match'],outputs:{artifact:'production.ues-continuum'},verifier:'ues-continuum-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.forge',name:'UES Forge Pipeline',version:'1.0.0',capabilities:['3d.corpus','quality.critics','physics.constraints','image.regress','world.stream'],outputs:{artifact:'production.ues-forge'},verifier:'ues-forge-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -466,6 +480,12 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/ues/city/simulate',{preHandler:authenticated,config:{rateLimit:{max:8,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCity.simulate(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/ues/reference/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesReference.compile(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/ues/continuum/build',{preHandler:authenticated,config:{rateLimit:{max:6,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesContinuum.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/corpus/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesCorpus.compile(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/critic/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesCritic.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/constraints/simulate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesConstraints.simulate(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/regress/compare',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesRegress.compare(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/stream/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesStream.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/forge/build',{preHandler:authenticated,config:{rateLimit:{max:6,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesForge.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())

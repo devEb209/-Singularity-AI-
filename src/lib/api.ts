@@ -172,6 +172,7 @@ class ApiClient {
   buildUesLivingWorld(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/living-world/build',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
   buildUesCraft(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/craft/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   buildUesContinuum(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/continuum/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  buildUesForge(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/forge/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

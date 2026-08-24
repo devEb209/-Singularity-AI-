@@ -13,7 +13,7 @@ Generated: ${new Date().toISOString()}
 ## Scope status
 
 - SNB orchestration/auth/projects/memory/files/missions/workers/tools/research, Master Intelligence across 30 scoped programs, and the shared D Thesis contextual PP/GPP/D-O15 matrix: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life/NMN/autonomy, semantic world+nav+society sample, PCM mixer, CPU profiler/D-O15 loop, swept AABB CCD, GJK/EPA + sleeping islands, foot-lock and motion matching, living-world artifact, craft retopo/anatomy/net/image filters, CPU fluids/smoke, voxel navmesh, city census, structured reference rights, ITD/ILD loop seams, continuum artifact and HSDS SVG/SSE: operational within declared lightweight scope.
+- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life/NMN/autonomy, semantic world+nav+society sample, PCM mixer, CPU profiler/D-O15 loop, swept AABB CCD, GJK/EPA + sleeping islands, foot-lock and motion matching, living-world artifact, craft retopo/anatomy/net/image filters, CPU fluids/smoke, voxel navmesh, city census, structured reference rights, ITD/ILD loop seams, six-kind semantic corpus, geometry/anatomy critics, particle constraints, CPU PSNR/SSIM regression, chunk hysteresis streaming, continuum/forge artifacts and HSDS SVG/SSE: operational within declared lightweight scope.
 - DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
 
 ## SNB cognitive programs (scoped V1 state)
@@ -58,12 +58,12 @@ These are engineering ranges, not automatically promoted capability states. The 
 
 - SNB 30-program V1 core readiness (weighted from canonical states): **${cognitiveCoreScore}%**
 - SNB platform as a whole: **80–88%**
-- UES architecture/contracts: **82–90%**
-- UES integration: **60–68%**
-- UES real production capability: **40–48%**
+- UES architecture/contracts: **84–92%**
+- UES integration: **63–71%**
+- UES real production capability: **42–50%**
 - DsOS: **20–30%**
 - Production infrastructure: **35–45%**
-- Total internal V1 (external-only gates excluded): **63–71% complete / 29–37% remaining**
+- Total internal V1 (external-only gates excluded): **65–73% complete / 27–35% remaining**
 
 The SNB cognitive score is reproducible: \`operational-core=1\`, \`foundation=0.5\`, \`research-program=0.25\`, divided by 30. The broader ranges remain directional because UES production, audiovisual GPU streaming and bootable DsOS are large unequal slices. Architecture or adapters do not receive production credit.
 
