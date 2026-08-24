@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T03:14:16.942Z
+Generated: 2026-08-24T03:26:51.436Z
 
 ## Scope status
 
@@ -11,8 +11,8 @@ Generated: 2026-08-24T03:14:16.942Z
 ## SNB cognitive programs (scoped V1 state)
 
 {
-  "operational-core": 21,
-  "foundation": 8,
+  "operational-core": 22,
+  "foundation": 7,
   "research-program": 1
 }
 
@@ -48,12 +48,12 @@ These states cover only each documented implemented scope; they do not mark the 
 
 ### SNB gaps
 - **End-to-end specialist model execution** — PARTIAL; dependency: Canonical Puter specialist outputs now have persistent client-reported handoffs, independent-model reviews and HMAC receipts; automatic revision execution, multi-round consensus and final integration receipts remain; activation: 2–6 real specialist outputs → critique → correction → verified integrated artifact
-- **Advanced adaptive workflow branching** — PARTIAL; dependency: Transactional task insertion/cancellation, cycle validation, audit, retry and recovery execute; conditional branches, compensating actions and distributed fan-out remain; activation: Concurrent branching, compensation and distributed recovery tests
+- **Distributed adaptive workflow execution** — PARTIAL; dependency: Transactional mutation, typed conditional branches, reverse compensation plans, cycle validation, audit and recovery execute; distributed fan-out and measured compensation execution remain; activation: Cross-worker branch/fan-out, compensation side-effect and recovery tests
 - **Advanced semantic memory intelligence** — PARTIAL; dependency: Immutable hashed versions, supersession, invalidation, expiry, lineage and tenant/project lexical-semantic retrieval execute; embeddings, hierarchical summaries and semantic preservation benchmarks remain; activation: Embedding retrieval, long-context compression benchmark and contradiction propagation tests
 - **Autonomous multi-domain correction execution** — PARTIAL; dependency: Revision findings now generate idempotent correction + independent re-review tasks and verified lineage receipts; automatic Puter invocation, artifact-level regression metrics and rollback remain; activation: Autonomous finding → model/tool correction → artifact re-test → rollback/accept across domains
 - **Advanced automation and executable plugin sandbox** — PARTIAL; dependency: Persistent cron/event automations, supervised mission actions, plugin package validation, checksums, permissions, dependencies, lifecycle and receipts execute; trusted scheduler worker, signed update channels and isolated plugin code execution remain; activation: Scheduler recovery plus container-sandbox plugin execution/escape/update/rollback tests
 - **Advanced document authoring** — PARTIAL; dependency: PDF, DOCX, XLSX, PPTX, Markdown and CSV files are generated, read back and structurally verified; complex styling, charts, formulas, embedded media, accessibility metadata and font shaping remain; activation: Advanced feature corpus opened in independent readers with visual/accessibility regression tests
-- **Offline queue and conflict-aware synchronization** — PARTIAL; dependency: Local persistence works; client operation queue, resumable transfer and conflict resolution remain; activation: Disconnect/edit/reconnect/conflict integration tests
+- **Device-integrated offline synchronization** — PARTIAL; dependency: Persistent idempotent operations, revisions, conflict strategies, manual resolution and checksummed resumable chunks execute; browser offline queue, encryption and multi-device transport remain; activation: Real disconnect/edit/reconnect across two devices with encrypted transport tests
 - **In-product GitHub integration** — ADAPTER_REQUIRED; dependency: Repository automation is used by the development agent; per-user GitHub App/OAuth permissions and product-side repository operations remain; activation: Authorized repository/branch/commit/PR/issue/release receipts
 
 ### UES gaps
@@ -97,7 +97,7 @@ These states cover only each documented implemented scope; they do not mark the 
 
 These are engineering ranges, not automatically promoted capability states. The denominator is the complete user-defined V1 scope; external execution counts as incomplete even when its contract exists.
 
-- SNB 30-program V1 core readiness (weighted from canonical states): **84.2%**
+- SNB 30-program V1 core readiness (weighted from canonical states): **85.8%**
 - SNB platform as a whole: **80–88%**
 - UES architecture/contracts: **70–78%**
 - UES integration: **42–50%**

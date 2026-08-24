@@ -56,6 +56,8 @@ import { UniversalDocumentEngine } from './services/universal-document-engine.js
 import { KnowledgeMemoryService } from './services/knowledge-memory.js'
 import { AutomationEngine } from './services/automation/service.js'
 import { PluginRuntime } from './services/plugins/service.js'
+import { WorkflowControlService } from './services/workflow-control/service.js'
+import { OfflineSyncService } from './services/offline-sync/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -120,6 +122,11 @@ const knowledgeMemoryInvalidateSchema=z.object({reason:z.string().min(3).max(100
 const automationCreateSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),trigger:z.discriminatedUnion('kind',[z.object({kind:z.literal('schedule'),cron:z.string().min(9).max(100)}),z.object({kind:z.literal('event'),event:z.string().min(1).max(160),filters:z.record(z.string(),z.string()).default({})})]),action:z.object({kind:z.literal('create-mission'),goal:z.string().min(3).max(5000),tasks:z.array(taskDefinitionSchema).min(1).max(100)})})
 const pluginManifestSchema=z.object({id:z.string(),name:z.string().min(1).max(200),version:z.string(),capabilities:z.array(z.string()).max(100),permissions:z.array(z.string()).max(100),dependencies:z.array(z.object({id:z.string(),version:z.string()})).max(100),entrypoint:z.string(),license:z.string(),payloadChecksum:z.string()})
 const pluginInstallSchema=z.object({projectId:z.string(),manifest:pluginManifestSchema,payloadBase64:z.string().min(1).max(5_000_000)})
+const conditionSchema=z.object({path:z.string().min(1).max(160),operator:z.enum(['eq','neq','gt','gte','lt','lte','includes','exists']),value:z.unknown().optional()})
+const workflowBranchSchema=z.object({reason:z.string().min(3).max(1000),facts:z.record(z.string(),z.unknown()),condition:conditionSchema,then:z.array(taskDefinitionSchema).max(100),otherwise:z.array(taskDefinitionSchema).max(100)})
+const compensationSchema=z.object({reason:z.string().min(3).max(1000),definitions:z.array(z.object({forTask:z.string(),title:z.string(),kind:z.string(),input:z.record(z.string(),z.unknown()).optional()})).min(1).max(100)})
+const offlineOperationSchema=z.object({id:z.string().min(1).max(160),deviceId:z.string().min(1).max(160),key:z.string().min(1).max(300),baseRevision:z.number().int().nonnegative(),patch:z.record(z.string(),z.unknown()),createdAt:z.string()})
+const offlineSyncSchema=z.object({operations:z.array(offlineOperationSchema).max(1000),strategy:z.enum(['manual','server-wins','client-wins']).default('manual')})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -181,6 +188,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const knowledgeMemory=new KnowledgeMemoryService(store)
   const automationEngine=new AutomationEngine(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const pluginRuntime=new PluginRuntime(store,appConfig.EXECUTION_RECEIPT_SECRET)
+  const workflowControl=new WorkflowControlService(store,missions)
+  const offlineSync=new OfflineSyncService(appConfig.EXECUTION_RECEIPT_SECRET)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
@@ -411,6 +420,13 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/plugins/:id/:version/enable',{preHandler:authenticated},async request=>pluginRuntime.transition(request.userId,(request.params as {id:string;version:string}).id,(request.params as {id:string;version:string}).version,'enabled'))
   app.post('/api/v1/plugins/:id/:version/disable',{preHandler:authenticated},async request=>pluginRuntime.transition(request.userId,(request.params as {id:string;version:string}).id,(request.params as {id:string;version:string}).version,'disabled'))
   app.delete('/api/v1/plugins/:id/:version',{preHandler:authenticated},async request=>pluginRuntime.remove(request.userId,(request.params as {id:string;version:string}).id,(request.params as {id:string;version:string}).version))
+  app.post('/api/v1/missions/:id/branch',{preHandler:authenticated},async request=>workflowControl.branch(request.userId,(request.params as {id:string}).id,workflowBranchSchema.parse(request.body)))
+  app.post('/api/v1/missions/:id/compensate',{preHandler:authenticated},async request=>workflowControl.compensate(request.userId,(request.params as {id:string}).id,compensationSchema.parse(request.body)))
+  app.get('/api/v1/offline-sync',{preHandler:authenticated},async request=>offlineSync.status(request.userId))
+  app.post('/api/v1/offline-sync/documents/:key',{preHandler:authenticated},async request=>offlineSync.seed(request.userId,(request.params as {key:string}).key,z.record(z.string(),z.unknown()).parse(request.body)))
+  app.post('/api/v1/offline-sync/operations',{preHandler:authenticated},async request=>{const value=offlineSyncSchema.parse(request.body);return offlineSync.sync(request.userId,value.operations,value.strategy)})
+  app.post('/api/v1/offline-sync/conflicts/:id/resolve',{preHandler:authenticated},async request=>{const value=z.object({resolution:z.enum(['server','client']),clientPatch:z.record(z.string(),z.unknown()).optional()}).parse(request.body);return offlineSync.resolve(request.userId,(request.params as {id:string}).id,value.resolution,value.clientPatch)})
+  app.post('/api/v1/offline-sync/chunks',{preHandler:authenticated},async request=>offlineSync.chunk(request.userId,z.object({uploadId:z.string(),index:z.number().int(),total:z.number().int(),checksum:z.string(),data:z.string()}).parse(request.body)))
   app.post('/api/v1/master-intelligence/compile',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await masterIntelligence.compile(request.userId,masterCompileSchema.parse(request.body))))
   app.post('/api/v1/problem-solver/analyze', { preHandler: authenticated }, async request => problemSolver.analyze(problemSchema.parse(request.body).problem))
   app.post('/api/v1/problem-solver/compile', { preHandler: authenticated }, async (request, reply) => { const value = problemSchema.parse(request.body); const analysis = problemSolver.analyze(value.problem); if (analysis.classification === 'domain-discovery-required' && !value.allowUnverifiedDomain) throw new AppError('O problema exige um novo Domain Profile antes da execução.', 409, 'DOMAIN_DISCOVERY_APPROVAL_REQUIRED', analysis.domainDiscovery); const compiled = missions.create(request.userId, value.problem, analysis.taskGraph.nodes.map(node => ({ key: node.key, title: node.title, kind: node.kind, dependsOn: node.dependsOn, input: { domainIds: node.domainIds, requiresHumanApproval: node.requiresHumanApproval, problemGraphId: analysis.graphId } })), value.projectId,{userIntent:value.problem,requiredCapabilities:analysis.domains.map(domain=>domain.id),constraints:analysis.safety,risks:analysis.safety,successCriteria:['Task Graph concluído','Verification stage aprovada'],verificationRequirements:['Verifier determinístico quando disponível','Proveniência preservada'],finalDeliverable:'Resultado da missão com evidências, limitações e verificação',autonomy:'SUPERVISED'}); return reply.status(201).send({ analysis, ...compiled }) })

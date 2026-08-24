@@ -105,6 +105,10 @@ class ApiClient {
   emitAutomationEvent(event:string,payload:Record<string,unknown>){return this.request<any>(`/api/v1/automations/events/${encodeURIComponent(event)}`,{method:'POST',body:JSON.stringify(payload)})}
   plugins(){return this.request<any>('/api/v1/plugins')}
   installPlugin(input:Record<string,unknown>){return this.request<any>('/api/v1/plugins',{method:'POST',body:JSON.stringify(input)})}
+  branchMission(id:string,input:Record<string,unknown>){return this.request<any>(`/api/v1/missions/${id}/branch`,{method:'POST',body:JSON.stringify(input)})}
+  compensateMission(id:string,input:Record<string,unknown>){return this.request<any>(`/api/v1/missions/${id}/compensate`,{method:'POST',body:JSON.stringify(input)})}
+  offlineSync(input:Record<string,unknown>){return this.request<any>('/api/v1/offline-sync/operations',{method:'POST',body:JSON.stringify(input)})}
+  offlineSyncStatus(){return this.request<any>('/api/v1/offline-sync')}
   analyzeProblem(problem: string) { return this.request<{ classification: string; domains: { id: string; name: string }[]; graphId: string }>('/api/v1/problem-solver/analyze', { method: 'POST', body: JSON.stringify({ problem }) }) }
   compileProblem(problem: string) { return this.request<{ mission: { id: string; status: string }; analysis: { classification: string; domains: { id: string; name: string }[] }; tasks: unknown[] }>('/api/v1/problem-solver/compile', { method: 'POST', body: JSON.stringify({ problem }) }) }
   createMission(goal: string, tasks: { key: string; title: string; kind: string; dependsOn?: string[] }[]) { return this.request<{ mission: MissionRecord; tasks: MissionTaskRecord[] }>('/api/v1/missions', { method: 'POST', body: JSON.stringify({ goal, tasks }) }) }
