@@ -51,6 +51,7 @@ import { HsdsService } from './services/hsds.js'
 import { UesCoreRuntime } from './services/ues-core-runtime.js'
 import { UesAdvancedPipeline } from './services/ues-advanced-pipeline.js'
 import { SnbMasterIntelligence } from './services/snb-master-intelligence.js'
+import { CognitiveCollaborationService } from './services/cognitive-collaboration.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -72,6 +73,7 @@ const failureCategorySchema=z.enum(['INPUT_FAILURE','MODEL_FAILURE','TOOL_FAILUR
 const missionSchema = z.object({ goal: z.string().min(3).max(5000), projectId: z.string().optional(), userIntent:z.string().max(5000).optional(),constraints:z.array(z.string().max(500)).max(100).optional(),requiredCapabilities:z.array(z.string().max(100)).max(100).optional(),availableResources:z.array(z.string().max(500)).max(100).optional(),risks:z.array(z.string().max(500)).max(100).optional(),successCriteria:z.array(z.string().max(500)).max(100).optional(),verificationRequirements:z.array(z.string().max(500)).max(100).optional(),finalDeliverable:z.string().max(2000).optional(),autonomy:autonomySchema.optional(),tasks: z.array(taskDefinitionSchema).min(1).max(200) })
 const taskOutputSchema = z.object({ output: z.record(z.string(), z.unknown()).default({}) })
 const taskFailureSchema = z.object({ reason: z.string().min(1).max(2000), retryable: z.boolean().default(false),category:failureCategorySchema.default('EXECUTION_FAILURE') })
+const workflowMutationSchema=z.object({reason:z.string().min(3).max(2000),add:z.array(taskDefinitionSchema).max(100).optional(),cancelKeys:z.array(z.string().regex(/^[a-zA-Z0-9_-]+$/).max(80)).max(100).optional()})
 const checkpointSchema = z.object({ label: z.string().min(1).max(120) })
 const problemSchema = z.object({ problem: z.string().min(5).max(20_000), projectId: z.string().optional(), allowUnverifiedDomain: z.boolean().default(false) })
 const benchmarkCampaignSchema = z.object({ capability: capabilitySchema, benchmarkVersion: z.string().regex(/^[a-zA-Z0-9._-]+$/).max(100) })
@@ -103,6 +105,9 @@ const hsdsInputSchema=z.object({type:z.enum(['pointer','keyboard','gamepad','tou
 const uesCoreBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),seed:z.string().min(1).max(500)})
 const uesAdvancedBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),prompt:z.string().min(3).max(5000)})
 const masterCompileSchema=z.object({projectId:z.string(),intent:z.string().min(3).max(20000),constraints:z.array(z.string().min(1).max(1000)).max(100).optional(),autonomy:autonomySchema.optional()})
+const cognitiveFindingSchema=z.object({code:z.string().min(1).max(120),severity:z.enum(['info','warning','error']),message:z.string().min(1).max(2000)})
+const cognitiveHandoffSchema=z.object({missionId:z.string(),taskId:z.string(),modelKey:z.string().min(1).max(600),inputArtifactIds:z.array(z.string()).max(100).default([]),output:z.record(z.string(),z.unknown()),findings:z.array(cognitiveFindingSchema).max(100).default([])})
+const cognitiveReviewSchema=z.object({reviewerTaskId:z.string(),reviewerModelKey:z.string().min(1).max(600),verdict:z.enum(['accept','revise','reject']),findings:z.array(cognitiveFindingSchema).max(100).default([])})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -159,6 +164,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesCore=new UesCoreRuntime(store,artifactGraph)
   const uesAdvanced=new UesAdvancedPipeline(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
+  const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
@@ -262,6 +268,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.get('/api/v1/missions', { preHandler: authenticated }, async request => ({ data: missions.list(request.userId) }))
   app.post('/api/v1/missions', { preHandler: authenticated }, async (request, reply) => { const value = missionSchema.parse(request.body); const{tasks,goal,projectId,...contract}=value;return reply.status(201).send(missions.create(request.userId,goal,tasks,projectId,contract)) })
   app.get('/api/v1/missions/:id', { preHandler: authenticated }, async request => missions.detail(request.userId, (request.params as { id: string }).id))
+  app.post('/api/v1/missions/:id/mutate',{preHandler:authenticated,config:{rateLimit:{max:30,timeWindow:'1 minute'}}},async request=>missions.mutate(request.userId,(request.params as {id:string}).id,workflowMutationSchema.parse(request.body)))
   app.post('/api/v1/missions/:id/cancel', { preHandler: authenticated }, async request => missions.cancel(request.userId, (request.params as { id: string }).id))
   app.post('/api/v1/missions/:id/pause', { preHandler: authenticated }, async request => missions.pause(request.userId,(request.params as {id:string}).id))
   app.post('/api/v1/missions/:id/resume', { preHandler: authenticated }, async request => missions.resume(request.userId,(request.params as {id:string}).id))
@@ -360,6 +367,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.get('/api/v1/capability-domains', async () => ({ data: capabilityDomains.map(domain => ({ ...domain, capabilityCount: domain.capabilities.length })), emergingDomains, summary: { domains: capabilityDomains.length, emergingDomains: emergingDomains.length, capabilities: universalCapabilities.length, previousSystems: singularitySystems.length, totalRegisteredNodes: universalCapabilities.length + singularitySystems.length } }))
   app.get('/api/v1/capability-domains/:id', async (request, reply) => { const domain = capabilityDomains.find(item => item.id === (request.params as { id: string }).id); return domain ? domain : reply.status(404).send({ error: { code: 'DOMAIN_NOT_FOUND', message: 'Domínio não encontrado.' } }) })
   app.get('/api/v1/master-intelligence/programs',{preHandler:authenticated},async()=>masterIntelligence.registry())
+  app.get('/api/v1/master-intelligence/missions/:id/handoffs',{preHandler:authenticated},async request=>({data:cognitiveCollaboration.list(request.userId,(request.params as {id:string}).id)}))
+  app.post('/api/v1/master-intelligence/handoffs',{preHandler:authenticated,config:{rateLimit:{max:60,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(cognitiveCollaboration.submit(request.userId,cognitiveHandoffSchema.parse(request.body))))
+  app.post('/api/v1/master-intelligence/handoffs/:id/reviews',{preHandler:authenticated,config:{rateLimit:{max:60,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(cognitiveCollaboration.review(request.userId,(request.params as {id:string}).id,cognitiveReviewSchema.parse(request.body))))
   app.post('/api/v1/master-intelligence/compile',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await masterIntelligence.compile(request.userId,masterCompileSchema.parse(request.body))))
   app.post('/api/v1/problem-solver/analyze', { preHandler: authenticated }, async request => problemSolver.analyze(problemSchema.parse(request.body).problem))
   app.post('/api/v1/problem-solver/compile', { preHandler: authenticated }, async (request, reply) => { const value = problemSchema.parse(request.body); const analysis = problemSolver.analyze(value.problem); if (analysis.classification === 'domain-discovery-required' && !value.allowUnverifiedDomain) throw new AppError('O problema exige um novo Domain Profile antes da execução.', 409, 'DOMAIN_DISCOVERY_APPROVAL_REQUIRED', analysis.domainDiscovery); const compiled = missions.create(request.userId, value.problem, analysis.taskGraph.nodes.map(node => ({ key: node.key, title: node.title, kind: node.kind, dependsOn: node.dependsOn, input: { domainIds: node.domainIds, requiresHumanApproval: node.requiresHumanApproval, problemGraphId: analysis.graphId } })), value.projectId,{userIntent:value.problem,requiredCapabilities:analysis.domains.map(domain=>domain.id),constraints:analysis.safety,risks:analysis.safety,successCriteria:['Task Graph concluído','Verification stage aprovada'],verificationRequirements:['Verifier determinístico quando disponível','Proveniência preservada'],finalDeliverable:'Resultado da missão com evidências, limitações e verificação',autonomy:'SUPERVISED'}); return reply.status(201).send({ analysis, ...compiled }) })

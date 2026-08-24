@@ -38,6 +38,8 @@ The output explicitly remains `compiled-awaiting-workers`; compiling is not repr
 
 The generated DAG includes intent validation, independent evidence, scenario simulation, mission-scoped specialists, critic matrix, correction, artifact integration, final verification and delivery. High-impact requests receive an approval task. Specialist contracts define capabilities, tools, permissions, attempt/context budgets and artifact requirements.
 
+Workflows can now be mutated transactionally through `POST /api/v1/missions/:id/mutate`. A mutation can cancel pending tasks and add a revised subgraph in one SQLite transaction. The combined graph is validated for duplicate keys, missing dependencies, cycles and the 200-task limit before any write; closed missions and non-pending cancellation targets are rejected. Every accepted mutation moves the contract to `REPLANNING`, recalculates progress and records a `mission.workflow_mutated` event.
+
 ## Cognitive programs
 
 The canonical runtime registry contains exactly 30 programs. Each reports one of:
@@ -47,6 +49,12 @@ The canonical runtime registry contains exactly 30 programs. Each reports one of
 - `research-program`: only bounded, controlled experimental behavior is allowed.
 
 This scoped vocabulary prevents a working compiler stage from being misrepresented as completion of an open-ended research ambition.
+
+## Specialist collaboration and independent review
+
+Canonical Puter model outputs can be recorded through `POST /api/v1/master-intelligence/handoffs`. The route accepts only a running `specialist:*` task, an exact available canonical model key and project-scoped input artifacts. It persists the output/findings, emits an HMAC receipt and completes the specialist task with an explicit `client-reported` trust boundary.
+
+A running `critic:*` task can review a handoff through `POST /api/v1/master-intelligence/handoffs/:id/reviews`. The originating model cannot review itself; duplicate reviews from the same model are rejected. Reviews persist `accept`, `revise` or `reject`, structured findings and a separate receipt. This is real collaboration state, but not provider attestation.
 
 ## Verification and safety
 

@@ -5,6 +5,8 @@ export interface StoredUser { id: string; email: string; name: string; passwordH
 export interface StoredRefreshToken { id: string; userId: string; tokenHash: string; expiresAt: string; revokedAt?: string; createdAt: string }
 export interface StoredPasswordResetToken {id:string;userId:string;tokenHash:string;expiresAt:string;usedAt?:string;createdAt:string}
 export interface AuditEvent { id: string; userId?: string; action: string; resource?: string; metadata?: Record<string, unknown>; createdAt: string }
+export interface CognitiveHandoff{id:string;userId:string;missionId:string;taskId:string;specialistRole:string;modelKey:string;inputArtifactIds:string[];output:Record<string,unknown>;findings:{code:string;severity:'info'|'warning'|'error';message:string}[];status:'submitted'|'accepted'|'revision-required'|'rejected';trust:'client-reported';receipt:string;createdAt:string;reviewedAt?:string}
+export interface CognitiveReview{id:string;handoffId:string;userId:string;reviewerTaskId:string;reviewerModelKey:string;verdict:'accept'|'revise'|'reject';findings:{code:string;severity:'info'|'warning'|'error';message:string}[];receipt:string;createdAt:string}
 
 export interface Store {
   createConversation(userId: string, title: string, projectId?: string): Conversation
@@ -32,6 +34,7 @@ export interface Store {
   listMissionTasks(missionId: string): MissionTask[]
   getMissionTask(taskId: string): MissionTask | undefined
   updateMissionTask(task: MissionTask): void
+  mutateMissionTasks(missionId:string,added:MissionTask[],cancelledIds:string[],event:MissionEvent):void
   addMissionEvent(event: MissionEvent): void
   listMissionEvents(missionId: string, after?: string): MissionEvent[]
   createCheckpoint(checkpoint: ProjectCheckpoint): ProjectCheckpoint
@@ -68,6 +71,12 @@ export interface Store {
   releaseTaskLease(taskId: string, workerId: string): void
   recoverExpiredTaskLeases(timestamp: string): { recovered: number; failed: number }
   findCompletedToolExecutionByTask(taskId: string): ToolExecution | undefined
+  createCognitiveHandoff(handoff:CognitiveHandoff):CognitiveHandoff
+  getCognitiveHandoff(handoffId:string,userId:string):CognitiveHandoff
+  listCognitiveHandoffs(userId:string,missionId:string):CognitiveHandoff[]
+  updateCognitiveHandoff(handoff:CognitiveHandoff):void
+  createCognitiveReview(review:CognitiveReview):CognitiveReview
+  listCognitiveReviews(handoffId:string,userId:string):CognitiveReview[]
   createPuterExecutionReport(report: PuterExecutionReport): PuterExecutionReport
   listPuterExecutionReports(userId: string, limit?: number): PuterExecutionReport[]
   createApproval(request: ApprovalRequest): ApprovalRequest

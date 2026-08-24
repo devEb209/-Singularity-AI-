@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T00:06:56.341Z
+Generated: 2026-08-24T00:35:35.964Z
 
 ## Scope status
 
@@ -11,8 +11,8 @@ Generated: 2026-08-24T00:06:56.341Z
 ## SNB cognitive programs (scoped V1 state)
 
 {
-  "operational-core": 16,
-  "foundation": 13,
+  "operational-core": 18,
+  "foundation": 11,
   "research-program": 1
 }
 
@@ -47,8 +47,8 @@ These states cover only each documented implemented scope; they do not mark the 
 }
 
 ### SNB gaps
-- **End-to-end specialist model execution** — PARTIAL; dependency: Master Intelligence compiles mission-scoped specialist contracts; Puter execution outputs still need server-recorded handoffs, critic correction passes and integration receipts; activation: 2–6 real specialist outputs → critique → correction → verified integrated artifact
-- **Transactional dynamic workflow mutation** — PARTIAL; dependency: Persistent DAG, retry, pause/resume and recovery execute; task insertion/removal, branching and compensating rollback during execution remain; activation: Graph mutation concurrency, recovery and rollback tests
+- **End-to-end specialist model execution** — PARTIAL; dependency: Canonical Puter specialist outputs now have persistent client-reported handoffs, independent-model reviews and HMAC receipts; automatic revision execution, multi-round consensus and final integration receipts remain; activation: 2–6 real specialist outputs → critique → correction → verified integrated artifact
+- **Advanced adaptive workflow branching** — PARTIAL; dependency: Transactional task insertion/cancellation, cycle validation, audit, retry and recovery execute; conditional branches, compensating actions and distributed fan-out remain; activation: Concurrent branching, compensation and distributed recovery tests
 - **Versioned semantic memory and context** — PARTIAL; dependency: Scoped lexical retrieval, importance, compression digest and decision memory execute; embeddings, versions, expiry, invalidation and semantic preservation metrics remain; activation: Isolation, expiry, version lineage and retrieval benchmark
 - **Universal critic correction executor** — PARTIAL; dependency: Critic contracts and correction DAG stages exist; generalized model/tool correction execution and regression rollback remain; activation: Finding → correction → re-test → rollback/accept receipts across domains
 - **Automation and plugin runtime** — PARTIAL; dependency: Tool/capability manifests and workers exist; schedules, triggers, plugin lifecycle, sandbox and signed updates remain; activation: Persistent trigger and plugin install/disable/update/rollback tests
