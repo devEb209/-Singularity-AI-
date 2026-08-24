@@ -179,6 +179,9 @@ class ApiClient {
   compileUesScale(projectId:string,name:string){return this.request<any>('/api/v1/ues/scale/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   buildUesRealis(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/realis/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   uesRealisStatus(){return this.request<any>('/api/v1/ues/realis/status')}
+  v1Generation(){return this.request<any>('/api/v1/v1-generation')}
+  rollbackArtifact(artifactId:string){return this.request<any>(`/api/v1/artifacts/${artifactId}/rollback`,{method:'POST'})}
+  evaluateUesShip(projectId:string,name='ship'){return this.request<any>(`/api/v1/projects/${projectId}/ship-gate`,{method:'POST',body:JSON.stringify({name})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

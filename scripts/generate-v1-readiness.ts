@@ -4,23 +4,31 @@ import { integrationMatrix } from '../server/services/integration-matrix.js'
 import { v1Gaps } from '../server/services/v1-gap-registry.js'
 import { snbCognitivePrograms } from '../server/services/snb-master-intelligence.js'
 import { externalValidationGates } from '../server/services/external-validation-gates.js'
+import { generationScore } from '../server/services/snb-compete/score.js'
 const by=<T>(items:T[],key:(item:T)=>string)=>Object.fromEntries([...new Set(items.map(key))].map(value=>[value,items.filter(item=>key(item)===value).length]))
 const cognitiveCoreScore=Math.round(snbCognitivePrograms.reduce((sum,item)=>sum+(item.state==='operational-core'?1:item.state==='foundation' ? .5 : .25),0)/snbCognitivePrograms.length*1000)/10
-const report=`# Final V1 Readiness Report — Pre-finalization
+const generation=generationScore()
+const report=`# Final V1 Readiness Report — First generation (compete bar)
 
 Generated: ${new Date().toISOString()}
 
+## First generation rule
+
+V1 is the first **generation** of SNB, not a reduced final, MVP or demo slice. It must be complete enough to **compete** when launched. V2 aims to **surpass**. See [V1-FIRST-GENERATION.md](./V1-FIRST-GENERATION.md).
+
+Reproducible compete score (\`GET /api/v1/v1-generation\`): **${generation.percent}% complete / ${generation.remaining}% remaining**. \`complete=${generation.complete}\`. DsOS is **not** in the compete bar.
+
 ## Scope status
 
-- SNB orchestration/auth/projects/memory/files/missions/workers/tools/research, Master Intelligence across 30 scoped programs, and the shared D Thesis contextual PP/GPP/D-O15 matrix: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life/NMN/autonomy, semantic world+nav+society sample, PCM mixer, CPU profiler/D-O15 loop, swept AABB CCD, GJK/EPA + sleeping islands, foot-lock and motion matching, living-world artifact, craft retopo/anatomy/net/image filters, CPU fluids/smoke, voxel navmesh, city census, structured reference rights, ITD/ILD loop seams, nine-kind semantic corpus, geometry/anatomy critics, particle constraints, CPU PSNR/SSIM regression, chunk hysteresis streaming, Earth-like planetary geophysics with D-O15 partitions, FNWS heightfield water with licensed-layer ingest, TITKO PBR prompt graphs (virtual-K, not stored 16K), structured universal motion + Explorer apply, world synthesis genres, own 3D Tiles HLOD, continuity ladder, internal GIS fixture, Kepler/sky sample, iterative kinematic CCD, planet heightfield nav, continuum/forge/emulation/realis artifacts and HSDS SVG/SSE: operational within declared lightweight scope. Live NASA/GIS/photoreal tiles and video motion analysis remain adapter-required.
-- DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
+- SNB orchestration/auth/projects/memory/files/missions/workers/tools/research, Master Intelligence across 30 scoped programs, artifact numeric rollback, and the shared D Thesis contextual PP/GPP/D-O15 matrix: local Beta operational with documented trust boundaries.
+- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life/NMN/autonomy, semantic world+nav+society sample, PCM mixer, CPU profiler/D-O15 loop, swept AABB CCD, GJK/EPA + sleeping islands, foot-lock and motion matching, living-world artifact, craft retopo/anatomy/net/image filters, CPU fluids/smoke, voxel navmesh, city census, structured reference rights, ITD/ILD loop seams, nine-kind semantic corpus, geometry/anatomy critics, particle constraints, CPU PSNR/SSIM regression, chunk hysteresis streaming, Earth-like planetary geophysics with D-O15 partitions, FNWS heightfield water with licensed-layer ingest, TITKO PBR prompt graphs (virtual-K, not stored 16K), structured universal motion + Explorer apply, world synthesis genres, own 3D Tiles HLOD, continuity ladder, internal GIS fixture, Kepler/sky sample, iterative kinematic CCD, planet heightfield nav, continuum/forge/emulation/realis artifacts, first-generation ship gates and HSDS SVG/SSE: operational within declared lightweight scope. Live NASA/GIS/photoreal tiles and video motion analysis remain adapter-required.
+- DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim; not the product that competes in V1.
 
-## SNB cognitive programs (scoped V1 state)
+## SNB cognitive programs (implemented scope only)
 
 ${JSON.stringify(by(snbCognitivePrograms,item=>item.state),null,2)}
 
-These states cover only each documented implemented scope; they do not mark the long-term program complete.
+These states cover only each documented implemented scope. They are **not** a claim that the first generation is launch-complete.
 
 ## Divine systems
 
@@ -44,28 +52,21 @@ ${v1Gaps.filter(item=>item.area==='UES').map(item=>`- **${item.name}** — ${ite
 ${v1Gaps.filter(item=>item.area==='DsOS').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')}
 
 ### Infrastructure gaps
-${v1Gaps.filter(item=>item.area==='SNB Infrastructure').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')||'- None: external-only deployment gates were removed from V1 completion.'}
+${v1Gaps.filter(item=>item.area==='SNB Infrastructure').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')||'- None listed as V1 blockers; external-only deployment remains a gate, not a fake integration.'}
 
 ## Non-blocking external validation gates
 
 ${externalValidationGates.map(item=>`- **${item.id}** (${item.area}) — ${item.requires}; ${item.reason}`).join('\n')}
 
-These gates are visible but do not reduce V1 internal completion.
+These gates stay visible. They do not redefine V1 as a reduced product.
 
-## Honest directional completion ranges
+## Supporting scores (not a substitute for the compete bar)
 
-These are engineering ranges, not automatically promoted capability states. The denominator is the complete user-defined V1 scope; external execution counts as incomplete even when its contract exists.
+- SNB 30-program implemented-scope score: **${cognitiveCoreScore}%**
+- Compete axes: ${JSON.stringify(generation.byAxis)}
+- DsOS module: **20–30%** of itself
 
-- SNB 30-program V1 core readiness (weighted from canonical states): **${cognitiveCoreScore}%**
-- SNB platform as a whole: **80–88%**
-- UES architecture/contracts: **88–95%**
-- UES integration: **68–76%**
-- UES real production capability: **46–54%**
-- DsOS: **20–30%**
-- Production infrastructure: **35–45%**
-- Total internal V1 (external-only gates excluded): **70–78% complete / 22–30% remaining**
-
-The SNB cognitive score is reproducible: \`operational-core=1\`, \`foundation=0.5\`, \`research-program=0.25\`, divided by 30. The broader ranges remain directional because UES production, audiovisual GPU streaming and bootable DsOS are large unequal slices. Architecture or adapters do not receive production credit.
+The SNB cognitive score remains: \`operational-core=1\`, \`foundation=0.5\`, \`research-program=0.25\`, divided by 30. Architecture or adapters do not receive production credit.
 
 ## Verification command
 

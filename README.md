@@ -14,6 +14,10 @@
 
 ---
 
+## First generation
+
+V1 is the first **generation** of SNB: it must be complete enough to **compete** when launched. V2 aims to **surpass**. V1 is not a reduced final, demo slice or MVP. Canonical rule: [docs/V1-FIRST-GENERATION.md](docs/V1-FIRST-GENERATION.md). Live score: `GET /api/v1/v1-generation`.
+
 ## What is SNB?
 
 **Singularity Neural Bunker (SNB)** is an open-source composed-intelligence platform by Bunker Studios. It coordinates models, agents, research, memory, tools, workers, artifacts, verification and recovery as one coherent system.

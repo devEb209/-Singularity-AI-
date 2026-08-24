@@ -100,6 +100,9 @@ import { UesArticulationService } from './services/ues-articulation/service.js'
 import { UesTerrainNavService } from './services/ues-terrain-nav/service.js'
 import { UesExplorerService } from './services/ues-explorer/service.js'
 import { UesRealisService } from './services/ues-realis/service.js'
+import { SnbRollbackService } from './services/snb-rollback/service.js'
+import { SnbCompeteService } from './services/snb-compete/service.js'
+import { UesShipService } from './services/ues-ship/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -278,6 +281,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesTerrainNav=new UesTerrainNavService(store,artifactGraph)
   const uesExplorer=new UesExplorerService(store,artifactGraph)
   const uesRealis=new UesRealisService(store,artifactGraph)
+  const snbRollback=new SnbRollbackService(store,artifactGraph)
+  const snbCompete=new SnbCompeteService()
+  const uesShip=new UesShipService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -312,6 +318,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.forge',name:'UES Forge Pipeline',version:'1.0.0',capabilities:['3d.corpus','quality.critics','physics.constraints','image.regress','world.stream'],outputs:{artifact:'production.ues-forge'},verifier:'ues-forge-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.emulation',name:'UES World Emulation',version:'1.0.0',capabilities:['world.planet','world.hydro','world.synthesize','material.titko','animation.umotion','water.fnws'],outputs:{artifact:'production.ues-emulation'},verifier:'ues-emulation-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.realis',name:'UES Realis Data Chain',version:'1.0.0',capabilities:['world.gis','tiles.hlod','world.scale','material.pbr','animation.apply','nav.terrain','physics.ik'],outputs:{artifact:'production.ues-realis'},verifier:'ues-realis-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb.artifact-rollback',name:'SNB Artifact Regression Rollback',version:'1.0.0',capabilities:['artifact.regress','artifact.rollback','quality.gate'],outputs:{artifact:'analysis.snb-rollback'},verifier:'snb-rollback-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.ship',name:'UES First-Generation Ship Gates',version:'1.0.0',capabilities:['release.gate','quality.ship'],outputs:{artifact:'analysis.ues-ship'},verifier:'ues-ship-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -460,6 +468,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/projects/:id/release-package',{preHandler:authenticated},async(request,reply)=>{const value=releasePackageSchema.parse(request.body);return reply.status(201).send(await releasePackager.create(request.userId,{projectId:(request.params as {id:string}).id,...value}))})
   app.get('/api/v1/integrations/matrix',{preHandler:authenticated},async()=>({data:integrationMatrix,summary:Object.fromEntries(['native','active-adapter','partial','adapter-required','infrastructure-required','blocked','planned'].map(state=>[state,integrationMatrix.filter(item=>item.state===state).length]))}))
   app.get('/api/v1/v1-gaps',{preHandler:authenticated},async request=>{const area=(request.query as {area?:string}).area,data=area?v1Gaps.filter(item=>item.area===area):v1Gaps;return{data,summary:Object.fromEntries(['PARTIAL','ADAPTER_REQUIRED','INFRASTRUCTURE_REQUIRED','BLOCKED','PLANNED'].map(state=>[state,data.filter(item=>item.state===state).length]))}})
+  app.get('/api/v1/v1-generation',{preHandler:authenticated},async()=>snbCompete.status())
+  app.post('/api/v1/artifacts/:id/rollback',{preHandler:authenticated},async request=>snbRollback.evaluate(request.userId,(request.params as {id:string}).id))
+  app.post('/api/v1/projects/:id/ship-gate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesShip.evaluate(request.userId,{projectId:(request.params as {id:string}).id,name:z.string().regex(/^[a-zA-Z0-9._-]+$/).max(80).parse((request.body as {name?:string}|undefined)?.name??'ship')})))
   app.get('/api/v1/external-validation-gates',{preHandler:authenticated},async()=>({blockingV1:false,data:externalValidationGates}))
   app.get('/api/v1/divine-engine/projects',{preHandler:authenticated},async request=>({data:divineEngine.list(request.userId)}))
   app.post('/api/v1/divine-engine/projects',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineEngine.create(request.userId,divineProjectSchema.parse(request.body))))

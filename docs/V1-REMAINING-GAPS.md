@@ -1,5 +1,7 @@
 # V1 Remaining Gaps Only
 
+V1 is the first generation and must compete when launched. Remaining items below are **V1 work**, not a postponed final. See [V1-FIRST-GENERATION.md](./V1-FIRST-GENERATION.md).
+
 This registry intentionally excludes completed capabilities. Canonical API:
 
 ```text
