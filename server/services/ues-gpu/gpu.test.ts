@@ -28,5 +28,8 @@ describe('UES GPU abstraction', () => {
     const result = new UesGpuCore().process()
     expect(result.verification.valid).toBe(true)
     expect(result.verification.webgpuRequired).toBe(false)
+    expect(result.verification.rasterExecutes).toBe(true)
+    expect(result.verification.hardwareGpu).toBe(false)
+    expect(result.raster.written).toBeGreaterThan(40)
   })
 })

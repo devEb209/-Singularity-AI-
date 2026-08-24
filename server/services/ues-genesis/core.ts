@@ -9,7 +9,10 @@ import { runKernel } from '../ues-kernel/pipeline.js'
 import { UesPopulationCore } from '../ues-population/core.js'
 import { UesRenderCore } from '../ues-render/core.js'
 import { UesShaderCore } from '../ues-shader/core.js'
+import { UesRasterCore } from '../ues-raster/core.js'
+import { UesScalePolicyCore } from '../ues-scale-policy/core.js'
 import { UesSpatialCore } from '../ues-spatial/core.js'
+import { UesWorldKnowledgeCore } from '../ues-world-knowledge/core.js'
 
 export class UesGenesisCore {
   private thesis = new DThesisCore()
@@ -20,6 +23,9 @@ export class UesGenesisCore {
   private spatial = new UesSpatialCore()
   private population = new UesPopulationCore()
   private toolbox = new SnbToolboxCore()
+  private raster = new UesRasterCore()
+  private knowledge = new UesWorldKnowledgeCore()
+  private scale = new UesScalePolicyCore()
 
   process(prompt = 'genese: mundo, gpu e ecossistema') {
     const gpu = this.gpu.process()
@@ -29,6 +35,9 @@ export class UesGenesisCore {
     const spatial = this.spatial.process()
     const population = this.population.process(prompt.slice(0, 24) || 'genesis')
     const toolbox = this.toolbox.process()
+    const raster = this.raster.process()
+    const knowledge = this.knowledge.process('earth')
+    const scale = this.scale.process()
     const water = shallowStep(initWater([[-1, -1], [-1, 0.2]]), [[-1, -1], [-1, 0.2]])
     const creation = creationPlan(prompt, 24)
     const kernel = runKernel(`Gênesis V1: ${prompt}`, 'ues.genesis', ['gpu', 'shader', 'spatial', 'toolbox'], [
@@ -37,8 +46,8 @@ export class UesGenesisCore {
       { module: 'genesis', accepted: gpu.verification.valid && shader.verification.valid && render.verification.valid, note: 'gpu stack' },
       { module: 'represent', accepted: spatial.verification.valid && !spatial.verification.googleRequired, note: 'earth not vendor' },
       { module: 'd-o15', accepted: population.verification.valid && !population.verification.uniqueMillionMinds, note: 'statistical million' },
-      { module: 'execute', accepted: image3d.verification.valid && !image3d.verification.learnedVision, note: 'image fallback' },
-      { module: 'verify', accepted: toolbox.verification.valid && water.volume >= 0, note: 'ecosystem + shallow' },
+      { module: 'execute', accepted: image3d.verification.valid && !image3d.verification.heightfieldOnly && raster.verification.valid, note: 'reconstruct + raster pixels' },
+      { module: 'verify', accepted: toolbox.verification.valid && knowledge.verification.valid && !scale.verification.fixedCap && water.volume >= 0, note: 'ecosystem + knowledge' },
       { module: 'refine', accepted: creation.verification.valid && !creation.instantAaa, note: 'not instant AAA' },
     ])
     const dThesis = this.thesis.evaluate({
@@ -57,6 +66,9 @@ export class UesGenesisCore {
       spatial: { googleRequired: spatial.verification.googleRequired, nasaRequired: spatial.verification.nasaRequired },
       population: { statistical: population.statistical, uniqueMillionMinds: population.verification.uniqueMillionMinds },
       toolbox: { assets: toolbox.assets, marketplaceLive: toolbox.verification.marketplaceLive },
+      raster: { written: raster.written, hardwareGpu: raster.verification.hardwareGpu },
+      knowledge: { biomes: knowledge.earth.biomes, earthIsLimit: knowledge.verification.earthIsLimit },
+      scale: { fixedCap: scale.verification.fixedCap, requested: scale.requested },
       water: { volume: Number(water.volume.toFixed(5)), compute: water.compute },
       creation,
       kernel,

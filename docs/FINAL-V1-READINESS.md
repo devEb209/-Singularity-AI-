@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — First generation (compete bar)
 
-Generated: 2026-08-24T22:33:35.426Z
+Generated: 2026-08-24T23:05:47.451Z
 
 ## First generation rule
 
@@ -57,7 +57,7 @@ These states cover only each documented implemented scope. They are **not** a cl
 - **Autonomous multi-domain correction execution** — PARTIAL; dependency: Revision findings generate correction + re-review; artifact numeric regression, rollback and consensus integration receipts now execute; automatic Puter invocation remains; activation: Autonomous finding → model/tool correction → artifact re-test → rollback/accept across domains
 
 ### UES gaps
-- **Semantic text/image-to-3D** — PARTIAL; dependency: Open-class compiler, SDF CSG, loft/sweep and luminance heightfield image-to-mesh now execute; learned multi-view vision remains adapter; activation: Learned or specialist-derived arbitrary geometry benchmarks
+- **Semantic text/image-to-3D** — PARTIAL; dependency: Open-class compiler, silhouette/distance/loft/CSG reconstruct and luminance heightfield now execute; learned multi-view vision remains adapter; activation: Learned or specialist-derived arbitrary geometry benchmarks
 - **Automatic retopology** — PARTIAL; dependency: Weld, hole fill, manifold inspect and anisotropic edge-flow remesh now execute; commercial QuadriFlow-class solvers remain; activation: Topology verifier and deformation tests
 - **Advanced semantic rigging and skinning** — PARTIAL; dependency: Humanoid/quadruped template fit, inverse-distance weights and LBS quality now execute; scanned anatomy and muscle systems remain; activation: Skeleton/weights artifact verification
 - **Semantic animation and retargeting** — PARTIAL; dependency: Foot-lock, Hermite, motion matching, Explorer apply and biomechanical motion compiler now execute; video/vision search and MoCap databases remain adapter-required; activation: Foot contact, limits and continuity tests

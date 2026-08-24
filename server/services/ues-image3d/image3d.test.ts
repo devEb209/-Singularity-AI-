@@ -11,5 +11,7 @@ describe('UES image/text to 3D fallback', () => {
     expect(result.verification.valid).toBe(true)
     expect(result.verification.learnedVision).toBe(false)
     expect(result.verification.puterRequired).toBe(false)
+    expect(result.verification.heightfieldOnly).toBe(false)
+    expect(result.reconstruct.method).toContain('csg')
   })
 })

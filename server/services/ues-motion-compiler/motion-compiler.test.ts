@@ -11,5 +11,7 @@ describe('UES universal motion compiler', () => {
     expect(result.verification.vision).toBe(false)
     expect(result.verification.userCaptureRequired).toBe(false)
     expect(result.continuity).toBe(true)
+    expect(result.bound.limitsHonored).toBe(true)
+    expect(result.bound.frames).toBeGreaterThan(0)
   })
 })

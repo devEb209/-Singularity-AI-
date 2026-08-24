@@ -15,5 +15,7 @@ describe('UES TITKO materials', () => {
     expect(result.pbr.wetness).toBeGreaterThan(0)
     expect(result.pbr.roughness).toBeLessThan(result.pbr.dryRoughness)
     expect(result.brdf.conserved).toBe(true)
+    expect(result.virtualTiles.vsBitmap).toBe(true)
+    expect(result.virtualTiles.resident).toBeLessThan(result.virtualBitmapBytes)
   })
 })

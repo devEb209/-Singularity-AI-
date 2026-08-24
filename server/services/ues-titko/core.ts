@@ -3,6 +3,7 @@ import { energyCheck, heightNormal } from './brdf.js'
 import { bitmapBytes, materials, storedBytes } from './graph.js'
 import { compileMaterialPrompt, modulateEnvironment } from './pbr.js'
 import { budgetedResolution, samplePatch } from './sample.js'
+import { residentBytes, tileAt } from './virtual.js'
 
 export class UesTitkoCore {
   private thesis = new DThesisCore()
@@ -11,6 +12,8 @@ export class UesTitkoCore {
     const material = materials[0]
     const coarse = samplePatch(material, 8, 2)
     const fine = samplePatch(material, budgetedResolution(tier), 5)
+    const tiles = [tileAt(material, 0, 0, 0), tileAt(material, 0.5, 0.5, 2)]
+    const resident = residentBytes(tiles)
     const stored = storedBytes(material)
     const virtual = bitmapBytes(material.virtualK)
     const dry = compileMaterialPrompt(prompt.replace(/molhad\w*/g, '').trim() || 'granito')
@@ -30,6 +33,7 @@ export class UesTitkoCore {
       pbr: { id: env.id, class: env.class, wetness: env.layers.wetness, roughness: env.layers.roughness, dryRoughness: dry.layers.roughness },
       stored,
       virtualBitmapBytes: virtual,
+      virtualTiles: { count: tiles.length, resident, vsBitmap: resident < virtual },
       coarse,
       fine,
       ratio: Number((virtual / stored).toFixed(1)),
@@ -37,7 +41,7 @@ export class UesTitkoCore {
       normal,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },
       verification: {
-        valid: stored < 400 && virtual > 1e8 && fine.gradient > coarse.gradient && fine.pixels > coarse.pixels && energy.conserved && env.layers.wetness > dry.layers.wetness,
+        valid: stored < 400 && virtual > 1e8 && resident < virtual && fine.gradient > coarse.gradient && fine.pixels > coarse.pixels && energy.conserved && env.layers.wetness > dry.layers.wetness,
         storedBitmap16k: false,
         gpu: false,
       },

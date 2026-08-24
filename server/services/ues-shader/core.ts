@@ -3,6 +3,7 @@ import { runKernel } from '../ues-kernel/pipeline.js'
 import { emitWgsl } from './emit.js'
 import { defaultGraph } from './graph.js'
 import { lowerGraph } from './ir.js'
+import { cachedCompile, executeProgram } from './bytecode.js'
 import { cpuEval, optimizeIr } from './optimize.js'
 
 export class UesShaderCore {
@@ -14,14 +15,17 @@ export class UesShaderCore {
     const optimized = optimizeIr(ir, 'surf')
     const wgsl = emitWgsl(optimized, 'surf')
     const value = cpuEval(optimized, 'surf', 0.5)
+    const fragment = cachedCompile(optimized, 'surf', 'fragment')
+    const again = cachedCompile(optimized, 'surf', 'fragment')
+    const executed = executeProgram(fragment.program, 0.5)
     const kernel = runKernel('Compilar grafo de material UES para IR e backends', 'ues.shader', ['titko', 'gpu'], [
       { module: 'knowledge', accepted: true, note: 'material graph' },
       { module: 'd-thesis', accepted: true, note: 'specialize used paths' },
       { module: 'shader', accepted: !optimized.some(op => op.id === 'unused'), note: 'DCE' },
       { module: 'represent', accepted: true, note: 'IR not backend' },
       { module: 'd-o15', accepted: optimized.some(op => op.id === 'six' && op.op === 'imm' && op.imm === 6), note: 'fold 2*3' },
-      { module: 'execute', accepted: wgsl.includes('6.') && !wgsl.includes('unused'), note: 'wgsl emit' },
-      { module: 'verify', accepted: value > 0 && value < 1, note: 'cpu eval' },
+      { module: 'execute', accepted: wgsl.includes('6.') && !wgsl.includes('unused') && executed === value, note: 'wgsl + bytecode' },
+      { module: 'verify', accepted: value > 0 && value < 1 && again.cacheHit, note: 'cpu eval + cache' },
       { module: 'refine', accepted: true, note: 'SPIR-V/HLSL remain adapters' },
     ])
     const dThesis = this.thesis.evaluate({
@@ -37,6 +41,7 @@ export class UesShaderCore {
       optimized: optimized.length,
       wgsl,
       cpu: value,
+      program: { stage: fragment.program.stage, bindings: fragment.program.bindings.length, cacheHit: again.cacheHit },
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },
       verification: {

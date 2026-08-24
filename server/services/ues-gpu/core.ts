@@ -1,7 +1,9 @@
 import { DThesisCore } from '../d-thesis/core.js'
 import { runKernel } from '../ues-kernel/pipeline.js'
 import { gpuBackends } from './backends.js'
+import { detectGpuBackend } from './detect.js'
 import { UesGpuDevice } from './device.js'
+import { UesRasterCore } from '../ues-raster/core.js'
 import type { GpuOp } from './types.js'
 import type { Plane, Sphere } from './kernels.js'
 
@@ -34,14 +36,16 @@ export class UesGpuCore {
       { op: 'EndRenderPass' },
     ]
     const frame = new UesGpuDevice().submit(ops, { spheres, planes, instances: [1, 8] })
+    const raster = new UesRasterCore().process()
+    const hardware = detectGpuBackend()
     const kernel = runKernel('API GPU da UES com compute CPU e backends de baixo nível como adapter', 'ues.gpu', ['represent', 'd-o15'], [
       { module: 'knowledge', accepted: true, note: 'own command/resource IR' },
       { module: 'd-thesis', accepted: true, note: 'GPU when workload justifies' },
       { module: 'gpu', accepted: frame.visible === 1 && frame.culled === 1, note: 'cpu compute cull' },
       { module: 'represent', accepted: true, note: 'horizon culled' },
       { module: 'd-o15', accepted: true, note: 'indirect only visible' },
-      { module: 'execute', accepted: frame.waves === 64 && frame.drawn === 1, note: 'gerstner + indirect' },
-      { module: 'verify', accepted: gpuBackends[0].status === 'IMPLEMENTADO' && gpuBackends.some(item => item.id === 'webgpu' && item.status === 'ADAPTER DISPONÍVEL'), note: 'webgpu adapter' },
+      { module: 'execute', accepted: frame.waves === 64 && frame.drawn === 1 && raster.verification.valid, note: 'compute + real raster pixels' },
+      { module: 'verify', accepted: gpuBackends[0].status === 'IMPLEMENTADO' && !hardware.available, note: 'hardware adapter here' },
       { module: 'refine', accepted: true, note: 'no vulkan claim' },
     ])
     const dThesis = this.thesis.evaluate({
@@ -54,14 +58,18 @@ export class UesGpuCore {
       format: 'ues-gpu-v1',
       backends: gpuBackends,
       frame,
+      raster: { written: raster.written, checksum: raster.checksum, hardwareGpu: raster.verification.hardwareGpu },
+      hardware,
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },
       verification: {
-        valid: kernel.verification.valid && frame.visible === 1 && frame.culled === 1 && frame.drawn === 1 && frame.waves === 64,
+        valid: kernel.verification.valid && frame.visible === 1 && frame.culled === 1 && frame.drawn === 1 && frame.waves === 64 && raster.verification.valid,
         webgpuRequired: false,
         ownsLowLevelApi: false,
+        hardwareGpu: hardware.available,
+        rasterExecutes: true,
       },
-      limitations: ['CPU compute implements the UES GPU API', 'WebGPU/Vulkan remain adapters'],
+      limitations: ['CPU raster/compute is the executing fallback', 'Hardware WebGPU/Vulkan remain adapters that amplify'],
     }
   }
 }

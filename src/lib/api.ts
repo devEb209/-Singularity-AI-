@@ -194,6 +194,8 @@ class ApiClient {
   orchestrateSnb(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/snb/orchestrate',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileUesImage3d(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/image3d/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   buildUesGenesis(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/genesis/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileUesRaster(projectId:string,name:string){return this.request<any>('/api/v1/ues/raster/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  compileUesKnowledge(projectId:string,name:string){return this.request<any>('/api/v1/ues/knowledge/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

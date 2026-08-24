@@ -3,6 +3,7 @@ import { hashSeed } from '../ues-shared/math.js'
 import { heightField } from '../ues-planet/height.js'
 import { flow, initWater, tickWater, volume } from './cycle.js'
 import { layersFromFixture, layersFromSeed, rainAmount, type HydroLayers } from './ingest.js'
+import { runLevel, waterLevel } from './levels.js'
 import { sphAdapter } from './sph.js'
 import { oceanWaves, pressure } from './waves.js'
 
@@ -38,6 +39,10 @@ export class UesFnwsCore {
     for (let i = 0; i < 10; i++) moved = flow(heights, moved)
     const stayed = moved[highland[1]][highland[0]]
     const waves = oceanWaves(heights, 1.2)
+    const far = runLevel(heights, waterLevel(30, 0.08))
+    const mid = runLevel(heights, waterLevel(10, 0.35))
+    const near = runLevel(heights, waterLevel(2, 0.85), 0.6, [{ x: 8, z: 8, radius: 1.2 }])
+    const sph = sphAdapter()
     const dThesis = this.thesis.evaluate({
       objective: 'Simular água natural sobre terreno: fluxo, volume, pressão, chuva e ondas',
       constraints: ['CPU only', 'não reivindicar SPH GPU'],
@@ -51,13 +56,15 @@ export class UesFnwsCore {
       downhill: { stayed, moved: 1 - stayed },
       waves: waves.length,
       samplePressure: pressure(0.4),
+      levels: { far: far.level, mid: mid.level, near: near.level, nearDisplaced: near.displaced },
+      sph,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },
       verification: {
-        valid: Math.abs(before - afterFlow) < 1e-6 && stayed < 0.85 && waves.length > 0 && state.rained > 0 && state.evaporated > 0,
-        sph: false,
+        valid: Math.abs(before - afterFlow) < 1e-6 && stayed < 0.85 && waves.length > 0 && state.rained > 0 && state.evaporated > 0 && far.level !== 'detailed' && near.level === 'detailed',
+        sph: sph.implemented,
         gpu: false,
       },
-      limitations: ['Heightfield water + Gerstner samples', 'Not GPU SPH oceans'],
+      limitations: ['Multi-level heightfield/shallow/detailed', 'GPU SPH remains adapter'],
     }
   }
 }

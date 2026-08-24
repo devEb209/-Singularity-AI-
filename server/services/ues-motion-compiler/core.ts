@@ -2,6 +2,7 @@ import { DThesisCore } from '../d-thesis/core.js'
 import { runKernel } from '../ues-kernel/pipeline.js'
 import { bake } from '../ues-umotion/apply.js'
 import { resolveMotionSource } from '../ues-umotion/adapters.js'
+import { bindMotionToObject } from './bind.js'
 import { compileMotionPrompt } from './recipes.js'
 
 export class UesMotionCompilerCore {
@@ -10,6 +11,7 @@ export class UesMotionCompilerCore {
   process(prompt = 'FN FAL recarregando') {
     const card = compileMotionPrompt(prompt)
     const baked = bake(card, 12)
+    const bound = bindMotionToObject(card, /fal|fuzil|arma/.test(prompt.toLowerCase()) ? 'fuzil FN FAL' : prompt)
     const video = resolveMotionSource('video-vision')
     const kernel = runKernel(`Compilar movimento para ${prompt}`, 'ues.motion-compiler', ['biomechanics', 'umotion'], [
       { module: 'knowledge', accepted: true, note: 'mechanics, not footage' },
@@ -17,8 +19,8 @@ export class UesMotionCompilerCore {
       { module: 'motion-compiler', accepted: baked.continuity, note: card.id },
       { module: 'represent', accepted: true, note: 'joint curves' },
       { module: 'd-o15', accepted: true, note: '12 samples' },
-      { module: 'execute', accepted: baked.frames.length === 12, note: 'hermite bake' },
-      { module: 'verify', accepted: baked.continuity && !video.executable, note: 'no vision claim' },
+      { module: 'execute', accepted: baked.frames.length === 12 && bound.limitsHonored, note: 'hermite + bind' },
+      { module: 'verify', accepted: baked.continuity && bound.continuity && !video.executable, note: 'no vision claim' },
       { module: 'refine', accepted: true, note: 'video remains adapter' },
     ])
     const dThesis = this.thesis.evaluate({
@@ -33,6 +35,7 @@ export class UesMotionCompilerCore {
       card: { id: card.id, subject: card.subject, keys: card.keys.length },
       frames: baked.frames.length,
       continuity: baked.continuity,
+      bound,
       video: video.status,
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },

@@ -126,6 +126,9 @@ import { UesPopulationService } from './services/ues-population/service.js'
 import { UesSpatialService } from './services/ues-spatial/service.js'
 import { SnbToolboxService } from './services/snb-toolbox/service.js'
 import { UesGenesisService } from './services/ues-genesis/service.js'
+import { UesRasterService } from './services/ues-raster/service.js'
+import { UesWorldKnowledgeService } from './services/ues-world-knowledge/service.js'
+import { UesScalePolicyService } from './services/ues-scale-policy/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -330,6 +333,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesSpatial=new UesSpatialService(store,artifactGraph)
   const snbToolbox=new SnbToolboxService(store,artifactGraph)
   const uesGenesis=new UesGenesisService(store,artifactGraph)
+  const uesRaster=new UesRasterService(store,artifactGraph)
+  const uesWorldKnowledge=new UesWorldKnowledgeService(store,artifactGraph)
+  const uesScalePolicy=new UesScalePolicyService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -368,7 +374,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.ship',name:'UES First-Generation Ship Gates',version:'1.0.0',capabilities:['release.gate','quality.ship'],outputs:{artifact:'analysis.ues-ship'},verifier:'ues-ship-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.kernel',name:'UES Shared Kernel',version:'1.0.0',capabilities:['pipeline.kernel','representation.do15','3d.arbitrary','graphics.ues','animation.compile'],outputs:{artifact:'production.ues-close'},verifier:'ues-close-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.atelier',name:'UES Atelier Compete Fabric',version:'1.0.0',capabilities:['3d.csg','physics.featherstone','studio.graph','world.lives','nav.mesh','consensus.integrate'],outputs:{artifact:'production.ues-atelier'},verifier:'ues-atelier-v1'})
-  capabilityFabric.registerInternalVerified({id:'ues.genesis',name:'UES V1 Genesis',version:'1.0.0',capabilities:['gpu.api','shader.ir','render.graph','3d.image','world.spatial','npc.population','ecosystem.toolbox'],outputs:{artifact:'production.ues-genesis'},verifier:'ues-genesis-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.genesis',name:'UES V1 Genesis',version:'1.0.0',capabilities:['gpu.api','shader.ir','render.graph','3d.image','world.spatial','npc.population','ecosystem.toolbox','raster.pixels','world.knowledge'],outputs:{artifact:'production.ues-genesis'},verifier:'ues-genesis-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -615,6 +621,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/ues/spatial/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesSpatial.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/toolbox/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbToolbox.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/ues/genesis/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesGenesis.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/raster/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesRaster.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/knowledge/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesWorldKnowledge.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/scale-policy/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesScalePolicy.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())
