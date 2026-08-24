@@ -172,6 +172,7 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 - [Real-Life Universal](docs/REAL-LIFE-UNIVERSAL.md)
 - [NMN — Natural Mindset of NPCs](docs/NMN.md)
 - [UES Autonomous Development](docs/UES-AUTONOMOUS-DEVELOPMENT.md)
+- [UES Living World](docs/UES-LIVING-WORLD.md)
 - [Versioned Knowledge Memory](docs/KNOWLEDGE-MEMORY.md)
 - [Universal Document Engine](docs/UNIVERSAL-DOCUMENT-ENGINE.md)
 - [Automation Engine](docs/AUTOMATION-ENGINE.md)

@@ -164,6 +164,12 @@ class ApiClient {
   composeRealLife(input:Record<string,unknown>){return this.request<any>('/api/v1/real-life/compose',{method:'POST',body:JSON.stringify(input)})}
   nmnWar(projectId:string,name:string){return this.request<any>('/api/v1/nmn/scenarios/war',{method:'POST',body:JSON.stringify({projectId,name})})}
   createAutonomy(input:Record<string,unknown>){return this.request<any>('/api/v1/ues/autonomy',{method:'POST',body:JSON.stringify(input)})}
+  buildUesWorld(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/world/build',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
+  compileUesNav(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/nav/compile',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
+  simulateUesSociety(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/society/simulate',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
+  mixUesAudio(projectId:string,name:string){return this.request<any>('/api/v1/ues/audio/mix',{method:'POST',body:JSON.stringify({projectId,name})})}
+  runUesOptimize(projectId:string,name:string){return this.request<any>('/api/v1/ues/optimize/loop',{method:'POST',body:JSON.stringify({projectId,name})})}
+  buildUesLivingWorld(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/living-world/build',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

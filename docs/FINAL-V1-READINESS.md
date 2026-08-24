@@ -1,11 +1,11 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T14:26:55.704Z
+Generated: 2026-08-24T14:48:03.069Z
 
 ## Scope status
 
 - SNB orchestration/auth/projects/memory/files/missions/workers/tools/research, Master Intelligence across 30 scoped programs, and the shared D Thesis contextual PP/GPP/D-O15 matrix: local Beta operational with documented trust boundaries.
-- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life Universal / NMN / autonomous-development complement, and HSDS SVG/SSE: operational within declared lightweight scope.
+- UES studio/runtime patch/settings/artifact graph, verified 2D SVG/2.5D parallax/3.5D experimental artifacts, procedural 3D/PBR/scene/WebGL/experimental 4D, owned deterministic world/physics/rig/animation/NPC/VFX/optimization core, advanced semantic geometry/physics/IK-FK/retargeting/LOD/critic pipeline, D Thesis plus Real-Life/NMN/autonomy, semantic world+nav+society sample, PCM mixer, CPU profiler/D-O15 loop, swept AABB CCD, foot-lock locomotion, living-world artifact and HSDS SVG/SSE: operational within declared lightweight scope.
 - DsOS project/core/module/compliance/resource architecture: foundation/partial; no boot image claim.
 
 ## SNB cognitive programs (scoped V1 state)
@@ -55,14 +55,14 @@ These states cover only each documented implemented scope; they do not mark the 
 - **Automatic retopology** — PARTIAL; dependency: UES Core has verified vertex-cluster remeshing; semantic edge-flow constraints, manifold repair and deformation corpus remain; activation: Topology verifier and deformation tests
 - **Advanced semantic rigging and skinning** — PARTIAL; dependency: UES Core has verified bounds-derived bones and normalized weights; anatomy inference and deformation quality remain; activation: Skeleton/weights artifact verification
 - **Semantic animation and retargeting** — PARTIAL; dependency: UES Advanced adds FK, iterative IK, segment preservation and mapped retargeting; joint constraints, foot locking, blending and motion corpus remain; activation: Foot contact, limits and continuity tests
-- **Advanced semantic world generation** — PARTIAL; dependency: UES Core has deterministic heightfields, biomes and chunk metadata; semantic roads, cities, vegetation and runtime streaming remain; activation: World graph artifacts and streaming tests
-- **Advanced physics runtime** — PARTIAL; dependency: UES Advanced adds sweep-and-prune, AABB impulses, friction, quaternion angular integration, distance joints, triggers and raycasts; convex narrowphase, CCD and solver islands remain; activation: Deterministic simulation tests
-- **Advanced NPC society runtime** — PARTIAL; dependency: NMN now executes identity, non-omniscient perception, hierarchical memory, contextual decisions, social observation, D-O15 fidelity and file-manager persistence; navigation meshes, large-scale economy and continuous world inhabitation remain; activation: Artificial-player/runtime benchmarks at population scale
-- **Audio generation and runtime** — PARTIAL; dependency: UES Core has verified PCM waveform synthesis; mixer, spatial graph, event synchronization, asset codecs and loudness gates remain; activation: Audio artifacts, loudness/loop/codec checks
+- **Advanced semantic world generation** — PARTIAL; dependency: Semantic world now executes roads, settlements, biome vegetation and chunk streaming; GIS import, city-scale districts and runtime LOD streaming remain; activation: Larger district graphs and streaming stress tests
+- **Advanced physics runtime** — PARTIAL; dependency: UES Advanced plus swept-AABB CCD and island grouping now execute; convex GJK/EPA, rotational CCD and sleeping islands remain; activation: Deterministic simulation tests
+- **Advanced NPC society runtime** — PARTIAL; dependency: NMN plus navgrid/A*/avoidance, 24-agent economy sample and D-O15 dormant agents now execute; city-scale census, persistent autonomous lives and navigation meshes from arbitrary 3D remain; activation: Artificial-player/runtime benchmarks at population scale
+- **Audio generation and runtime** — PARTIAL; dependency: PCM mixer, distance attenuation, tick-synced events and loudness gate now execute; spatial HRTF graph, asset codecs and loop seam checks remain; activation: Audio artifacts, loudness/loop/codec checks
 - **Advanced VFX production/runtime** — PARTIAL; dependency: UES Core has deterministic particle state simulation; renderer shaders, fluid/smoke models and performance gates remain; activation: Effect artifacts and performance gates
 - **Multiplayer runtime** — PARTIAL; dependency: UES-owned authority, replication, reconciliation and adversarial network simulation are not yet implemented; activation: Network simulation and security tests
-- **CPU/GPU profiler** — PARTIAL; dependency: Runtime metrics adapters; activation: Measured frame/resource telemetry
-- **Quality-preserving optimization loop** — PARTIAL; dependency: UES Advanced adds verified multi-LOD clustering and structured performance critics; measured renderer telemetry and perceptual regression remain; activation: Before/after benchmark with rollback
+- **CPU/GPU profiler** — PARTIAL; dependency: CPU hrtime section profiler now measures world/society work; GPU/frame telemetry remains infrastructure-specific; activation: Measured frame/resource telemetry
+- **Quality-preserving optimization loop** — PARTIAL; dependency: Measured D-O15 loop now chooses perceptual equivalents and rolls back past the quality frontier; renderer image regression remains; activation: Before/after benchmark with rollback
 - **Reference Intelligence** — PARTIAL; dependency: Vision analysis and rights policy; activation: Reference-derived constraint artifacts
 - **SNB Super Resolution** — PARTIAL; dependency: UES-owned reconstruction filters, motion/depth production and objective native-vs-reconstructed benchmarks remain; activation: Native-vs-reconstructed benchmark
 - **SNB FrameFlow** — PARTIAL; dependency: UES-owned motion/depth buffers, interpolation and measured frame-pacing implementation remain; activation: Real/generated FPS and latency report
@@ -97,12 +97,12 @@ These are engineering ranges, not automatically promoted capability states. The 
 
 - SNB 30-program V1 core readiness (weighted from canonical states): **90.8%**
 - SNB platform as a whole: **80–88%**
-- UES architecture/contracts: **70–78%**
-- UES integration: **42–50%**
-- UES real production capability: **24–32%**
+- UES architecture/contracts: **78–86%**
+- UES integration: **52–60%**
+- UES real production capability: **32–40%**
 - DsOS: **20–30%**
 - Production infrastructure: **35–45%**
-- Total internal V1 (external-only gates excluded): **52–60% complete / 40–48% remaining**
+- Total internal V1 (external-only gates excluded): **58–66% complete / 34–42% remaining**
 
 The SNB cognitive score is reproducible: `operational-core=1`, `foundation=0.5`, `research-program=0.25`, divided by 30. The broader ranges remain directional because UES production, audiovisual GPU streaming and bootable DsOS are large unequal slices. Architecture or adapters do not receive production credit.
 

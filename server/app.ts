@@ -66,6 +66,14 @@ import { DThesisService } from './services/d-thesis/service.js'
 import { RealLifeService } from './services/real-life/service.js'
 import { NmnService } from './services/nmn/service.js'
 import { AutonomyService } from './services/ues-autonomy/service.js'
+import { UesWorldService } from './services/ues-world/service.js'
+import { UesNavService } from './services/ues-nav/service.js'
+import { UesSocietyService } from './services/ues-society/service.js'
+import { UesAudioService } from './services/ues-audio/service.js'
+import { UesOptimizeService } from './services/ues-optimize/service.js'
+import { UesPhysicsService } from './services/ues-physics/service.js'
+import { UesMotionService } from './services/ues-motion/service.js'
+import { UesLivingWorldService } from './services/ues-living/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -117,6 +125,7 @@ const prototypePipelineSchema=z.object({projectId:z.string(),prompt:z.string().m
 const hsdsCreateSchema=z.object({divineProjectId:z.string(),device:z.object({viewportWidth:z.number().int().min(1).max(16384),viewportHeight:z.number().int().min(1).max(16384),bandwidthMbps:z.number().positive().max(10000).optional(),latencyMs:z.number().nonnegative().max(60000).optional(),decodeTier:z.enum(['low','balanced','high']).optional(),saveData:z.boolean().optional()})})
 const hsdsInputSchema=z.object({type:z.enum(['pointer','keyboard','gamepad','touch']),dx:z.number().min(-100).max(100).optional(),dy:z.number().min(-100).max(100).optional(),zoom:z.number().min(.1).max(10).optional(),key:z.enum(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown']).optional()})
 const uesCoreBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),seed:z.string().min(1).max(500)})
+const uesLivingBuildSchema=z.object({projectId:z.string(),name:z.string().regex(/^[a-zA-Z0-9._-]+$/).max(120),seed:z.string().min(1).max(500).default('ues'),size:z.number().int().min(8).max(64).optional(),ticks:z.number().int().min(1).max(24).optional(),action:z.enum(['flee','hide','protect-family','search-missing','aid-wounded','defend','seek-info','continue-routine','loot','freeze','follow-crowd','evacuate-with-family','travel-to-family','help-evacuation']).optional()})
 const uesAdvancedBuildSchema=z.object({projectId:z.string(),name:z.string().min(1).max(120),prompt:z.string().min(3).max(5000)})
 const masterCompileSchema=z.object({projectId:z.string(),intent:z.string().min(3).max(20000),constraints:z.array(z.string().min(1).max(1000)).max(100).optional(),autonomy:autonomySchema.optional()})
 const cognitiveFindingSchema=z.object({code:z.string().min(1).max(120),severity:z.enum(['info','warning','error']),message:z.string().min(1).max(2000)})
@@ -209,6 +218,14 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const realLife=new RealLifeService(store,artifactGraph)
   const nmn=new NmnService(store,artifactGraph)
   const uesAutonomy=new AutonomyService(store,artifactGraph)
+  const uesWorld=new UesWorldService(store,artifactGraph)
+  const uesNav=new UesNavService(store,artifactGraph)
+  const uesSociety=new UesSocietyService(store,artifactGraph)
+  const uesAudio=new UesAudioService(store,artifactGraph)
+  const uesOptimize=new UesOptimizeService(store,artifactGraph)
+  const uesPhysicsCcd=new UesPhysicsService(store,artifactGraph)
+  const uesMotion=new UesMotionService(store,artifactGraph)
+  const uesLiving=new UesLivingWorldService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -229,7 +246,15 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'snb.automation-engine',name:'SNB Automation Engine',version:'1.0.0',capabilities:['automation.cron','automation.event','mission.trigger'],outputs:{mission:'supervised persistent DAG',receipt:'HMAC'},verifier:'automation-policy-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.plugin-package-runtime',name:'SNB Plugin Package Runtime',version:'1.0.0',capabilities:['plugin.install','plugin.lifecycle','plugin.dependencies','plugin.verify'],outputs:{state:'installed/enabled/disabled',receipt:'HMAC'},verifier:'plugin-package-policy-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.multidimensional-creation',name:'UES Multidimensional Creation',version:'1.0.0',capabilities:['2d.generate','2.5d.compose','3.5d.experimental','runtime.parallax'],outputs:{artifacts:['SVG','HTML','JSON']},verifier:'ues-multidimensional-v1'})
-  capabilityFabric.registerInternalVerified({id:'snb-ues.d-thesis',name:'SNB/UES D Thesis',version:'1.0.0',capabilities:['reasoning.d-matrix','optimization.do15','planning.perfect-points','analysis.gpp'],outputs:{artifact:'analysis.d-thesis'},verifier:'d-thesis-contextual-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb-ues.d-thesis',name:'SNB/UES D Thesis',version:'1.1.0',capabilities:['reasoning.d-matrix','optimization.do15','planning.perfect-points','analysis.gpp','reality.universal','npc.nmn','development.autonomy'],outputs:{artifact:'analysis.d-thesis'},verifier:'d-thesis-contextual-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.real-life-universal',name:'UES Real-Life Universal',version:'1.0.0',capabilities:['reality.domains','reality.modes','environment.graph','perceptual.equivalence','hardware.adaptation'],outputs:{artifact:'model.real-life-universal'},verifier:'real-life-universal-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.nmn',name:'UES Natural Mindset of NPCs',version:'1.0.0',capabilities:['npc.identity','npc.perception','npc.decision','npc.fidelity'],outputs:{artifact:'simulation.nmn'},verifier:'nmn-contextual-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.semantic-world',name:'UES Semantic World',version:'1.0.0',capabilities:['world.roads','world.settlements','world.vegetation','world.streaming'],outputs:{artifact:'world.ues-semantic'},verifier:'ues-semantic-world-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.navigation',name:'UES Navigation',version:'1.0.0',capabilities:['nav.grid','nav.astar','nav.avoidance','nav.nmn-intent'],outputs:{artifact:'runtime.ues-nav'},verifier:'ues-nav-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.society',name:'UES Society Sample',version:'1.0.0',capabilities:['society.economy','society.population','npc.fidelity'],outputs:{artifact:'simulation.ues-society'},verifier:'ues-society-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.audio-mixer',name:'UES Audio Mixer',version:'1.0.0',capabilities:['audio.mix','audio.spatial','audio.loudness'],outputs:{artifact:'audio.ues-mix'},verifier:'ues-audio-mix-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.optimizer',name:'UES Measured D-O15 Loop',version:'1.0.0',capabilities:['profile.cpu','optimize.perceptual','optimize.rollback'],outputs:{artifact:'analysis.ues-optimize'},verifier:'ues-optimize-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.living-world',name:'UES Living World',version:'1.0.0',capabilities:['world.generate','nav.grid','society.population','audio.mix','profile.cpu'],outputs:{artifact:'runtime.ues-living-world'},verifier:'ues-living-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -412,6 +437,15 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/ues/autonomy/:id/decide',{preHandler:authenticated},async request=>uesAutonomy.decide(request.userId,(request.params as {id:string}).id,autonomyDecideSchema.parse(request.body).answer))
   app.post('/api/v1/ues/autonomy/:id/knowledge',{preHandler:authenticated},async request=>uesAutonomy.ingest(request.userId,(request.params as {id:string}).id,autonomyKnowledgeSchema.parse(request.body)))
   app.post('/api/v1/ues/multidimensional/build',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesMultidimensional.build(request.userId,multidimensionalBuildSchema.parse(request.body))))
+  app.get('/api/v1/ues/world/capabilities',{preHandler:authenticated},async()=>uesWorld.capabilities())
+  app.post('/api/v1/ues/world/build',{preHandler:authenticated,config:{rateLimit:{max:12,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesWorld.build(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/nav/compile',{preHandler:authenticated,config:{rateLimit:{max:12,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesNav.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/society/simulate',{preHandler:authenticated,config:{rateLimit:{max:10,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesSociety.simulate(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/audio/mix',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesAudio.mix(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/optimize/loop',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesOptimize.run(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/physics/ccd',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesPhysicsCcd.simulate(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/motion/stride',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesMotion.build(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/ues/living-world/build',{preHandler:authenticated,config:{rateLimit:{max:8,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesLiving.build(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())

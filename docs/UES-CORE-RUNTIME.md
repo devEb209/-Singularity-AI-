@@ -22,6 +22,6 @@ The UES Stage exposes **UES Core**, which runs this pipeline against the selecte
 
 ## Boundaries
 
-This closes the absence of an executable engine-owned baseline. It does not claim that the current implementation is a production photorealistic engine. Remaining advanced work includes semantic geometry synthesis, anatomy inference, edge-flow retopology, broadphase and rotational physics, navigation/economy at NPC scale, GPU VFX rendering, audio mixing and profiler-driven visual regression.
+This closes the absence of an executable engine-owned baseline. It does not claim that the current implementation is a production photorealistic engine. Semantic world/nav/society sample, PCM mixing, CPU profiler/D-O15 and swept AABB live in [UES-LIVING-WORLD.md](./UES-LIVING-WORLD.md). Remaining advanced work includes arbitrary semantic geometry, anatomy inference, edge-flow retopology, convex physics, GPU VFX and city-scale inhabitation.
 
 These are internal UES implementation gaps—not reasons to replace the UES with commercial generation APIs. Puter can provide specialist intelligence; generated decisions still need to be transformed and verified by UES-owned systems.
