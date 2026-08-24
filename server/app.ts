@@ -59,6 +59,9 @@ import { PluginRuntime } from './services/plugins/service.js'
 import { WorkflowControlService } from './services/workflow-control/service.js'
 import { OfflineSyncService } from './services/offline-sync/service.js'
 import { AutonomousBenchmarkScientist } from './services/benchmark-scientist/service.js'
+import { externalValidationGates } from './services/external-validation-gates.js'
+import { SelfDiagnosticsService } from './services/self-diagnostics.js'
+import { UesMultidimensionalCreation } from './services/ues-2d/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -129,6 +132,7 @@ const compensationSchema=z.object({reason:z.string().min(3).max(1000),definition
 const offlineOperationSchema=z.object({id:z.string().min(1).max(160),deviceId:z.string().min(1).max(160),key:z.string().min(1).max(300),baseRevision:z.number().int().nonnegative(),patch:z.record(z.string(),z.unknown()),createdAt:z.string()})
 const offlineSyncSchema=z.object({operations:z.array(offlineOperationSchema).max(1000),strategy:z.enum(['manual','server-wins','client-wins']).default('manual')})
 const benchmarkProposalSchema=z.object({projectId:z.string(),capability:capabilitySchema,version:z.string().regex(/^[a-zA-Z0-9._-]+$/).max(100)})
+const multidimensionalBuildSchema=z.object({projectId:z.string(),name:z.string().regex(/^[a-zA-Z0-9._-]+$/).max(120),prompt:z.string().min(3).max(5000)})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -184,6 +188,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const hsds=new HsdsService(store)
   const uesCore=new UesCoreRuntime(store,artifactGraph)
   const uesAdvanced=new UesAdvancedPipeline(store,artifactGraph)
+  const uesMultidimensional=new UesMultidimensionalCreation(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
   const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
@@ -203,10 +208,12 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'snb.document-engine',name:'SNB Universal Document Engine',version:'1.0.0',capabilities:['document.pdf','document.docx','document.xlsx','document.pptx','document.markdown','document.csv'],outputs:{artifacts:['PDF','DOCX','XLSX','PPTX','Markdown','CSV']},verifier:'document-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.automation-engine',name:'SNB Automation Engine',version:'1.0.0',capabilities:['automation.cron','automation.event','mission.trigger'],outputs:{mission:'supervised persistent DAG',receipt:'HMAC'},verifier:'automation-policy-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.plugin-package-runtime',name:'SNB Plugin Package Runtime',version:'1.0.0',capabilities:['plugin.install','plugin.lifecycle','plugin.dependencies','plugin.verify'],outputs:{state:'installed/enabled/disabled',receipt:'HMAC'},verifier:'plugin-package-policy-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.multidimensional-creation',name:'UES Multidimensional Creation',version:'1.0.0',capabilities:['2d.generate','2.5d.compose','3.5d.experimental','runtime.parallax'],outputs:{artifacts:['SVG','HTML','JSON']},verifier:'ues-multidimensional-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
   const workers = new WorkerCoordinator(store, appConfig.WORKER_LEASE_SECONDS)
+  const selfDiagnostics=new SelfDiagnosticsService(store,workers,appConfig.EXECUTION_RECEIPT_SECRET)
   const modelHealth = new ModelHealthService(store)
   const puterReports = new PuterExecutionReports(store,appConfig.EXECUTION_RECEIPT_SECRET)
   app.addHook('onClose', async () => store.close())
@@ -249,6 +256,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.get('/api/v1/auth/me',{preHandler:authenticated},async request=>{const user=store.findUserById(request.userId);return user?{user:{id:user.id,email:user.email,name:user.name,guest:false,createdAt:user.createdAt}}:{user:{id:request.userId,name:'Guest Workspace',guest:true}}})
 
   app.get('/api/v1/dashboard', {preHandler:authenticated}, async request=>({user:{id:request.userId,guest:request.userId.startsWith('guest_')},counts:{projects:store.listProjects(request.userId).length,conversations:store.listConversations(request.userId).length,memories:store.listMemories(request.userId).length,files:store.listFiles(request.userId).length,missions:store.listMissions(request.userId).length,auditEvents:store.listAudit(request.userId,200).length},core:{status:'online',uptime:process.uptime(),physicalExecutionEnabled:appConfig.PHYSICAL_EXECUTION_ENABLED},puter:modelCatalog.summary(),workers:{total:workers.list().length,online:workers.list().filter(worker=>worker.status==='online').length}}))
+  app.get('/api/v1/self-diagnostics',{preHandler:authenticated},async request=>selfDiagnostics.inspect(request.userId))
+  app.post('/api/v1/self-diagnostics/repair',{preHandler:authenticated},async request=>selfDiagnostics.repair(request.userId))
   app.get('/api/v1/observability',{preHandler:authenticated},async request=>{const missions=store.listMissions(request.userId),toolRuns=store.listToolExecutions(request.userId,200),artifacts=store.listArtifacts(request.userId),workersList=workers.list();return{generatedAt:new Date().toISOString(),missions:{total:missions.length,byStatus:Object.fromEntries(['pending','running','paused','completed','failed','cancelled'].map(status=>[status,missions.filter(item=>item.status===status).length]))},tools:{total:toolRuns.length,failed:toolRuns.filter(item=>item.status==='failed').length,denied:toolRuns.filter(item=>item.status==='denied').length},artifacts:{total:artifacts.length,verified:artifacts.filter(item=>item.status==='verified').length,rejected:artifacts.filter(item=>item.status==='rejected').length},workers:{total:workersList.length,online:workersList.filter(item=>item.status==='online').length},providers:{models:modelCatalog.summary(),external:externalProviders.list()},audit:store.listAudit(request.userId,50)}})
   app.get('/api/v1/beta/readiness',{preHandler:authenticated},async()=>{const catalog=modelCatalog.summary(),workerList=workers.list(),checks=[{id:'core',status:'pass',detail:'API online'},{id:'catalog',status:catalog.total===879?'pass':'fail',detail:`${catalog.total}/879 modelos canônicos`},{id:'worker',status:workerList.some(worker=>worker.status==='online'&&Date.now()-new Date(worker.lastHeartbeatAt).getTime()<60000)?'pass':'warn',detail:`${workerList.length} workers registrados`},{id:'physical-gate',status:!appConfig.PHYSICAL_EXECUTION_ENABLED?'pass':'warn',detail:`physical=${appConfig.PHYSICAL_EXECUTION_ENABLED}`},{id:'jwt-secret',status:appConfig.JWT_SECRET.startsWith('development-')?'warn':'pass',detail:appConfig.JWT_SECRET.startsWith('development-')?'Trocar antes de exposição pública':'Custom secret'},{id:'receipt-secret',status:appConfig.EXECUTION_RECEIPT_SECRET.startsWith('development-')?'warn':'pass',detail:appConfig.EXECUTION_RECEIPT_SECRET.startsWith('development-')?'Trocar antes de exposição pública':'Custom secret'},{id:'https',status:appConfig.PUBLIC_BASE_URL.startsWith('https://')?'pass':'warn',detail:appConfig.PUBLIC_BASE_URL}];return{status:checks.some(check=>check.status==='fail')?'blocked':checks.some(check=>check.status==='warn')?'local-beta':'release-candidate',checks,generatedAt:new Date().toISOString()}})
   app.get('/api/v1/settings',{preHandler:authenticated},async request=>({data:store.getUserSettings(request.userId)}))
@@ -348,6 +357,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/projects/:id/release-package',{preHandler:authenticated},async(request,reply)=>{const value=releasePackageSchema.parse(request.body);return reply.status(201).send(await releasePackager.create(request.userId,{projectId:(request.params as {id:string}).id,...value}))})
   app.get('/api/v1/integrations/matrix',{preHandler:authenticated},async()=>({data:integrationMatrix,summary:Object.fromEntries(['native','active-adapter','partial','adapter-required','infrastructure-required','blocked','planned'].map(state=>[state,integrationMatrix.filter(item=>item.state===state).length]))}))
   app.get('/api/v1/v1-gaps',{preHandler:authenticated},async request=>{const area=(request.query as {area?:string}).area,data=area?v1Gaps.filter(item=>item.area===area):v1Gaps;return{data,summary:Object.fromEntries(['PARTIAL','ADAPTER_REQUIRED','INFRASTRUCTURE_REQUIRED','BLOCKED','PLANNED'].map(state=>[state,data.filter(item=>item.state===state).length]))}})
+  app.get('/api/v1/external-validation-gates',{preHandler:authenticated},async()=>({blockingV1:false,data:externalValidationGates}))
   app.get('/api/v1/divine-engine/projects',{preHandler:authenticated},async request=>({data:divineEngine.list(request.userId)}))
   app.post('/api/v1/divine-engine/projects',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(divineEngine.create(request.userId,divineProjectSchema.parse(request.body))))
   app.get('/api/v1/divine-engine/projects/:id',{preHandler:authenticated},async request=>divineEngine.detail(request.userId,(request.params as {id:string}).id))
@@ -363,6 +373,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/procedural-pbr/generate',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await proceduralPbr.generate(request.userId,pbrSchema.parse(request.body))))
   app.post('/api/v1/divine-engine/prototype-pipeline',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await prototypePipeline.build(request.userId,prototypePipelineSchema.parse(request.body))))
   app.post('/api/v1/divine-engine/experimental-4d',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await experimental4d.create(request.userId,experimental4dSchema.parse(request.body))))
+  app.post('/api/v1/ues/multidimensional/build',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await uesMultidimensional.build(request.userId,multidimensionalBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
   app.post('/api/v1/ues/core/build',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await uesCore.build(request.userId,uesCoreBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/advanced/capabilities',{preHandler:authenticated},async()=>uesAdvanced.capabilities())

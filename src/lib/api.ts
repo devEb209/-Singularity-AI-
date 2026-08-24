@@ -156,6 +156,7 @@ class ApiClient {
   buildExperimental4D(projectId:string,name:string){return this.request<any>('/api/v1/divine-engine/experimental-4d',{method:'POST',body:JSON.stringify({projectId,name})})}
   buildUesCore(projectId:string,name:string,seed:string){return this.request<any>('/api/v1/ues/core/build',{method:'POST',body:JSON.stringify({projectId,name,seed})})}
   buildUesAdvanced(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/advanced/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  buildUesMultidimensional(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/ues/multidimensional/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}
   divineProjectSettings(id:string){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`)}
   updateDivineProjectSettings(id:string,changes:Record<string,unknown>){return this.request<any>(`/api/v1/divine-engine/projects/${id}/settings`,{method:'PATCH',body:JSON.stringify({changes})})}

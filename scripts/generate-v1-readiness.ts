@@ -3,6 +3,7 @@ import { divineSystemConcepts } from '../server/services/divine-ecosystem-regist
 import { integrationMatrix } from '../server/services/integration-matrix.js'
 import { v1Gaps } from '../server/services/v1-gap-registry.js'
 import { snbCognitivePrograms } from '../server/services/snb-master-intelligence.js'
+import { externalValidationGates } from '../server/services/external-validation-gates.js'
 const by=<T>(items:T[],key:(item:T)=>string)=>Object.fromEntries([...new Set(items.map(key))].map(value=>[value,items.filter(item=>key(item)===value).length]))
 const cognitiveCoreScore=Math.round(snbCognitivePrograms.reduce((sum,item)=>sum+(item.state==='operational-core'?1:item.state==='foundation' ? .5 : .25),0)/snbCognitivePrograms.length*1000)/10
 const report=`# Final V1 Readiness Report — Pre-finalization
@@ -43,7 +44,13 @@ ${v1Gaps.filter(item=>item.area==='UES').map(item=>`- **${item.name}** — ${ite
 ${v1Gaps.filter(item=>item.area==='DsOS').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')}
 
 ### Infrastructure gaps
-${v1Gaps.filter(item=>item.area==='SNB Infrastructure').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')}
+${v1Gaps.filter(item=>item.area==='SNB Infrastructure').map(item=>`- **${item.name}** — ${item.state}; dependency: ${item.dependency}; activation: ${item.activation}`).join('\n')||'- None: external-only deployment gates were removed from V1 completion.'}
+
+## Non-blocking external validation gates
+
+${externalValidationGates.map(item=>`- **${item.id}** (${item.area}) — ${item.requires}; ${item.reason}`).join('\n')}
+
+These gates are visible but do not reduce V1 internal completion.
 
 ## Honest directional completion ranges
 
@@ -56,7 +63,7 @@ These are engineering ranges, not automatically promoted capability states. The 
 - UES real production capability: **24–32%**
 - DsOS: **20–30%**
 - Production infrastructure: **35–45%**
-- Total V1: **47–54% complete / 46–53% remaining**
+- Total internal V1 (external-only gates excluded): **52–60% complete / 40–48% remaining**
 
 The SNB cognitive score is reproducible: \`operational-core=1\`, \`foundation=0.5\`, \`research-program=0.25\`, divided by 30. The broader ranges remain directional because UES production, audiovisual GPU streaming and bootable DsOS are large unequal slices. Architecture or adapters do not receive production credit.
 

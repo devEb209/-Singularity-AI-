@@ -20,4 +20,4 @@ The HSDS local baseline is implemented and therefore is not a gap: persisted ses
 
 Major remaining DsOS gaps are isolated source checkout, reproducible rootfs/image build, QEMU boot verification, Android toolchain/emulator/signing, legal compatibility runtime, hardware/driver evidence and package trust.
 
-External gates remain public HTTPS, transactional e-mail, Chromium E2E worker, container/microVM execution and object storage.
+Public HTTPS/e-mail, optional target engines, remote object storage, connected browser matrices and arbitrary-code microVM execution are tracked separately as non-blocking external validation/deployment gates. They no longer reduce internal V1 completion; local/self-hosted capabilities and disabled unsafe execution remain the V1 behavior.

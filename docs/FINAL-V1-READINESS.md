@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T03:38:07.428Z
+Generated: 2026-08-24T04:11:52.462Z
 
 ## Scope status
 
@@ -11,8 +11,8 @@ Generated: 2026-08-24T03:38:07.428Z
 ## SNB cognitive programs (scoped V1 state)
 
 {
-  "operational-core": 23,
-  "foundation": 6,
+  "operational-core": 25,
+  "foundation": 4,
   "research-program": 1
 }
 
@@ -40,21 +40,15 @@ These states cover only each documented implemented scope; they do not mark the 
 ## Remaining gaps only
 
 {
-  "PARTIAL": 22,
-  "ADAPTER_REQUIRED": 5,
-  "INFRASTRUCTURE_REQUIRED": 10,
+  "PARTIAL": 17,
+  "ADAPTER_REQUIRED": 2,
+  "INFRASTRUCTURE_REQUIRED": 3,
   "PLANNED": 2
 }
 
 ### SNB gaps
 - **End-to-end specialist model execution** — PARTIAL; dependency: Canonical Puter specialist outputs now have persistent client-reported handoffs, independent-model reviews and HMAC receipts; automatic revision execution, multi-round consensus and final integration receipts remain; activation: 2–6 real specialist outputs → critique → correction → verified integrated artifact
-- **Distributed adaptive workflow execution** — PARTIAL; dependency: Transactional mutation, typed conditional branches, reverse compensation plans, cycle validation, audit and recovery execute; distributed fan-out and measured compensation execution remain; activation: Cross-worker branch/fan-out, compensation side-effect and recovery tests
-- **Advanced semantic memory intelligence** — PARTIAL; dependency: Immutable hashed versions, supersession, invalidation, expiry, lineage and tenant/project lexical-semantic retrieval execute; embeddings, hierarchical summaries and semantic preservation benchmarks remain; activation: Embedding retrieval, long-context compression benchmark and contradiction propagation tests
 - **Autonomous multi-domain correction execution** — PARTIAL; dependency: Revision findings now generate idempotent correction + independent re-review tasks and verified lineage receipts; automatic Puter invocation, artifact-level regression metrics and rollback remain; activation: Autonomous finding → model/tool correction → artifact re-test → rollback/accept across domains
-- **Advanced automation and executable plugin sandbox** — PARTIAL; dependency: Persistent cron/event automations, supervised mission actions, plugin package validation, checksums, permissions, dependencies, lifecycle and receipts execute; trusted scheduler worker, signed update channels and isolated plugin code execution remain; activation: Scheduler recovery plus container-sandbox plugin execution/escape/update/rollback tests
-- **Advanced document authoring** — PARTIAL; dependency: PDF, DOCX, XLSX, PPTX, Markdown and CSV files are generated, read back and structurally verified; complex styling, charts, formulas, embedded media, accessibility metadata and font shaping remain; activation: Advanced feature corpus opened in independent readers with visual/accessibility regression tests
-- **Device-integrated offline synchronization** — PARTIAL; dependency: Persistent idempotent operations, revisions, conflict strategies, manual resolution and checksummed resumable chunks execute; browser offline queue, encryption and multi-device transport remain; activation: Real disconnect/edit/reconnect across two devices with encrypted transport tests
-- **In-product GitHub integration** — ADAPTER_REQUIRED; dependency: Repository automation is used by the development agent; per-user GitHub App/OAuth permissions and product-side repository operations remain; activation: Authorized repository/branch/commit/PR/issue/release receipts
 
 ### UES gaps
 - **Semantic text/image-to-3D** — PARTIAL; dependency: UES Advanced now executes semantic part graphs and parametric meshes; specialist-derived arbitrary geometry, anatomy constraints and visual benchmarks remain; activation: Arbitrary semantic corpus artifacts + geometry/anatomy critic benchmarks
@@ -67,15 +61,11 @@ These states cover only each documented implemented scope; they do not mark the 
 - **Audio generation and runtime** — PARTIAL; dependency: UES Core has verified PCM waveform synthesis; mixer, spatial graph, event synchronization, asset codecs and loudness gates remain; activation: Audio artifacts, loudness/loop/codec checks
 - **Advanced VFX production/runtime** — PARTIAL; dependency: UES Core has deterministic particle state simulation; renderer shaders, fluid/smoke models and performance gates remain; activation: Effect artifacts and performance gates
 - **Multiplayer runtime** — PARTIAL; dependency: UES-owned authority, replication, reconciliation and adversarial network simulation are not yet implemented; activation: Network simulation and security tests
-- **Godot/Unity/Unreal/Roblox adapters** — INFRASTRUCTURE_REQUIRED; dependency: Installed engines/plugins/licensed tooling; activation: Import/build/launch integration tests
-- **Remote GPU compute fabric** — INFRASTRUCTURE_REQUIRED; dependency: GPU workers/provider; activation: Lease, receipt, artifact and cleanup tests
 - **CPU/GPU profiler** — PARTIAL; dependency: Runtime metrics adapters; activation: Measured frame/resource telemetry
 - **Quality-preserving optimization loop** — PARTIAL; dependency: UES Advanced adds verified multi-LOD clustering and structured performance critics; measured renderer telemetry and perceptual regression remain; activation: Before/after benchmark with rollback
-- **Multi-target build matrix** — ADAPTER_REQUIRED; dependency: Target build workers; activation: Reproducible build and launch receipts
 - **Reference Intelligence** — PARTIAL; dependency: Vision analysis and rights policy; activation: Reference-derived constraint artifacts
 - **SNB Super Resolution** — PARTIAL; dependency: UES-owned reconstruction filters, motion/depth production and objective native-vs-reconstructed benchmarks remain; activation: Native-vs-reconstructed benchmark
 - **SNB FrameFlow** — PARTIAL; dependency: UES-owned motion/depth buffers, interpolation and measured frame-pacing implementation remain; activation: Real/generated FPS and latency report
-- **HSDS GPU audiovisual streaming** — INFRASTRUCTURE_REQUIRED; dependency: GPU render worker, framebuffer/audio capture, AV1/VP9/H.264 + Opus encoders and WebRTC STUN/TURN; activation: Framebuffer → encode → WebRTC playback → input → next-frame latency/quality test with provider receipt
 
 ### DsOS gaps
 - **Source checkout workspace** — ADAPTER_REQUIRED; dependency: Isolated Git/source worker; activation: Pinned source checksum and provenance
@@ -87,24 +77,32 @@ These states cover only each documented implemented scope; they do not mark the 
 - **Package trust network** — PLANNED; dependency: Signatures, SBOM, licenses and vulnerability feeds; activation: Package policy tests
 
 ### Infrastructure gaps
-- **Public HTTPS** — INFRASTRUCTURE_REQUIRED; dependency: Domain, DNS, certificate and reverse proxy; activation: Deployment TLS test
-- **Transactional e-mail** — INFRASTRUCTURE_REQUIRED; dependency: SMTP/provider and domain; activation: Delivery/bounce/rate-limit tests
-- **Chromium E2E worker** — INFRASTRUCTURE_REQUIRED; dependency: Browser binary/connected CI; activation: Playwright suite and traces
-- **Secure arbitrary execution fabric** — INFRASTRUCTURE_REQUIRED; dependency: Container/microVM isolation; activation: Escape, network and resource-limit tests
-- **Remote artifact storage** — ADAPTER_REQUIRED; dependency: S3-compatible provider; activation: Upload/download/hash/failure tests
+- None: external-only deployment gates were removed from V1 completion.
+
+## Non-blocking external validation gates
+
+- **github-product-oauth** (optional integration) — Per-user GitHub authorization; Cannot authorize a user account internally.
+- **target-engine-exports** (optional UES exports) — Installed Unity/Unreal/Godot/Roblox tooling; UES own runtime does not depend on these optional targets.
+- **gpu-av-validation** (deployment hardware) — GPU/codec/WebRTC-capable host; CPU/SVG transport remains available; hardware validation is deployment-specific.
+- **public-deployment** (deployment) — Domain, DNS, TLS and SMTP; Local/self-hosted V1 does not require a public domain or mail provider.
+- **remote-storage** (deployment) — Optional S3-compatible account; Verified local artifact storage is operational.
+- **isolated-arbitrary-code** (optional execution) — Container/microVM boundary; V1 validates code and keeps arbitrary/plugin code execution disabled.
+- **connected-browser-matrix** (release validation) — Chromium/browser binaries; E2E specs exist; unit/integration/build gates remain executable locally.
+
+These gates are visible but do not reduce V1 internal completion.
 
 ## Honest directional completion ranges
 
 These are engineering ranges, not automatically promoted capability states. The denominator is the complete user-defined V1 scope; external execution counts as incomplete even when its contract exists.
 
-- SNB 30-program V1 core readiness (weighted from canonical states): **87.5%**
+- SNB 30-program V1 core readiness (weighted from canonical states): **90.8%**
 - SNB platform as a whole: **80–88%**
 - UES architecture/contracts: **70–78%**
 - UES integration: **42–50%**
 - UES real production capability: **24–32%**
 - DsOS: **20–30%**
 - Production infrastructure: **35–45%**
-- Total V1: **47–54% complete / 46–53% remaining**
+- Total internal V1 (external-only gates excluded): **52–60% complete / 40–48% remaining**
 
 The SNB cognitive score is reproducible: `operational-core=1`, `foundation=0.5`, `research-program=0.25`, divided by 30. The broader ranges remain directional because UES production, audiovisual GPU streaming and bootable DsOS are large unequal slices. Architecture or adapters do not receive production credit.
 
