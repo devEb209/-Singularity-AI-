@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T03:26:51.436Z
+Generated: 2026-08-24T03:38:07.428Z
 
 ## Scope status
 
@@ -11,8 +11,8 @@ Generated: 2026-08-24T03:26:51.436Z
 ## SNB cognitive programs (scoped V1 state)
 
 {
-  "operational-core": 22,
-  "foundation": 7,
+  "operational-core": 23,
+  "foundation": 6,
   "research-program": 1
 }
 
@@ -97,7 +97,7 @@ These states cover only each documented implemented scope; they do not mark the 
 
 These are engineering ranges, not automatically promoted capability states. The denominator is the complete user-defined V1 scope; external execution counts as incomplete even when its contract exists.
 
-- SNB 30-program V1 core readiness (weighted from canonical states): **85.8%**
+- SNB 30-program V1 core readiness (weighted from canonical states): **87.5%**
 - SNB platform as a whole: **80–88%**
 - UES architecture/contracts: **70–78%**
 - UES integration: **42–50%**

@@ -58,6 +58,7 @@ import { AutomationEngine } from './services/automation/service.js'
 import { PluginRuntime } from './services/plugins/service.js'
 import { WorkflowControlService } from './services/workflow-control/service.js'
 import { OfflineSyncService } from './services/offline-sync/service.js'
+import { AutonomousBenchmarkScientist } from './services/benchmark-scientist/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -127,6 +128,7 @@ const workflowBranchSchema=z.object({reason:z.string().min(3).max(1000),facts:z.
 const compensationSchema=z.object({reason:z.string().min(3).max(1000),definitions:z.array(z.object({forTask:z.string(),title:z.string(),kind:z.string(),input:z.record(z.string(),z.unknown()).optional()})).min(1).max(100)})
 const offlineOperationSchema=z.object({id:z.string().min(1).max(160),deviceId:z.string().min(1).max(160),key:z.string().min(1).max(300),baseRevision:z.number().int().nonnegative(),patch:z.record(z.string(),z.unknown()),createdAt:z.string()})
 const offlineSyncSchema=z.object({operations:z.array(offlineOperationSchema).max(1000),strategy:z.enum(['manual','server-wins','client-wins']).default('manual')})
+const benchmarkProposalSchema=z.object({projectId:z.string(),capability:capabilitySchema,version:z.string().regex(/^[a-zA-Z0-9._-]+$/).max(100)})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -190,6 +192,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const pluginRuntime=new PluginRuntime(store,appConfig.EXECUTION_RECEIPT_SECRET)
   const workflowControl=new WorkflowControlService(store,missions)
   const offlineSync=new OfflineSyncService(appConfig.EXECUTION_RECEIPT_SECRET)
+  const benchmarkScientist=new AutonomousBenchmarkScientist(store,artifactGraph)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
@@ -260,6 +263,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/admin/models/health', { preHandler:modelSyncAuthorized }, async request=>{const value=modelHealthSchema.parse(request.body);return modelHealth.record(value.modelKey,value.success,value.latencyMs,value.source,value.error)})
   app.get('/api/v1/models/puter/health', { preHandler:authenticated }, async request=>modelHealth.summary(z.string().min(1).parse((request.query as {modelKey?:string}).modelKey)))
   app.get('/api/v1/benchmarks/suites', { preHandler: authenticated }, async () => ({ data: benchmarkSuites }))
+  app.post('/api/v1/benchmarks/proposals',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await benchmarkScientist.propose(request.userId,benchmarkProposalSchema.parse(request.body))))
   app.get('/api/v1/benchmarks/campaigns', { preHandler: authenticated }, async request => ({ data: benchmarkCampaigns.list(request.userId) }))
   app.post('/api/v1/benchmarks/campaigns', { preHandler: authenticated }, async (request,reply) => { const value=benchmarkCampaignSchema.parse(request.body);return reply.status(201).send(benchmarkCampaigns.create(request.userId,value.capability,value.benchmarkVersion)) })
   app.get('/api/v1/benchmarks/campaigns/:id', { preHandler: authenticated }, async request => { const query=request.query as {status?: 'pending'|'claimed'|'submitted'|'verified'|'failed';limit?:string;offset?:string};return benchmarkCampaigns.detail(request.userId,(request.params as {id:string}).id,query.status,Number(query.limit??100),Number(query.offset??0)) })

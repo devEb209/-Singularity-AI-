@@ -1,0 +1,1 @@
+import{describe,expect,it}from'vitest';import{critiqueProposal}from'./critic.js';import{generateCases}from'./cases.js';describe('benchmark proposal critic',()=>it('requires diverse adversarial cases and criteria',()=>{const cases=generateCases('code',['reliability']);expect(critiqueProposal({cases} as any).valid).toBe(true)}))

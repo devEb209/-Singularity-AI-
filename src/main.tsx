@@ -17,6 +17,9 @@ import './divine-studio.css'
 import './divine-os.css'
 import App from './App'
 import { ErrorBoundary } from './ErrorBoundary'
+import { registerOfflineWorker } from './lib/offline'
+
+if(import.meta.env.PROD)void registerOfflineWorker().catch(()=>undefined)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><ErrorBoundary><App /></ErrorBoundary></StrictMode>,

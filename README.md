@@ -174,6 +174,7 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 - [Plugin Package Runtime](docs/PLUGIN-RUNTIME.md)
 - [Conditional Workflow Control](docs/WORKFLOW-CONTROL.md)
 - [Offline Sync](docs/OFFLINE-SYNC.md)
+- [Autonomous Benchmark Scientist](docs/AUTONOMOUS-BENCHMARK-SCIENTIST.md)
 - [Puter and model policy](docs/PUTER.md)
 - [Research Swarm](docs/RESEARCH-SWARM.md)
 - [Capability Fabric](docs/CAPABILITY-FABRIC.md)
