@@ -1,0 +1,1 @@
+export const mergePatch=(content:Record<string,unknown>,patch:Record<string,unknown>)=>{const next={...content};for(const[key,value]of Object.entries(patch)){if(value===null)delete next[key];else next[key]=value}return next}
