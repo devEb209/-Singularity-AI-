@@ -1,0 +1,24 @@
+# V1 is the first generation — not a reduced final
+
+This rule is mandatory for every remaining SNB/UES decision.
+
+```text
+V1  = first GENERATION. Complete. Must COMPETE when launched.
+V2  = next GENERATION. Aims to SURPASS the companies V1 already competes with.
+```
+
+V1 is not:
+
+- an MVP;
+- a demo slice;
+- a “reduced final”;
+- a contract-only architecture;
+- work that can be postponed because “the real product is V2”.
+
+If a capability is required for SNB/UES to compete as a launched generation, it belongs to V1.
+
+If a capability has **no internal option** and needs a third-party account we refused to depend on (NASA live, Google tiles, Cesium ion, WebRTC vendor, GPU host), it stays an adapter/external gate. It does **not** get faked, and it does **not** redefine V1 as a toy.
+
+DsOS remains a module, not the product that competes. It is not the V1 launch center.
+
+Compete does not mean claiming “most powerful in the world” without evidence. It means the generation is complete enough to stand as a product against the companies in its category: composed intelligence + verified execution + universal creation.
