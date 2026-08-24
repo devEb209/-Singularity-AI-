@@ -1,12 +1,12 @@
 # Final V1 Readiness Report — First generation (compete bar)
 
-Generated: 2026-08-24T22:31:55.980Z
+Generated: 2026-08-24T22:33:35.426Z
 
 ## First generation rule
 
 V1 is the first **generation** of SNB, not a reduced final, MVP or demo slice. It must be complete enough to **compete** when launched. V2 aims to **surpass**. See [V1-FIRST-GENERATION.md](./V1-FIRST-GENERATION.md).
 
-Reproducible compete score (`GET /api/v1/v1-generation`): **66.3% complete / 33.7% remaining**. `complete=false`. DsOS is **not** in the compete bar.
+Reproducible compete score (`GET /api/v1/v1-generation`): **67.8% complete / 32.2% remaining**. `complete=false`. DsOS is **not** in the compete bar.
 
 ## Scope status
 
@@ -102,7 +102,7 @@ These gates stay visible. They do not redefine V1 as a reduced product.
 ## Supporting scores (not a substitute for the compete bar)
 
 - SNB 30-program implemented-scope score: **90.8%**
-- Compete axes: {"intelligence":{"percent":89.3,"items":5},"trust":{"percent":50,"items":4},"creation":{"percent":63.4,"items":7},"world":{"percent":73,"items":4},"shipping":{"percent":52.5,"items":5}}
+- Compete axes: {"intelligence":{"percent":89.3,"items":5},"trust":{"percent":50,"items":4},"creation":{"percent":63.4,"items":7},"world":{"percent":73,"items":4},"shipping":{"percent":60.6,"items":5}}
 - DsOS module: **20–30%** of itself
 
 The SNB cognitive score remains: `operational-core=1`, `foundation=0.5`, `research-program=0.25`, divided by 30. Architecture or adapters do not receive production credit.
