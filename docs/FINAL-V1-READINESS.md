@@ -1,6 +1,6 @@
 # Final V1 Readiness Report — Pre-finalization
 
-Generated: 2026-08-24T00:46:42.040Z
+Generated: 2026-08-24T01:11:53.068Z
 
 ## Scope status
 
@@ -52,7 +52,7 @@ These states cover only each documented implemented scope; they do not mark the 
 - **Versioned semantic memory and context** — PARTIAL; dependency: Scoped lexical retrieval, importance, compression digest and decision memory execute; embeddings, versions, expiry, invalidation and semantic preservation metrics remain; activation: Isolation, expiry, version lineage and retrieval benchmark
 - **Autonomous multi-domain correction execution** — PARTIAL; dependency: Revision findings now generate idempotent correction + independent re-review tasks and verified lineage receipts; automatic Puter invocation, artifact-level regression metrics and rollback remain; activation: Autonomous finding → model/tool correction → artifact re-test → rollback/accept across domains
 - **Automation and plugin runtime** — PARTIAL; dependency: Tool/capability manifests and workers exist; schedules, triggers, plugin lifecycle, sandbox and signed updates remain; activation: Persistent trigger and plugin install/disable/update/rollback tests
-- **Universal document production** — PARTIAL; dependency: Text/JSON/CSV/file artifacts exist; PDF, DOCX, XLSX and PPTX production plus structural validators remain; activation: Real files opened, parsed and structurally verified
+- **Advanced document authoring** — PARTIAL; dependency: PDF, DOCX, XLSX, PPTX, Markdown and CSV files are generated, read back and structurally verified; complex styling, charts, formulas, embedded media, accessibility metadata and font shaping remain; activation: Advanced feature corpus opened in independent readers with visual/accessibility regression tests
 - **Offline queue and conflict-aware synchronization** — PARTIAL; dependency: Local persistence works; client operation queue, resumable transfer and conflict resolution remain; activation: Disconnect/edit/reconnect/conflict integration tests
 - **In-product GitHub integration** — ADAPTER_REQUIRED; dependency: Repository automation is used by the development agent; per-user GitHub App/OAuth permissions and product-side repository operations remain; activation: Authorized repository/branch/commit/PR/issue/release receipts
 

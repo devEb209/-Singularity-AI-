@@ -168,6 +168,7 @@ puter-models.txt      canonical Puter snapshot supplied by project owner
 
 - [Backend](docs/BACKEND.md)
 - [SNB Master Intelligence and 30 cognitive programs](docs/SNB-MASTER-INTELLIGENCE.md)
+- [Universal Document Engine](docs/UNIVERSAL-DOCUMENT-ENGINE.md)
 - [Puter and model policy](docs/PUTER.md)
 - [Research Swarm](docs/RESEARCH-SWARM.md)
 - [Capability Fabric](docs/CAPABILITY-FABRIC.md)

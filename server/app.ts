@@ -52,6 +52,7 @@ import { UesCoreRuntime } from './services/ues-core-runtime.js'
 import { UesAdvancedPipeline } from './services/ues-advanced-pipeline.js'
 import { SnbMasterIntelligence } from './services/snb-master-intelligence.js'
 import { CognitiveCollaborationService } from './services/cognitive-collaboration.js'
+import { UniversalDocumentEngine } from './services/universal-document-engine.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
 
 const registerSchema = z.object({ email: z.string().email(), password: z.string().min(10).max(128), name: z.string().min(2).max(80) })
@@ -109,6 +110,7 @@ const cognitiveFindingSchema=z.object({code:z.string().min(1).max(120),severity:
 const cognitiveHandoffSchema=z.object({missionId:z.string(),taskId:z.string(),modelKey:z.string().min(1).max(600),inputArtifactIds:z.array(z.string()).max(100).default([]),output:z.record(z.string(),z.unknown()),findings:z.array(cognitiveFindingSchema).max(100).default([])})
 const cognitiveReviewSchema=z.object({reviewerTaskId:z.string(),reviewerModelKey:z.string().min(1).max(600),verdict:z.enum(['accept','revise','reject']),findings:z.array(cognitiveFindingSchema).max(100).default([])})
 const correctionVerificationSchema=z.object({correctedHandoffId:z.string().min(1).max(200)})
+const documentCreateSchema=z.object({projectId:z.string(),name:z.string().regex(/^[a-zA-Z0-9._-]+$/).min(1).max(120),title:z.string().min(1).max(500),paragraphs:z.array(z.string().max(20000)).max(500),table:z.array(z.array(z.string().max(10000)).max(200)).max(10000).optional(),formats:z.array(z.enum(['pdf','docx','xlsx','pptx','markdown','csv'])).min(1).max(6)})
 const divineSettingsUpdateSchema=z.object({changes:z.record(z.string(),z.unknown()),preset:z.string().max(80).optional()})
 const divineCommandSchema=z.object({message:z.string().min(1).max(10000),attachmentFileIds:z.array(z.string()).max(20).default([])})
 const experimental4dSchema=z.object({projectId:z.string(),name:z.string().min(1).max(100),size:z.number().min(.1).max(10).optional(),projectionDistance:z.number().min(.2).max(100).optional()})
@@ -166,6 +168,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const uesAdvanced=new UesAdvancedPipeline(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
   const cognitiveCollaboration=new CognitiveCollaborationService(store,missions,appConfig.EXECUTION_RECEIPT_SECRET)
+  const documentEngine=new UniversalDocumentEngine(store,artifactGraph)
   capabilityFabric.registerInternalVerified({id:'snb.procedural-3d',name:'SNB Procedural 3D Fallback',version:'1.0.0',capabilities:['3d.generate','3d.uv','material.pbr','animation.motion','3d.export','verify.3d'],outputs:{artifact:'GLB',mesh:'24 vertices / 12 triangles',animation:'turntable'},verifier:'glb-structural-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.procedural-pbr',name:'SNB Procedural PBR',version:'1.0.0',capabilities:['texture.generate','material.pbr','texture.optimize','verify.texture'],outputs:{maps:['albedo','normal','roughness','metallic','ao','height'],material:'JSON'},verifier:'png-and-mapset-v1'})
   capabilityFabric.registerInternalVerified({id:'snb.scene-builder',name:'SNB Scene Builder',version:'1.0.0',capabilities:['scene.build','artifact.integrate'],outputs:{scene:'snb-scene-v1'},verifier:'scene-dependency-v1'})
@@ -173,6 +176,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'snb.experimental-4d',name:'SNB Experimental 4D Runtime',version:'1.0.0',capabilities:['math.4d','geometry.4d','projection.4d-3d','visualization.4d'],outputs:{geometry:'snb-4d-geometry-v1',build:'offline HTML canvas'},verifier:'tesseract-topology-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.core-runtime',name:'UES Owned Core Runtime',version:'1.1.0',capabilities:['world.generate','physics.simulate','3d.retopology','rig.character','animation.motion','audio.synthesize','vfx.simulate','3d.optimize'],outputs:{artifact:'runtime.ues-core'},verifier:'ues-core-multisystem-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.advanced-pipeline',name:'UES Advanced Internal Pipeline',version:'1.0.0',capabilities:['3d.semantic','3d.generate','physics.broadphase','physics.raycast','animation.ik','animation.fk','animation.retarget','3d.lod','quality.critics'],outputs:{artifact:'production.ues-advanced'},verifier:'ues-advanced-production-v1'})
+  capabilityFabric.registerInternalVerified({id:'snb.document-engine',name:'SNB Universal Document Engine',version:'1.0.0',capabilities:['document.pdf','document.docx','document.xlsx','document.pptx','document.markdown','document.csv'],outputs:{artifacts:['PDF','DOCX','XLSX','PPTX','Markdown','CSV']},verifier:'document-structural-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -373,6 +377,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/master-intelligence/handoffs/:id/reviews',{preHandler:authenticated,config:{rateLimit:{max:60,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(cognitiveCollaboration.review(request.userId,(request.params as {id:string}).id,cognitiveReviewSchema.parse(request.body))))
   app.post('/api/v1/master-intelligence/handoffs/:id/schedule-correction',{preHandler:authenticated},async request=>cognitiveCollaboration.scheduleCorrection(request.userId,(request.params as {id:string}).id))
   app.post('/api/v1/master-intelligence/handoffs/:id/verify-correction',{preHandler:authenticated},async request=>cognitiveCollaboration.verifyCorrection(request.userId,(request.params as {id:string}).id,correctionVerificationSchema.parse(request.body).correctedHandoffId))
+  app.get('/api/v1/documents/capabilities',{preHandler:authenticated},async()=>documentEngine.capabilities())
+  app.post('/api/v1/documents',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await documentEngine.create(request.userId,documentCreateSchema.parse(request.body))))
+  app.get('/api/v1/documents/:fileId/verify',{preHandler:authenticated},async request=>documentEngine.verifyFile(request.userId,(request.params as {fileId:string}).fileId))
   app.post('/api/v1/master-intelligence/compile',{preHandler:authenticated,config:{rateLimit:{max:20,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await masterIntelligence.compile(request.userId,masterCompileSchema.parse(request.body))))
   app.post('/api/v1/problem-solver/analyze', { preHandler: authenticated }, async request => problemSolver.analyze(problemSchema.parse(request.body).problem))
   app.post('/api/v1/problem-solver/compile', { preHandler: authenticated }, async (request, reply) => { const value = problemSchema.parse(request.body); const analysis = problemSolver.analyze(value.problem); if (analysis.classification === 'domain-discovery-required' && !value.allowUnverifiedDomain) throw new AppError('O problema exige um novo Domain Profile antes da execução.', 409, 'DOMAIN_DISCOVERY_APPROVAL_REQUIRED', analysis.domainDiscovery); const compiled = missions.create(request.userId, value.problem, analysis.taskGraph.nodes.map(node => ({ key: node.key, title: node.title, kind: node.kind, dependsOn: node.dependsOn, input: { domainIds: node.domainIds, requiresHumanApproval: node.requiresHumanApproval, problemGraphId: analysis.graphId } })), value.projectId,{userIntent:value.problem,requiredCapabilities:analysis.domains.map(domain=>domain.id),constraints:analysis.safety,risks:analysis.safety,successCriteria:['Task Graph concluído','Verification stage aprovada'],verificationRequirements:['Verifier determinístico quando disponível','Proveniência preservada'],finalDeliverable:'Resultado da missão com evidências, limitações e verificação',autonomy:'SUPERVISED'}); return reply.status(201).send({ analysis, ...compiled }) })
