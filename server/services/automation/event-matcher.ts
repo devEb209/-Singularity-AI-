@@ -1,0 +1,1 @@
+export const matchEvent=(expected:string,filters:Record<string,string>,event:string,payload:Record<string,unknown>)=>expected===event&&Object.entries(filters).every(([key,value])=>String(payload[key]??'')===value)

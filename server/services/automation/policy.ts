@@ -1,0 +1,3 @@
+import { AppError } from '../../lib/errors.js'
+import type { AutomationAction } from './types.js'
+export const validateAutomationAction=(action:AutomationAction)=>{if(action.kind!=='create-mission')throw new AppError('Ação de automação não permitida.',400,'AUTOMATION_ACTION_DENIED');if(!action.tasks.length||action.tasks.length>100)throw new AppError('Automação deve criar entre 1 e 100 tarefas.',400,'AUTOMATION_TASK_LIMIT');if(action.tasks.some(task=>/physical|host-root|malware/i.test(`${task.kind} ${task.title}`)))throw new AppError('Automação de alto impacto exige fluxo humano explícito.',409,'AUTOMATION_APPROVAL_REQUIRED');return action}
