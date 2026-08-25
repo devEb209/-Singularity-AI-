@@ -1,7 +1,7 @@
 import { DThesisCore } from '../d-thesis/core.js'
 import { runKernel } from '../ues-kernel/pipeline.js'
 import { capsulePlaneCcd, rotatingBoxAabbCcd, spherePlaneCcd, sphereSphereCcd } from './ccd.js'
-import { obbObbRotationalCcd, obbOverlap } from './obb.js'
+import { obbObbRotationalCcd, obbObbSampledCcd, obbOverlap } from './obb.js'
 import { crba, defaultArm, defaultPendulum, forwardDynamics, massSpd, pendulumClosedForm } from './featherstone.js'
 
 export class UesDynamicsCore {
@@ -15,6 +15,7 @@ export class UesDynamicsCore {
     const yaw = rotatingBoxAabbCcd([0, 0.4, 0], [0.35, 0.12, 0.12], 0, 4, [0.25, 0, -0.2], [0.7, 0.8, 0.2], 1)
     const separate = obbOverlap({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [2, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 })
     const rotating = obbObbRotationalCcd({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [0.85, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, 2, 1)
+    const pitched = obbObbSampledCcd({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [0, 0, 0.85], half: [0.4, 0.4, 0.4], yaw: 0 }, { yaw: 0, pitch: 0.9 }, 1)
     const rod = defaultPendulum()
     const analytic = pendulumClosedForm(rod[0], 0)
     const numeric = forwardDynamics(rod, { q: [0], qd: [0] }, [0])[0]
@@ -27,7 +28,7 @@ export class UesDynamicsCore {
       { module: 'dynamics', accepted: falling.hit && floor.hit, note: falling.method },
       { module: 'represent', accepted: true, note: 'serial chain only when needed' },
       { module: 'd-o15', accepted: true, note: 'planar CRBA n<=3' },
-      { module: 'execute', accepted: Number.isFinite(numeric) && qdd.every(Number.isFinite) && rotating.hit && !separate, note: 'forward dynamics + obb' },
+      { module: 'execute', accepted: Number.isFinite(numeric) && qdd.every(Number.isFinite) && rotating.hit && pitched.hit && !separate, note: 'forward dynamics + obb' },
       { module: 'verify', accepted: Math.abs(numeric - analytic) < 1e-6 && massSpd(mass), note: 'pendulum closed form' },
       { module: 'refine', accepted: !miss.hit, note: 'negative CCD' },
     ])
@@ -39,7 +40,7 @@ export class UesDynamicsCore {
     })
     return {
       format: 'ues-dynamics-v1',
-      ccd: { falling, miss, floor, capsule, yaw, obb: rotating },
+      ccd: { falling, miss, floor, capsule, yaw, obb: rotating, pitched },
       featherstone: {
         algorithm: 'crba-rnea-planar-serial',
         pendulum: { analytic, numeric, error: Math.abs(numeric - analytic) },

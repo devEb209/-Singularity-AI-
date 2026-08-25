@@ -15,4 +15,12 @@ RRW must be able to hold **any phenomenon human knowledge can describe**. The se
 
 Phenomena are produced from **properties + couplings + knowledge**, not from a folder of `fire.ts` / `cloth.ts` / `shader-water` assets.
 
-Honest limit: this is not complete reality, not NIST-measured spectra, not always-on atomic simulation.
+The close loop now executes:
+
+```text
+intent → internal knowledge → compose biome → D-O15 → description packets → critic → versioned history
+```
+
+A description of a desert is not the same world as a salty coast. A height/moisture map is knowledge, not a pasted heightfield. Living scale has no conceptual 320/1e6 cap.
+
+Honest limit: this is not complete reality, not NIST-measured spectra, not always-on atomic simulation, and **Genesis is not closed**.

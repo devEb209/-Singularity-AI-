@@ -22,6 +22,10 @@ const cues: Cue[] = [
   { keys: ['solo', 'soil', 'terra', 'ground', 'rocha'], substanceId: 'SiO2', kind: 'structure', domain: 'geology', label: 'interpreted soil' },
   { keys: ['estrela', 'star', 'sol', 'sun'], substanceId: 'H', kind: 'phenomenon', domain: 'astronomy', label: 'interpreted star' },
   { keys: ['animal', 'bicho', 'fera'], substanceId: 'H2O', kind: 'living', domain: 'organisms', label: 'interpreted animal' },
+  { keys: ['deserto', 'desert', 'duna', 'árido', 'arido'], substanceId: 'SiO2', kind: 'structure', domain: 'geology', label: 'interpreted desert' },
+  { keys: ['neve', 'snow', 'gelo', 'ice', 'alpino', 'alpine'], substanceId: 'H2O', kind: 'matter', domain: 'climate', label: 'interpreted ice' },
+  { keys: ['montanha', 'mountain', 'cume', 'serra'], substanceId: 'SiO2', kind: 'structure', domain: 'geology', label: 'interpreted mountain' },
+  { keys: ['chuva', 'rain', 'precipita'], substanceId: 'H2O', kind: 'field', domain: 'climate', label: 'interpreted rain' },
 ]
 
 const claim = (id: string, statement: string): KnowledgeClaim => ({
@@ -40,7 +44,7 @@ const nodeFrom = (cue: Cue, index: number): RealityNode => {
     kind: cue.kind,
     label: cue.label,
     substanceId: cue.substanceId,
-    temperatureK: cue.kind === 'phenomenon' && cue.substanceId === 'C' ? 900 : 290,
+    temperatureK: cue.label.includes('ice') ? 260 : cue.kind === 'phenomenon' && cue.substanceId === 'C' ? 900 : 290,
     pressurePa: 101325,
     phase: substance?.phase293 ?? 'mixture',
     extent: { kind: 'sphere', center: [index * 1.4, cue.kind === 'field' ? 6 : 0.4, 0], radius: 0.8 },

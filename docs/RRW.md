@@ -46,11 +46,11 @@ The catalog is **open**. Seed domains are not the universe. Unknown statements b
 ```text
 POST /api/v1/rrw/build
 POST /api/v1/rrw/phenomena/build
+POST /api/v1/rrw/loop/build
+POST /api/v1/rrw/present/compile
 POST /api/v1/rrw/interpret/compile
 POST /api/v1/rrw/verify/compile
 GET  /api/v1/rrw/catalog
 POST /api/v1/rrw/resource/compile
 POST /api/v1/rrw/studio/compile
-POST /api/v1/snb/canon/compile
-POST /api/v1/snb/collab/compile
 ```

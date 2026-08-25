@@ -208,6 +208,8 @@ class ApiClient {
   buildRrwPhenomena(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/phenomena/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileRrwInterpret(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/interpret/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileRrwVerify(projectId:string,name:string){return this.request<any>('/api/v1/rrw/verify/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  buildRrwLoop(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/loop/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileRrwPresent(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/present/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileSnbCanon(projectId:string,name:string){return this.request<any>('/api/v1/snb/canon/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   compileSnbCollab(projectId:string,name:string){return this.request<any>('/api/v1/snb/collab/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}

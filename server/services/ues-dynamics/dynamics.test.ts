@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { capsulePlaneCcd, spherePlaneCcd, sphereSphereCcd } from './ccd.js'
-import { obbObbRotationalCcd, obbOverlap } from './obb.js'
+import { obbObbRotationalCcd, obbObbSampledCcd, obbOverlap } from './obb.js'
 import { UesDynamicsCore } from './core.js'
 import { crba, defaultPendulum, forwardDynamics, massSpd, pendulumClosedForm } from './featherstone.js'
 
@@ -23,6 +23,7 @@ describe('UES analytic CCD and Featherstone CRBA', () => {
     expect(result.featherstone.spatialBranchedAba).toBe(false)
     expect(obbOverlap({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [2, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 })).toBe(false)
     expect(obbObbRotationalCcd({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [0.85, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, 2, 1).hit).toBe(true)
+    expect(obbObbSampledCcd({ center: [0, 0, 0], half: [0.4, 0.4, 0.4], yaw: 0 }, { center: [0, 0, 0.85], half: [0.4, 0.4, 0.4], yaw: 0 }, { yaw: 0, pitch: 0.9 }, 1).hit).toBe(true)
     expect(result.verification.completeObbObb).toBe(false)
     expect(result.ccd.obb.hit).toBe(true)
   })

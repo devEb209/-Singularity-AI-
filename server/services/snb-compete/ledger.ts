@@ -29,7 +29,7 @@ export const generationLedger: GenerationItem[] = [
   { id: 'world.planet', axis: 'world', name: 'Mundo/planeta/água/cidade internos', state: 'OPERATIONAL', weight: 6, note: 'Regras + fixture; não Terra NASA' },
   { id: 'world.physics', axis: 'world', name: 'Física determinística CPU', state: 'OPERATIONAL', weight: 6, note: 'GJK/EPA, CCD analítico, Featherstone CRBA/RNEA planar; não PhysX' },
   { id: 'world.society', axis: 'world', name: 'Sociedade NMN', state: 'PARTIAL', weight: 4, note: 'D-O15 por necessidade×representação; sem teto conceitual 320/1e6' },
-  { id: 'world.rrw', axis: 'world', name: 'RRW — representação da realidade', state: 'PARTIAL', weight: 8, note: 'Matéria/espectro/química/campos/organismos/D-O15 executam num contínuo; não é realidade completa, NIST nem Unreal.' },
+  { id: 'world.rrw', axis: 'world', name: 'RRW — representação da realidade', state: 'PARTIAL', weight: 8, note: 'Laço intenção→composição→D-O15→crítica executa; não é Gênesis fechada, NIST nem Unreal.' },
   { id: 'world.live-earth', axis: 'world', name: 'Terra fotogramétrica live', state: 'ADAPTER', weight: 4, note: 'HLOD próprio; dataset live adapter' },
   { id: 'ship.runtime', axis: 'shipping', name: 'Runtime UES + HSDS SVG', state: 'OPERATIONAL', weight: 5, note: 'Leve; GPU/WebRTC adapter' },
   { id: 'ship.package', axis: 'shipping', name: 'Release packager + quality gates', state: 'OPERATIONAL', weight: 4, note: 'Só artifacts verificados' },

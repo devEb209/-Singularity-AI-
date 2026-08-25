@@ -140,6 +140,8 @@ import { RrwResourceService } from './services/rrw-resource/service.js'
 import { RrwPhenomenaService } from './services/rrw-phenomena/service.js'
 import { RrwInterpretService } from './services/rrw-interpret/service.js'
 import { RrwVerifyService } from './services/rrw-verify/service.js'
+import { RrwLoopService } from './services/rrw-loop/service.js'
+import { RrwPresentService } from './services/rrw-present/service.js'
 import { SnbCanonService } from './services/snb-canon/service.js'
 import { SnbCollabService } from './services/snb-collab/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
@@ -360,6 +362,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const rrwPhenomena=new RrwPhenomenaService(store,artifactGraph)
   const rrwInterpret=new RrwInterpretService(store,artifactGraph)
   const rrwVerify=new RrwVerifyService(store,artifactGraph)
+  const rrwLoop=new RrwLoopService(store,artifactGraph)
+  const rrwPresent=new RrwPresentService(store,artifactGraph)
   const snbCanon=new SnbCanonService(store,artifactGraph)
   const snbCollab=new SnbCollabService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
@@ -665,6 +669,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/rrw/phenomena/build',{preHandler:authenticated,config:{rateLimit:{max:4,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwPhenomena.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/interpret/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwInterpret.compile(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/verify/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwVerify.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.post('/api/v1/rrw/loop/build',{preHandler:authenticated,config:{rateLimit:{max:4,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwLoop.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/rrw/present/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwPresent.compile(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/canon/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCanon.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/collab/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCollab.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())

@@ -4,6 +4,8 @@ export interface Obb {
   center: V3
   half: V3
   yaw: number
+  pitch?: number
+  roll?: number
 }
 
 const rot = (yaw: number, local: V3): V3 => [
@@ -18,8 +20,29 @@ export const obbAxes = (yaw: number): [V3, V3, V3] => [
   rot(yaw, [0, 0, 1]),
 ]
 
+const orient = (obb: Obb, local: V3): V3 => {
+  const pitch = obb.pitch ?? 0
+  const roll = obb.roll ?? 0
+  if (pitch === 0 && roll === 0) return rot(obb.yaw, local)
+  const cr = Math.cos(roll)
+  const sr = Math.sin(roll)
+  const y1 = local[1] * cr - local[2] * sr
+  const z1 = local[1] * sr + local[2] * cr
+  const cp = Math.cos(pitch)
+  const sp = Math.sin(pitch)
+  const x2 = local[0] * cp + z1 * sp
+  const z2 = -local[0] * sp + z1 * cp
+  return rot(obb.yaw, [x2, y1, z2])
+}
+
+export const obbAxesOf = (obb: Obb): [V3, V3, V3] => [
+  orient(obb, [1, 0, 0]),
+  orient(obb, [0, 1, 0]),
+  orient(obb, [0, 0, 1]),
+]
+
 const project = (obb: Obb, axis: V3) => {
-  const axes = obbAxes(obb.yaw)
+  const axes = obbAxesOf(obb)
   const center = obb.center[0] * axis[0] + obb.center[1] * axis[1] + obb.center[2] * axis[2]
   const radius = obb.half[0] * Math.abs(axes[0][0] * axis[0] + axes[0][1] * axis[1] + axes[0][2] * axis[2])
     + obb.half[1] * Math.abs(axes[1][0] * axis[0] + axes[1][1] * axis[1] + axes[1][2] * axis[2])
@@ -61,4 +84,28 @@ export const obbObbRotationalCcd = (a: Obb, b: Obb, omega: number, dt: number): 
   const end = { ...a, yaw: a.yaw + omega * dt }
   if (obbOverlap(end, b)) return { hit: true, toi: dt, method: 'obb-obb-rotational-sat' }
   return { hit: false, toi: dt, method: 'obb-obb-rotational-sat' }
+}
+
+export const obbObbSampledCcd = (a: Obb, b: Obb, rates: { yaw: number; pitch?: number; roll?: number }, dt: number): CcdHit => {
+  if (obbOverlap(a, b)) return { hit: true, toi: 0, method: 'obb-obb-sampled-sat' }
+  let lo = 0
+  let hi = dt
+  let found = false
+  const pitchRate = rates.pitch ?? 0
+  const rollRate = rates.roll ?? 0
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2
+    const sample = {
+      ...a,
+      yaw: a.yaw + rates.yaw * mid,
+      pitch: (a.pitch ?? 0) + pitchRate * mid,
+      roll: (a.roll ?? 0) + rollRate * mid,
+    }
+    if (obbOverlap(sample, b)) {
+      found = true
+      hi = mid
+    } else lo = mid
+  }
+  if (found) return { hit: true, toi: Number(hi.toFixed(6)), method: 'obb-obb-sampled-sat' }
+  return { hit: false, toi: dt, method: 'obb-obb-sampled-sat' }
 }

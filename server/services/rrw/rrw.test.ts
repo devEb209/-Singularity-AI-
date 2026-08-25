@@ -63,5 +63,8 @@ describe('RRW reality foundation', () => {
     expect(result.continuum.catalogOpen).toBe(true)
     expect(result.continuum.conservedWithSink).toBe(true)
     expect(result.continuum.samePhenomena).toBe(true)
+    expect(result.close.genesisClosed).toBe(false)
+    expect(result.close.puterFired).toBe(false)
+    expect(result.close.sameIds).toBe(true)
   })
 })
