@@ -52,6 +52,7 @@ POST /api/v1/rrw/world/build
 POST /api/v1/rrw/genesis/build
 POST /api/v1/rrw/chain/build
 POST /api/v1/rrw/habit/build
+POST /api/v1/rrw/continue/build
 POST /api/v1/rrw/interpret/compile
 POST /api/v1/rrw/verify/compile
 GET  /api/v1/rrw/catalog

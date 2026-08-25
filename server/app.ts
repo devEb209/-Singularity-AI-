@@ -146,6 +146,7 @@ import { RrwWorldService } from './services/rrw-world/service.js'
 import { RrwGenesisService } from './services/rrw-genesis/service.js'
 import { RrwChainService } from './services/rrw-chain/service.js'
 import { RrwHabitService } from './services/rrw-habit/service.js'
+import { RrwContinueService } from './services/rrw-continue/service.js'
 import { SnbCanonService } from './services/snb-canon/service.js'
 import { SnbCollabService } from './services/snb-collab/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
@@ -372,6 +373,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const rrwGenesis=new RrwGenesisService(store,artifactGraph)
   const rrwChain=new RrwChainService(store,artifactGraph)
   const rrwHabit=new RrwHabitService(store,artifactGraph)
+  const rrwContinue=new RrwContinueService(store,artifactGraph)
   const snbCanon=new SnbCanonService(store,artifactGraph)
   const snbCollab=new SnbCollabService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
@@ -421,6 +423,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.rrw-genesis',name:'UES RRW Genesis Path',version:'1.0.0',capabilities:['reality.circadian','reality.resume','reality.iterate','reality.audio'],outputs:{artifact:'production.rrw-genesis'},verifier:'rrw-genesis-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.rrw-chain',name:'UES RRW Genesis Success Chain',version:'1.0.0',capabilities:['reality.intent','reality.season','reality.hydrology','reality.session','reality.devices','reality.refine'],outputs:{artifact:'production.rrw-chain'},verifier:'rrw-chain-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.rrw-habit',name:'UES RRW Habitation',version:'1.0.0',capabilities:['reality.structure','reality.city','reality.forage','reality.studio-edit','reality.nav'],outputs:{artifact:'production.rrw-habit'},verifier:'rrw-habit-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.rrw-continue',name:'UES RRW Continuity',version:'1.0.0',capabilities:['reality.days','reality.query','reality.envelope','reality.soundscape','reality.shelter'],outputs:{artifact:'production.rrw-continue'},verifier:'rrw-continue-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -688,6 +691,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/rrw/genesis/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwGenesis.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/chain/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwChain.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/habit/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwHabit.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/rrw/continue/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwContinue.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/canon/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCanon.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/collab/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCollab.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())
