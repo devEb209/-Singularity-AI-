@@ -11,7 +11,9 @@ import { fixtureCoastMap, interpretMap } from './map-knowledge.js'
 import { presentWorld } from './present.js'
 import { describePorts } from './ports.js'
 import { budgetOf } from './quantities.js'
+import { interpretImageKnowledge } from './image-knowledge.js'
 import { scaleLiving } from './scale-living.js'
+import { walkReality } from './walk.js'
 
 export const runLoop = (prompt = 'oceano salgado sob céu nublado com fogo, floresta e um humano', ticks = 4) => {
   const knowledge = consultKnowledge(prompt)
@@ -40,6 +42,8 @@ export const runLoop = (prompt = 'oceano salgado sob céu nublado com fogo, flor
   const map = interpretMap(fixtureCoastMap())
   const living = scaleLiving(96)
   const ports = describePorts()
+  const walk = walkReality(prompt)
+  const image = interpretImageKnowledge()
   const phoneIds = phone.adaptations.map(item => item.nodeId).sort().join(',')
   const deskIds = desk.adaptations.map(item => item.nodeId).sort().join(',')
   return {
@@ -56,6 +60,8 @@ export const runLoop = (prompt = 'oceano salgado sob céu nublado com fogo, flor
     map: { wetland: map.wetland, ridge: map.ridge, pastedHeightmap: map.pastedHeightmap },
     living,
     ports,
+    walk: { found: walk.found, recast: walk.recast },
+    image: { learnedVision: image.learnedVision, heightfieldIsIdentity: image.heightfieldIsIdentity },
     verification: {
       valid: critic.accepted
         && phoneIds === deskIds
@@ -65,7 +71,9 @@ export const runLoop = (prompt = 'oceano salgado sob céu nublado com fogo, flor
         && presented.framebufferFoundation === false
         && knowledge.puterFired === false
         && ports.fnws.identity === false
-        && history.lineagePreserved,
+        && history.lineagePreserved
+        && walk.found
+        && image.learnedVision === false,
       traditionalPipeline: false,
       meshIsFoundation: false,
       pbrIsFoundation: false,

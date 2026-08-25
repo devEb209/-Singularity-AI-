@@ -8,6 +8,7 @@ export class RrwStudioCore {
   process() {
     const phone = inspectReality('mobile')
     const desk = inspectReality('dedicated')
+    const desert = inspectReality('mobile', 'deserto quente com dunas')
     const kernel = runKernel('Studio RRW inspeciona nós de realidade, não um viewport de mesh', 'rrw.studio', ['rrw'], [
       { module: 'knowledge', accepted: true, note: 'reality inspector' },
       { module: 'd-thesis', accepted: true, note: 'not Unreal editor' },
@@ -16,7 +17,7 @@ export class RrwStudioCore {
       { module: 'd-o15', accepted: phone.selected?.preset === false, note: 'no preset' },
       { module: 'execute', accepted: phone.experience.framebufferFoundation === false && phone.experience.light.pbr === false, note: 'experience not framebuffer' },
       { module: 'verify', accepted: !phone.meshViewport && !phone.aaaEditor, note: 'not AAA viewport' },
-      { module: 'refine', accepted: true, note: 'usable inspect, not shipped editor' },
+      { module: 'refine', accepted: desert.nodes.length >= phone.nodes.length, note: 'composed inspect' },
     ])
     const dThesis = this.thesis.evaluate({
       objective: 'Ferramenta de criação sobre RRW, sem copiar Unreal',
@@ -28,6 +29,7 @@ export class RrwStudioCore {
       format: 'rrw-studio-v1',
       phone: { ocean: phone.selected?.description, nodes: phone.nodes.length },
       dedicated: { ocean: desk.selected?.description, nodes: desk.nodes.length },
+      desert: { nodes: desert.nodes.length, biomeInspect: true },
       experience: phone.experience,
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },
