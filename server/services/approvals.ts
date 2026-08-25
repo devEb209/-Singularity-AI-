@@ -1,0 +1,12 @@
+import type { ApprovalRequest } from '../domain.js'
+import { AppError } from '../lib/errors.js'
+import { id, now } from '../lib/id.js'
+import type { Store } from '../repositories/store.js'
+
+export class ApprovalService{
+  constructor(private store:Store){}
+  request(userId:string,input:{action:string;risk:ApprovalRequest['risk'];rationale:string;missionId?:string;taskId?:string;ttlMinutes?:number}){if(input.missionId)this.store.getMission(input.missionId,userId);const requestedAt=now(),request:ApprovalRequest={id:id('approval'),userId,missionId:input.missionId,taskId:input.taskId,action:input.action,risk:input.risk,rationale:input.rationale,status:'pending',expiresAt:new Date(Date.now()+Math.min(input.ttlMinutes??30,1440)*60000).toISOString(),requestedAt};this.store.createApproval(request);this.store.audit({id:id('audit'),userId,action:'approval.requested',resource:request.id,metadata:{target:input.action,risk:input.risk},createdAt:requestedAt});return request}
+  list(userId:string,status?:ApprovalRequest['status']){const values=this.store.listApprovals(userId,status);for(const request of values)if(request.status==='pending'&&new Date(request.expiresAt)<=new Date()){request.status='expired';this.store.updateApproval(request)}return values}
+  decide(userId:string,approvalId:string,decision:'approved'|'rejected'){const request=this.store.getApproval(approvalId,userId);if(request.status!=='pending')throw new AppError('Aprovação não está pendente.',409,'APPROVAL_NOT_PENDING');if(new Date(request.expiresAt)<=new Date()){request.status='expired';this.store.updateApproval(request);throw new AppError('Aprovação expirou.',409,'APPROVAL_EXPIRED')}request.status=decision;request.decidedAt=now();this.store.updateApproval(request);this.store.audit({id:id('audit'),userId,action:`approval.${decision}`,resource:request.id,metadata:{target:request.action,risk:request.risk},createdAt:request.decidedAt});return request}
+  consume(userId:string,approvalId:string,action:string){const request=this.store.getApproval(approvalId,userId);if(request.status!=='approved')throw new AppError('Aprovação válida é obrigatória.',409,'APPROVAL_REQUIRED');if(request.action!==action)throw new AppError('Aprovação não corresponde à ação.',403,'APPROVAL_ACTION_MISMATCH');if(new Date(request.expiresAt)<=new Date()){request.status='expired';this.store.updateApproval(request);throw new AppError('Aprovação expirou.',409,'APPROVAL_EXPIRED')}request.status='consumed';request.consumedAt=now();this.store.updateApproval(request);return request}
+}
