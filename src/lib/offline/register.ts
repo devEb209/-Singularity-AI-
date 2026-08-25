@@ -1,0 +1,1 @@
+export const registerOfflineWorker=async()=>{if(!('serviceWorker'in navigator))return{supported:false};const registration=await navigator.serviceWorker.register('/snb-sw.js',{scope:'/'});return{supported:true,scope:registration.scope}}

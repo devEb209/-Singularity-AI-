@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="240" viewBox="0 0 960 240" role="img" aria-labelledby="title desc">
+  <title id="title">SNB — Singularity Neural Bunker</title><desc id="desc">Geometric violet Singularity mark and SNB wordmark.</desc>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c5bcff"/><stop offset="1" stop-color="#7163d5"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="960" height="240" rx="28" fill="#090b0f"/>
+  <g transform="translate(120 120) rotate(45)" fill="none" stroke="url(#g)" filter="url(#glow)"><rect x="-58" y="-58" width="116" height="116" rx="10" stroke-width="3"/><rect x="-36" y="-36" width="72" height="72" rx="7" stroke-width="3"/><rect x="-15" y="-15" width="30" height="30" rx="4" stroke-width="4"/><path d="M-78 0H78M0-78V78" opacity=".35"/></g>
+  <circle cx="120" cy="120" r="5" fill="#eeeaff" filter="url(#glow)"/>
+  <text x="240" y="112" fill="#f1f2f5" font-family="Arial,Helvetica,sans-serif" font-size="62" font-weight="700" letter-spacing="14">SNB</text>
+  <text x="244" y="154" fill="#9b94c9" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="600" letter-spacing="6">SINGULARITY NEURAL BUNKER</text>
+  <text x="244" y="187" fill="#626975" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2">COMPOSED INTELLIGENCE · VERIFIED EXECUTION</text>
+</svg>

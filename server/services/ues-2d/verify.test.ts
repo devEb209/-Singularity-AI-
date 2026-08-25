@@ -1,0 +1,1 @@
+import{describe,expect,it}from'vitest';import{createSvgScene}from'./svg.js';import{verifySvg}from'./verify.js';describe('UES 2D verifier',()=>it('validates semantic deterministic SVG without scripts',()=>{const svg=createSvgScene('Forest','forest');expect(verifySvg(svg)).toMatchObject({valid:true,objects:24,noScripts:true});expect(svg).toBe(createSvgScene('Forest','forest'))}))
