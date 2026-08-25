@@ -1,0 +1,14 @@
+import { mkdtemp,rm } from 'node:fs/promises'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
+import { afterEach,describe,expect,it } from 'vitest'
+import { SQLiteStore } from '../repositories/sqlite-store.js'
+import { ArtifactGraphService } from './artifact-graph.js'
+import { UesAdvancedPipeline,type AdvancedBody } from './ues-advanced-pipeline.js'
+const dirs:string[]=[]
+afterEach(async()=>Promise.all(dirs.splice(0).map(dir=>rm(dir,{recursive:true,force:true}))))
+describe('UES advanced internal production pipeline',()=>{
+ it('materializes semantic geometry, advanced CPU physics, animation, LOD and critics as a verified artifact',async()=>{const dir=await mkdtemp(join(tmpdir(),'ues-advanced-'));dirs.push(dir);const store=new SQLiteStore(join(dir,'db.sqlite')),pipeline=new UesAdvancedPipeline(store,new ArtifactGraphService(store),join(dir,'uploads')),project=store.createProject('u','Bear','Advanced UES');const result=await pipeline.build('u',{projectId:project.id,name:'bear',prompt:'Crie um urso com anatomia quadrúpede'});expect(result.artifact.status).toBe('verified');expect(result.summary).toMatchObject({parts:7,lodLevels:3,criticFindings:0});expect(result.summary.vertices).toBeGreaterThan(100);expect(store.listArtifacts('u',project.id)[0].type).toBe('production.ues-advanced');store.close()})
+ it('executes broadphase, triggers, normalized angular integration, joints and raycasts deterministically',()=>{const store=new SQLiteStore(':memory:'),pipeline=new UesAdvancedPipeline(store,new ArtifactGraphService(store)),bodies:AdvancedBody[]=[{id:'a',position:[0,2,0],velocity:[0,0,0],rotation:[0,0,0,1],angularVelocity:[0,1,0],halfExtents:[.5,.5,.5],mass:1,friction:.5,restitution:.2},{id:'sensor',position:[0,1,0],velocity:[0,0,0],rotation:[0,0,0,1],angularVelocity:[0,0,0],halfExtents:[1,1,1],mass:1,friction:0,restitution:0,static:true,trigger:true}];const first=pipeline.simulate(bodies,30),second=pipeline.simulate(bodies,30);expect(first).toEqual(second);expect(first.verification).toMatchObject({finite:true,normalizedRotations:true});expect(first.events.some(event=>event.type==='trigger')).toBe(true);expect(pipeline.raycast([0,5,0],[0,-1,0],first.bodies).map(hit=>hit.bodyId)).toEqual(['sensor','a']);store.close()})
+ it('preserves IK segments and maps source rotations into a target skeleton',()=>{const store=new SQLiteStore(':memory:'),pipeline=new UesAdvancedPipeline(store,new ArtifactGraphService(store)),ik=pipeline.solveCcd([[0,0,0],[0,1,0],[0,2,0]],[1,1,0]);expect(ik.verification.segmentLengthsPreserved).toBe(true);expect(ik.error).toBeLessThan(.01);const result=pipeline.retarget([{name:'source-hip',rotation:[0,0,0,2]}],['pelvis'],{'source-hip':'pelvis'});expect(result.verification).toEqual({complete:true,normalized:true});store.close()})
+})
