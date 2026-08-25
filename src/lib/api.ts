@@ -204,6 +204,10 @@ class ApiClient {
   buildRrw(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
   compileRrwStudio(projectId:string,name:string){return this.request<any>('/api/v1/rrw/studio/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   compileRrwResource(projectId:string,name:string){return this.request<any>('/api/v1/rrw/resource/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
+  rrwCatalog(){return this.request<any>('/api/v1/rrw/catalog')}
+  buildRrwPhenomena(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/phenomena/build',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileRrwInterpret(projectId:string,name:string,prompt:string){return this.request<any>('/api/v1/rrw/interpret/compile',{method:'POST',body:JSON.stringify({projectId,name,prompt})})}
+  compileRrwVerify(projectId:string,name:string){return this.request<any>('/api/v1/rrw/verify/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   compileSnbCanon(projectId:string,name:string){return this.request<any>('/api/v1/snb/canon/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   compileSnbCollab(projectId:string,name:string){return this.request<any>('/api/v1/snb/collab/compile',{method:'POST',body:JSON.stringify({projectId,name,seed:name})})}
   divineSettingsRegistry(){return this.request<any>('/api/v1/divine-engine/settings-registry')}

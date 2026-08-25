@@ -5,6 +5,10 @@ export type DeviceClass = 'cpu' | 'ancient' | 'mobile' | 'igpu' | 'integrated' |
 export type SpectrumBand = 'uv' | 'violet' | 'blue' | 'green' | 'yellow' | 'red' | 'nir' | 'fir'
 export type ObserverKind = 'human-photopic' | 'camera-srgb' | 'thermal-ir' | 'insect-uv'
 export type ClaimState = 'KNOWN' | 'LIKELY' | 'INFERRED' | 'UNKNOWN'
+export type ConservedKind = 'mass' | 'energy' | 'charge' | 'momentum'
+export type FieldKind = 'gravity' | 'electric' | 'magnetic' | 'thermal' | 'pressure' | 'acoustic' | 'optical'
+export type RelationKind = 'contains' | 'on' | 'surrounds' | 'held-by' | 'illuminates' | 'observes' | 'feeds' | 'exchanges' | 'orbits'
+export type PhenomenonFamily = string
 
 export const spectrumBands: SpectrumBand[] = ['uv', 'violet', 'blue', 'green', 'yellow', 'red', 'nir', 'fir']
 
@@ -61,6 +65,28 @@ export interface KnowledgeClaim {
   source: string
 }
 
+export interface MixturePart {
+  substanceId: string
+  moles: number
+}
+
+export interface OrganismNeed {
+  energy: number
+  water: number
+  oxygen: number
+  temperatureOk: boolean
+}
+
+export interface OrganismState {
+  species: string
+  identity: string
+  systems: { id: string; integrity: number }[]
+  needs: OrganismNeed
+  perception: { seen: string[]; heard: string[] }
+  action: string
+  consciousnessClaim: false
+}
+
 export interface RealityNode {
   id: string
   kind: NodeKind
@@ -73,12 +99,17 @@ export interface RealityNode {
   living?: { species: string; identity: string; consciousnessClaim: false }
   emissionScale: number
   claims: KnowledgeClaim[]
+  inventory?: MixturePart[]
+  chargeC?: number
+  magneticMoment?: [number, number, number]
+  organism?: OrganismState
+  domain?: string
 }
 
 export interface RealityRelation {
   from: string
   to: string
-  kind: 'contains' | 'on' | 'surrounds' | 'held-by' | 'illuminates' | 'observes'
+  kind: RelationKind
 }
 
 export interface Situation {
@@ -97,4 +128,38 @@ export interface Adaptation {
   reason: string
   preset: false
   sameReality: true
+}
+
+export interface RealityDomain {
+  id: string
+  name: string
+  family: PhenomenonFamily
+  conserved: ConservedKind[]
+  typicalDescription: RealityDescription
+  closed: false
+  source: 'internal-reference' | 'ingested'
+}
+
+export interface PhenomenonSpec {
+  id: string
+  family: PhenomenonFamily
+  requiredKnowledge: string[]
+  conserved: ConservedKind[]
+  defaultDescription: RealityDescription
+  closedList: false
+}
+
+export interface QuantityBudget {
+  mass: number
+  energy: number
+  charge: number
+  momentum: [number, number, number]
+}
+
+export interface FieldSample {
+  kind: FieldKind
+  scalar: number
+  vector: [number, number, number]
+  rayTraced: false
+  shaderField: false
 }

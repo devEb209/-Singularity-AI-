@@ -137,6 +137,9 @@ import { UesRadianceService } from './services/ues-radiance/service.js'
 import { RrwService } from './services/rrw/service.js'
 import { RrwStudioService } from './services/rrw-studio/service.js'
 import { RrwResourceService } from './services/rrw-resource/service.js'
+import { RrwPhenomenaService } from './services/rrw-phenomena/service.js'
+import { RrwInterpretService } from './services/rrw-interpret/service.js'
+import { RrwVerifyService } from './services/rrw-verify/service.js'
 import { SnbCanonService } from './services/snb-canon/service.js'
 import { SnbCollabService } from './services/snb-collab/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
@@ -354,6 +357,9 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const rrw=new RrwService(store,artifactGraph)
   const rrwStudio=new RrwStudioService(store,artifactGraph)
   const rrwResource=new RrwResourceService(store,artifactGraph)
+  const rrwPhenomena=new RrwPhenomenaService(store,artifactGraph)
+  const rrwInterpret=new RrwInterpretService(store,artifactGraph)
+  const rrwVerify=new RrwVerifyService(store,artifactGraph)
   const snbCanon=new SnbCanonService(store,artifactGraph)
   const snbCollab=new SnbCollabService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
@@ -396,7 +402,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.atelier',name:'UES Atelier Compete Fabric',version:'1.0.0',capabilities:['3d.csg','physics.featherstone','studio.graph','world.lives','nav.mesh','consensus.integrate'],outputs:{artifact:'production.ues-atelier'},verifier:'ues-atelier-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.genesis',name:'UES V1 Genesis',version:'1.0.0',capabilities:['gpu.api','shader.ir','render.graph','3d.image','world.spatial','npc.population','ecosystem.toolbox','raster.pixels','world.knowledge','rrw.reality'],outputs:{artifact:'production.ues-genesis'},verifier:'ues-genesis-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.radiance',name:'UES compatibility radiance port',version:'1.0.0',capabilities:['light.pbr','shadow.map','texture.mip','post.aces'],outputs:{artifact:'production.ues-radiance'},verifier:'ues-radiance-v1'})
-  capabilityFabric.registerInternalVerified({id:'ues.rrw',name:'UES RRW Reality Foundation',version:'1.0.0',capabilities:['reality.matter','reality.spectrum','reality.do15','reality.materialize','reality.evolve','reality.observer'],outputs:{artifact:'production.rrw'},verifier:'rrw-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.rrw',name:'UES RRW Reality Foundation',version:'1.1.0',capabilities:['reality.matter','reality.spectrum','reality.do15','reality.materialize','reality.evolve','reality.observer','reality.chemistry','reality.fields','reality.organism'],outputs:{artifact:'production.rrw'},verifier:'rrw-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.rrw-phenomena',name:'UES RRW Known-Reality Continuum',version:'1.0.0',capabilities:['reality.catalog','reality.chemistry','reality.fields','reality.organism','reality.interpret','reality.verify'],outputs:{artifact:'production.rrw-phenomena'},verifier:'rrw-phenomena-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -654,6 +661,10 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/rrw/build',{preHandler:authenticated,config:{rateLimit:{max:4,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrw.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/studio/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwStudio.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/resource/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwResource.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
+  app.get('/api/v1/rrw/catalog',{preHandler:authenticated},async()=>rrwPhenomena.catalog())
+  app.post('/api/v1/rrw/phenomena/build',{preHandler:authenticated,config:{rateLimit:{max:4,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwPhenomena.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/rrw/interpret/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwInterpret.compile(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.post('/api/v1/rrw/verify/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await rrwVerify.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/canon/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCanon.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/collab/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCollab.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())

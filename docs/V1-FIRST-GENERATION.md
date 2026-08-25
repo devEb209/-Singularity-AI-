@@ -26,7 +26,7 @@ Compete does not mean claiming “most powerful in the world” without evidence
 Genesis graphics are **not** “beat Unreal at Unreal’s game”. The foundation is RRW:
 
 ```text
-REALITY → KNOWLEDGE → TESE DOS D → REPRESENTATION → D-O15 → RRW → MATERIALIZATION
+REALITY → KNOWLEDGE → TESE DOS D → REPRESENTATION → D-O15 → RRW → MATERIALIZATION → VERIFICATION → REFINEMENT
 ```
 
 Traditional mesh/PBR/RT/LOD stacks are compatibility ports or historical references, not the architecture. D-O15 is the universal reality adapter, not a graphics LOD. Hardware materializes; it does not define the reality.

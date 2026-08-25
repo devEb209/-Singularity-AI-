@@ -60,5 +60,8 @@ describe('RRW reality foundation', () => {
     expect(result.day.hydroConserved).toBe(true)
     expect(result.day.guestConsciousness).toBe(true)
     expect(result.day.emMicrowave).toBe(true)
+    expect(result.continuum.catalogOpen).toBe(true)
+    expect(result.continuum.conservedWithSink).toBe(true)
+    expect(result.continuum.samePhenomena).toBe(true)
   })
 })

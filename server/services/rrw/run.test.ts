@@ -14,6 +14,8 @@ describe('RRW day tick', () => {
     expect(day.hydro.shaderWater).toBe(false)
     expect(day.snapshot.restored).toBe(true)
     expect(day.experience.framebufferFoundation).toBe(false)
+    expect(day.consciousnessClaim).toBe(true)
+    expect(day.continuumValid).toBe(true)
     expect(compareEm().waterBlocksMicrowaveMoreThanAir).toBe(true)
     const seeded = seedReality()
     const frozen = freezeReality(seeded.nodes, seeded.relations)

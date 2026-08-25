@@ -10,6 +10,8 @@ conhecimento + dados permitidos
 → D-O15
 → RRW
 → materialização adaptativa
+→ verificação
+→ refinamento
 → dispositivo
 ```
 
@@ -37,11 +39,18 @@ RRW is the UES **foundation**, not a traditional renderer.
 
 Compatibility raster/PBR (Radiância) remains a **port**, not the architecture.
 
-Also executing: Newtonian potential, acoustics, climate, heat evolution, observer packets, knowledge conflict rejection, grove-scale D-O15, day tick (grasp/hydro/snapshot), electromagnetic bands, NMN bind as living nodes, and FNWS as a water *materialization* — not the identity of the ocean.
+Also executing: Newtonian potential, acoustics, climate, heat evolution, observer packets, knowledge conflict rejection, grove-scale D-O15, day tick (grasp/hydro/snapshot), electromagnetic bands, NMN bind as living nodes, FNWS as a water *materialization* — not the identity of the ocean — plus an open known-reality catalog, stoichiometric chemistry, conserved heat with an explicit sink, unified fields, organisms without consciousness claims, description→knowledge interpretation, and an internal critic on the reality graph.
+
+The catalog is **open**. Seed domains are not the universe. Unknown statements become law-level nodes (`inferenceIsFact: false`) instead of being discarded or faked as full simulations.
 
 ```text
 POST /api/v1/rrw/build
+POST /api/v1/rrw/phenomena/build
+POST /api/v1/rrw/interpret/compile
+POST /api/v1/rrw/verify/compile
+GET  /api/v1/rrw/catalog
 POST /api/v1/rrw/resource/compile
+POST /api/v1/rrw/studio/compile
 POST /api/v1/snb/canon/compile
 POST /api/v1/snb/collab/compile
 ```

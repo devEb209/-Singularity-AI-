@@ -11,6 +11,7 @@ import { materialize } from './materialize.js'
 import { phaseAt } from './matter.js'
 import { experienceAt } from './observer.js'
 import { populateGrove } from './populate.js'
+import { runContinuum } from './continuum.js'
 import { runDay } from './run.js'
 import { requireSubstance } from './substances.js'
 import { describeWater } from './water.js'
@@ -56,15 +57,16 @@ export class RrwCore {
       { id: 'k2', statement: 'H2O boils at 10K', state: 'LIKELY', inferred: true, source: 'unchecked-inference' },
     ])
     const day = runDay()
+    const continuum = runContinuum()
     const kernel = runKernel('RRW: realidade → D-O15 → materialização, sem pipeline tradicional', 'rrw', ['d-thesis', 'matter', 'spectrum'], [
       { module: 'knowledge', accepted: true, note: 'internal substances + claims' },
       { module: 'd-thesis', accepted: true, note: 'not a graphics unlock ladder' },
       { module: 'rrw', accepted: water.molarMass === 18.015 && !('roughness' in water) && !('albedo' in water) && inside && !outside, note: 'matter not PBR' },
       { module: 'represent', accepted: phoneIds === deskIds && phoneOcean?.preset === false, note: 'same reality' },
       { module: 'd-o15', accepted: differentDescription && phoneAdapt.lod === false && phoneSky?.description !== 'interactive-local', note: 'adapter not LOD' },
-      { module: 'execute', accepted: media.water.luminance < media.air.luminance && fireAfter < fireBefore && near < far && grove.sameIds && claims.rejected.length === 1 && day.hydro.conserved && day.snapshot.restored && day.grasp, note: 'fields + day tick' },
-      { module: 'verify', accepted: !frame.traditionalPipeline && !experience.framebufferFoundation && !experience.light.pbr && sound.shaderAudio === false && living.every(item => item.living?.consciousnessClaim === false), note: 'not a renamed engine' },
-      { module: 'refine', accepted: phaseAt(water, 250) === 'solid' && phaseAt(water, 290) === 'liquid' && phaseAt(water, 400) === 'gas' && gold.z === 79, note: 'phase + table' },
+      { module: 'execute', accepted: media.water.luminance < media.air.luminance && fireAfter < fireBefore && near < far && grove.sameIds && claims.rejected.length === 1 && day.hydro.conserved && day.snapshot.restored && day.grasp && continuum.verification.valid, note: 'fields + day tick + continuum' },
+      { module: 'verify', accepted: !frame.traditionalPipeline && !experience.framebufferFoundation && !experience.light.pbr && sound.shaderAudio === false && living.every(item => item.living?.consciousnessClaim === false) && !continuum.verification.completeReality, note: 'not a renamed engine' },
+      { module: 'refine', accepted: phaseAt(water, 250) === 'solid' && phaseAt(water, 290) === 'liquid' && phaseAt(water, 400) === 'gas' && gold.z === 79 && continuum.optics.bendsTowardNormal, note: 'phase + table + optics' },
     ])
     const dThesis = this.thesis.evaluate({
       objective: 'Fundação RRW da Gênesis: representar realidade e materializar por D-O15, sem copiar Unreal',
@@ -74,7 +76,7 @@ export class RrwCore {
     })
     return {
       format: 'rrw-v1',
-      architecture: 'REALITY → KNOWLEDGE → TESE DOS D → REPRESENTATION → D-O15 → RRW → MATERIALIZATION',
+      architecture: 'REALITY → KNOWLEDGE → TESE DOS D → REPRESENTATION → D-O15 → RRW → MATERIALIZATION → VERIFICATION → REFINEMENT',
       nodes: reality.nodes.length,
       relations: reality.relations.length,
       water: { formula: water.formula, molarMass: water.molarMass, phase290: phaseAt(water, 290), shaderWater: describeWater(290).shaderWater },
@@ -103,10 +105,17 @@ export class RrwCore {
         guestConsciousness: day.guest.consciousnessClaim,
         emMicrowave: day.em.waterBlocksMicrowaveMoreThanAir,
       },
+      continuum: {
+        catalogOpen: continuum.catalog.open,
+        conservedWithSink: continuum.energy.conservedWithSink,
+        samePhenomena: continuum.phenomena.sameIds,
+        optics: continuum.optics.bendsTowardNormal,
+        society: continuum.society.population,
+      },
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score, absolutePerfectionClaim: false },
       verification: {
-        valid: kernel.verification.valid && phoneIds === deskIds && media.water.luminance < media.air.luminance,
+        valid: kernel.verification.valid && phoneIds === deskIds && media.water.luminance < media.air.luminance && continuum.verification.valid,
         traditionalPipeline: false,
         meshIsFoundation: false,
         pbrIsFoundation: false,

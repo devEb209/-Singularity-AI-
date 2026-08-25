@@ -12,6 +12,8 @@ export const inspectReality = (device: keyof typeof deviceProfiles = 'mobile') =
       kind: node.kind,
       substance: node.substanceId,
       phase: node.phase,
+      domain: node.domain,
+      inventory: node.inventory?.length ?? 0,
       description: adapted.adaptations.find(item => item.nodeId === node.id)?.description,
     })),
     selected: focus,
