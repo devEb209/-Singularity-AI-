@@ -13,7 +13,7 @@ export const generationLedger: GenerationItem[] = [
   { id: 'intel.master', axis: 'intelligence', name: 'Master Intelligence 30 programas (escopo implementado)', state: 'OPERATIONAL', weight: 6, note: 'Compila missão/DAG; não executa todos os especialistas sozinha' },
   { id: 'intel.handoff', axis: 'intelligence', name: 'Handoff/critic/correção com recibo', state: 'OPERATIONAL', weight: 5, note: 'Client-reported Puter; invocação automática permanece' },
   { id: 'intel.rollback', axis: 'intelligence', name: 'Regressão e rollback de artifact', state: 'OPERATIONAL', weight: 5, note: 'Métrica + restore da versão verificada' },
-  { id: 'intel.puter-auto', axis: 'intelligence', name: 'Invocação automática de especialistas Puter', state: 'PARTIAL', weight: 6, note: 'Orchestrator dispara internos; tickets Puter canônicos ficam pending-client' },
+  { id: 'intel.puter-auto', axis: 'intelligence', name: 'Invocação automática de especialistas Puter', state: 'PARTIAL', weight: 6, note: 'Internos + crítico automático; plano cliente dispara Puter só se puter.ai existir; servidor não finge' },
   { id: 'intel.consensus', axis: 'intelligence', name: 'Consenso multi-round e recibo de integração', state: 'OPERATIONAL', weight: 6, note: 'Maioria multi-round + HMAC; client-reported, sem auto-Puter' },
   { id: 'trust.auth', axis: 'trust', name: 'Auth, audit, receipts, sandbox', state: 'OPERATIONAL', weight: 5, note: 'Local Beta operacional' },
   { id: 'trust.verify', axis: 'trust', name: 'Verification ≠ confiança do modelo', state: 'OPERATIONAL', weight: 4, note: 'Contrato de confiança honesto' },

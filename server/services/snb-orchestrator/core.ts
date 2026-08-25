@@ -1,5 +1,6 @@
 import { DThesisCore } from '../d-thesis/core.js'
 import { runKernel } from '../ues-kernel/pipeline.js'
+import { clientPuterPlan } from './client-plan.js'
 import { orchestrate } from './execute.js'
 
 export class SnbOrchestratorCore {
@@ -7,6 +8,7 @@ export class SnbOrchestratorCore {
 
   process(intent = 'ponte de pedra e recorte esferico') {
     const run = orchestrate(intent)
+    const plan = clientPuterPlan(intent)
     const independent = new Set(run.tickets.map(item => item.provider)).size >= Math.min(2, run.tickets.length)
     const kernel = runKernel(`Orquestrar Gênesis internamente: ${intent}`, 'snb.orchestrator', ['solid', 'semantic-3d', 'consensus'], [
       { module: 'knowledge', accepted: true, note: intent },
@@ -15,7 +17,7 @@ export class SnbOrchestratorCore {
       { module: 'represent', accepted: true, note: 'tickets are not execution' },
       { module: 'd-o15', accepted: true, note: 'do not fire 879' },
       { module: 'execute', accepted: run.readyToIntegrate, note: 'internal artifacts' },
-      { module: 'verify', accepted: !run.automaticPuter && run.tickets.every(item => item.status === 'pending-client'), note: 'puter pending' },
+      { module: 'verify', accepted: !run.automaticPuter && run.tickets.every(item => item.status === 'pending-client') && plan.critic.accepted && !plan.critic.puterExecuted, note: 'puter pending + internal critic' },
       { module: 'refine', accepted: independent || run.tickets.length === 0, note: 'independent providers' },
     ])
     const dThesis = this.thesis.evaluate({
@@ -28,6 +30,7 @@ export class SnbOrchestratorCore {
       format: 'snb-orchestrator-v1',
       intent,
       ...run,
+      clientPlan: { automaticWhenPuterPresent: plan.automaticWhenPuterPresent, serverExecutesPuter: plan.serverExecutesPuter, criticAccepted: plan.critic.accepted },
       independentProviders: independent,
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score },

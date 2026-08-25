@@ -11,6 +11,7 @@ import { materialize } from './materialize.js'
 import { phaseAt } from './matter.js'
 import { experienceAt } from './observer.js'
 import { populateGrove } from './populate.js'
+import { runDay } from './run.js'
 import { requireSubstance } from './substances.js'
 import { describeWater } from './water.js'
 import { seedReality } from './world.js'
@@ -54,13 +55,14 @@ export class RrwCore {
       { id: 'k1', statement: 'H2O boils at 373.15K', state: 'KNOWN', inferred: false, source: 'internal-reference' },
       { id: 'k2', statement: 'H2O boils at 10K', state: 'LIKELY', inferred: true, source: 'unchecked-inference' },
     ])
+    const day = runDay()
     const kernel = runKernel('RRW: realidade → D-O15 → materialização, sem pipeline tradicional', 'rrw', ['d-thesis', 'matter', 'spectrum'], [
       { module: 'knowledge', accepted: true, note: 'internal substances + claims' },
       { module: 'd-thesis', accepted: true, note: 'not a graphics unlock ladder' },
-      { module: 'rrw', accepted: water.molarMass === 18.015 && !('roughness' in water) && !('albedo' in water), note: 'matter not PBR' },
+      { module: 'rrw', accepted: water.molarMass === 18.015 && !('roughness' in water) && !('albedo' in water) && inside && !outside, note: 'matter not PBR' },
       { module: 'represent', accepted: phoneIds === deskIds && phoneOcean?.preset === false, note: 'same reality' },
       { module: 'd-o15', accepted: differentDescription && phoneAdapt.lod === false && phoneSky?.description !== 'interactive-local', note: 'adapter not LOD' },
-      { module: 'execute', accepted: media.water.luminance < media.air.luminance && fireAfter < fireBefore && near < far && grove.sameIds && claims.rejected.length === 1, note: 'fields + evolve + knowledge' },
+      { module: 'execute', accepted: media.water.luminance < media.air.luminance && fireAfter < fireBefore && near < far && grove.sameIds && claims.rejected.length === 1 && day.hydro.conserved && day.snapshot.restored && day.grasp, note: 'fields + day tick' },
       { module: 'verify', accepted: !frame.traditionalPipeline && !experience.framebufferFoundation && !experience.light.pbr && sound.shaderAudio === false && living.every(item => item.living?.consciousnessClaim === false), note: 'not a renamed engine' },
       { module: 'refine', accepted: phaseAt(water, 250) === 'solid' && phaseAt(water, 290) === 'liquid' && phaseAt(water, 400) === 'gas' && gold.z === 79, note: 'phase + table' },
     ])
@@ -93,6 +95,14 @@ export class RrwCore {
       grove,
       experience,
       knowledge: { rejected: claims.rejected.length, inferenceIsFact: claims.inferenceIsFact },
+      day: {
+        events: day.events,
+        grasp: day.grasp,
+        hydroConserved: day.hydro.conserved,
+        snapshot: day.snapshot.checksum,
+        guestConsciousness: day.guest.consciousnessClaim,
+        emMicrowave: day.em.waterBlocksMicrowaveMoreThanAir,
+      },
       kernel,
       dThesis: { selected: dThesis.selectedDs.map(item => item.key), gpp: dThesis.gpp.score, absolutePerfectionClaim: false },
       verification: {

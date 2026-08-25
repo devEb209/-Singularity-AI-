@@ -37,7 +37,7 @@ RRW is the UES **foundation**, not a traditional renderer.
 
 Compatibility raster/PBR (Radiância) remains a **port**, not the architecture.
 
-Also executing in this generation slice: Newtonian potential samples, acoustic travel through a medium, climate field from ocean/air, fire/heat evolution, observer experience packets (not a framebuffer), knowledge conflict rejection, grove-scale D-O15, and a reality inspector (not an Unreal viewport).
+Also executing: Newtonian potential, acoustics, climate, heat evolution, observer packets, knowledge conflict rejection, grove-scale D-O15, day tick (grasp/hydro/snapshot), electromagnetic bands, NMN bind as living nodes, and FNWS as a water *materialization* — not the identity of the ocean.
 
 ```text
 POST /api/v1/rrw/build
