@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible SNB defect
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include secrets or personal data. Security issues belong in private vulnerability reporting.
+  - type: input
+    id: version
+    attributes: { label: Version/commit }
+    validations: { required: true }
+  - type: textarea
+    id: reproduce
+    attributes: { label: Reproduction steps }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected behavior }
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual behavior and logs }
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [SNB Core, UES, DsOS, Puter, Research, Tools/Workers, Frontend, Build/Deployment]
