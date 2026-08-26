@@ -1,0 +1,61 @@
+export type GenerationState = 'OPERATIONAL' | 'PARTIAL' | 'ADAPTER' | 'MISSING'
+
+export interface GenerationItem {
+  id: string
+  axis: 'intelligence' | 'trust' | 'creation' | 'world' | 'shipping'
+  name: string
+  state: GenerationState
+  weight: number
+  note: string
+}
+
+export const generationLedger: GenerationItem[] = [
+  { id: 'intel.master', axis: 'intelligence', name: 'Master Intelligence 30 programas (escopo implementado)', state: 'OPERATIONAL', weight: 6, note: 'Compila missão/DAG; não executa todos os especialistas sozinha' },
+  { id: 'intel.handoff', axis: 'intelligence', name: 'Handoff/critic/correção com recibo', state: 'OPERATIONAL', weight: 5, note: 'Client-reported Puter; invocação automática permanece' },
+  { id: 'intel.rollback', axis: 'intelligence', name: 'Regressão e rollback de artifact', state: 'OPERATIONAL', weight: 5, note: 'Métrica + restore da versão verificada' },
+  { id: 'intel.puter-auto', axis: 'intelligence', name: 'Invocação automática de especialistas Puter', state: 'PARTIAL', weight: 6, note: 'Internos + crítico automático; plano cliente dispara Puter só se puter.ai existir; servidor não finge' },
+  { id: 'intel.consensus', axis: 'intelligence', name: 'Consenso multi-round e recibo de integração', state: 'OPERATIONAL', weight: 6, note: 'Maioria multi-round + HMAC; client-reported, sem auto-Puter' },
+  { id: 'trust.auth', axis: 'trust', name: 'Auth, audit, receipts, sandbox', state: 'OPERATIONAL', weight: 5, note: 'Local Beta operacional' },
+  { id: 'trust.verify', axis: 'trust', name: 'Verification ≠ confiança do modelo', state: 'OPERATIONAL', weight: 4, note: 'Contrato de confiança honesto' },
+  { id: 'trust.product', axis: 'trust', name: 'Produto, billing, conta pública', state: 'MISSING', weight: 4, note: 'Billing é última feature; não compete como SaaS ainda' },
+  { id: 'trust.scale-ops', axis: 'trust', name: 'Operação pública em escala', state: 'MISSING', weight: 5, note: 'Local/self-host existe; operação de geração 1 ainda não' },
+  { id: 'create.pipeline', axis: 'creation', name: 'Pipeline 3D/PBR/cena/WebGL próprio', state: 'OPERATIONAL', weight: 6, note: 'Porta de compatibilidade; fundação é RRW, não mesh/PBR' },
+  { id: 'create.corpus', axis: 'creation', name: 'Corpus semântico + críticos', state: 'OPERATIONAL', weight: 6, note: '9 kinds + compilador aberto + críticos; scans de especialista ficam no 3D arbitrário' },
+  { id: 'create.motion', axis: 'creation', name: 'Animação estruturada + Explorer', state: 'PARTIAL', weight: 5, note: 'Compiler biomecânico + cards; visão/vídeo adapter' },
+  { id: 'create.material', axis: 'creation', name: 'TITKO PBR por pedido', state: 'OPERATIONAL', weight: 5, note: 'Porta de compatibilidade; matéria fundamental é substância RRW' },
+  { id: 'create.editor', axis: 'creation', name: 'Editor de produção completo', state: 'PARTIAL', weight: 8, note: 'Viewport/gizmo/prefab/timeline no servidor; não é Unreal' },
+  { id: 'create.arbitrary-3d', axis: 'creation', name: 'Geometria 3D arbitrária a partir do pedido', state: 'PARTIAL', weight: 8, note: 'Silhueta/simetria/loft/CSG + heightfield; visão aprendida adapter' },
+  { id: 'create.audiovisual', axis: 'creation', name: 'Geração audiovisual de produção', state: 'ADAPTER', weight: 7, note: 'PCM/HSDS existem; vídeo/visão adapter' },
+  { id: 'world.planet', axis: 'world', name: 'Mundo/planeta/água/cidade internos', state: 'OPERATIONAL', weight: 6, note: 'Regras + fixture; não Terra NASA' },
+  { id: 'world.physics', axis: 'world', name: 'Física determinística CPU', state: 'OPERATIONAL', weight: 6, note: 'GJK/EPA, CCD analítico, Featherstone CRBA/RNEA planar; não PhysX' },
+  { id: 'world.society', axis: 'world', name: 'Sociedade NMN', state: 'PARTIAL', weight: 4, note: 'D-O15 por necessidade×representação; sem teto conceitual 320/1e6' },
+  { id: 'world.rrw', axis: 'world', name: 'RRW — representação da realidade', state: 'PARTIAL', weight: 8, note: 'Biosfera, esferas, sentidos e cívico executam; não é Gênesis fechada, NIST nem Unreal.' },
+  { id: 'world.rrw-sense', axis: 'world', name: 'Sentidos RRW como conhecimento', state: 'OPERATIONAL', weight: 5, note: 'Cheiro/gosto/toque/dor-sinal executam; sem qualia nem consciência' },
+  { id: 'world.rrw-civic', axis: 'world', name: 'Normas, censo e dádiva RRW', state: 'OPERATIONAL', weight: 4, note: 'Reserva do bosque e carbono conservado; sem marketplace' },
+  { id: 'world.rrw-extreme', axis: 'world', name: 'Extremos RRW: onda de calor, maré, poeira', state: 'OPERATIONAL', weight: 4, note: 'Água/sílica conservadas; não shader de clima' },
+  { id: 'world.rrw-studio-live', axis: 'world', name: 'Estúdio RRW edita claims no grafo', state: 'OPERATIONAL', weight: 4, note: 'Inspect + claim persistido; não é editor AAA' },
+  { id: 'world.rrw-bio', axis: 'world', name: 'Biosfera RRW: teia, sucessão, sono, recife', state: 'OPERATIONAL', weight: 5, note: 'Carbono trófico conservado; sem mentes únicas nem diagnóstico médico' },
+  { id: 'world.rrw-hydro', axis: 'world', name: 'Hidrosfera RRW: aquífero, bacia, cheia, seca', state: 'OPERATIONAL', weight: 4, note: 'Água conservada; não shader nem GIS live' },
+  { id: 'world.rrw-geo', axis: 'world', name: 'Geoesfera RRW: vulcão, sismo, sedimento', state: 'OPERATIONAL', weight: 4, note: 'Sílica/carbonato conservados; não placa NASA' },
+  { id: 'world.rrw-atmo', axis: 'world', name: 'Atmosfera RRW: ozônio UV e tropopausa', state: 'OPERATIONAL', weight: 4, note: 'Extinção UV extra; não ensaio NIST de O3' },
+  { id: 'world.rrw-sphere', axis: 'world', name: 'Esferas hidro/crio/geo/atmo unificadas', state: 'OPERATIONAL', weight: 4, note: 'Um grafo; Gênesis aberta' },
+  { id: 'world.rrw-cycles', axis: 'world', name: 'Ciclos C/N/P/S conservados no RRW', state: 'OPERATIONAL', weight: 5, note: 'Átomos/moles conservados; não é ensaio NIST nem mundo fechado' },
+  { id: 'world.rrw-living-depth', axis: 'world', name: 'Vida RRW: reprodução, crescimento, dieta, cultura', state: 'OPERATIONAL', weight: 5, note: 'Muda muda, envelhece e lembra como claim; sem mentes únicas' },
+  { id: 'world.rrw-earth', axis: 'world', name: 'Processos da Terra de referência', state: 'OPERATIONAL', weight: 5, note: 'Salinidade, acidez, erosão, tectônica, magnetosfera; não NASA live' },
+  { id: 'world.rrw-transport', axis: 'world', name: 'Transporte RRW: convecção, orvalho, relâmpago', state: 'OPERATIONAL', weight: 4, note: 'Carga e água conservadas; não shader de clima' },
+  { id: 'world.rrw-depth', axis: 'world', name: 'Lote fundo+terra unificado', state: 'OPERATIONAL', weight: 4, note: 'Um grafo aprofunda ciclos e planeta; Gênesis aberta' },
+  { id: 'world.rrw-chain', axis: 'world', name: 'Cadeia Gênesis de 10 passos', state: 'OPERATIONAL', weight: 4, note: 'describe→conhecimento→RRW→D-O15→materializar→verificar→refinar executa; Gênesis não fechada' },
+  { id: 'world.rrw-live', axis: 'world', name: 'Tique vivo unificado RRW', state: 'OPERATIONAL', weight: 4, note: 'Uma hora acopla clima, reação, crônica, refino e caminho; não é loop AAA' },
+  { id: 'world.rrw-persist', axis: 'world', name: 'Mundo RRW persistente entre operações', state: 'OPERATIONAL', weight: 5, note: 'Envelope + arquivo interno; não é DB distribuído nem WebRTC' },
+  { id: 'world.rrw-matter', axis: 'world', name: 'Matéria, química e energia RRW', state: 'OPERATIONAL', weight: 5, note: 'Estequiometria e calor com sink; não NIST' },
+  { id: 'world.rrw-inhabit', axis: 'world', name: 'Habitar, crônica e necessidades RRW', state: 'OPERATIONAL', weight: 4, note: 'Abrigo/forrageio/crônica/needs-from-moles executam; sem mentes únicas' },
+  { id: 'world.rrw-unify', axis: 'world', name: 'Unificação persistir+viver+sociedade RRW', state: 'OPERATIONAL', weight: 4, note: 'Um mundo só: persistir, parentesco, trabalho, troca, saúde, fala-como-conhecimento; Gênesis aberta' },
+  { id: 'world.live-earth', axis: 'world', name: 'Terra fotogramétrica live', state: 'ADAPTER', weight: 4, note: 'HLOD próprio; dataset live adapter' },
+  { id: 'ship.runtime', axis: 'shipping', name: 'Runtime UES + HSDS SVG', state: 'OPERATIONAL', weight: 5, note: 'Leve; GPU/WebRTC adapter' },
+  { id: 'ship.package', axis: 'shipping', name: 'Release packager + quality gates', state: 'OPERATIONAL', weight: 4, note: 'Só artifacts verificados' },
+  { id: 'ship.gpu', axis: 'shipping', name: 'Renderer GPU / shaders / SPH', state: 'PARTIAL', weight: 6, note: 'Raster/PBR são porta de compatibilidade; RRW é a arquitetura. Backends de hardware ampliam materialização.' },
+  { id: 'ship.multiplayer', axis: 'shipping', name: 'Multiplayer conectado', state: 'ADAPTER', weight: 5, note: 'Simulação autoritativa existe; WebRTC/UDP externo' },
+  { id: 'ship.platforms', axis: 'shipping', name: 'Ship desktop/mobile/console', state: 'PARTIAL', weight: 6, note: 'Web/HSDS real; stores/consoles não' },
+]
+
+export const scoreOf = (state: GenerationState) => (state === 'OPERATIONAL' ? 1 : state === 'PARTIAL' ? 0.5 : state === 'ADAPTER' ? 0.15 : 0)
