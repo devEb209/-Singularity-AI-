@@ -31,4 +31,4 @@ REALITY → KNOWLEDGE → TESE DOS D → REPRESENTATION → D-O15 → RRW → MA
 
 Traditional mesh/PBR/RT/LOD stacks are compatibility ports or historical references, not the architecture. D-O15 is the universal reality adapter, not a graphics LOD. Hardware materializes; it does not define the reality.
 
-The user-facing Genesis path is now an executing chain (describe → knowledge → RRW → D-O15 → session → verify → refine). Worlds persist across operations, unify living continuum, and deepen cycles, spheres, senses-as-knowledge and civic norms on that same graph. Executing the chain is **not** the same as closing Genesis. `genesisClosed` stays false until the generation actually competes.
+The user-facing Genesis path is now an executing chain (describe → knowledge → RRW → D-O15 → session → verify → refine). Worlds persist across operations and are constructed through a 30-layer fabric (meta → universe) with bidirectional coupling. D-O15 abstracts description and never deletes a layer. Executing the chain is **not** the same as closing Genesis. `genesisClosed` stays false until the generation actually competes.

@@ -1,12 +1,12 @@
 # Final V1 Readiness Report — First generation (compete bar)
 
-Generated: 2026-08-26T21:31:06.598Z
+Generated: 2026-08-26T22:07:17.088Z
 
 ## First generation rule
 
 V1 is the first **generation** of SNB, not a reduced final, MVP or demo slice. It must be complete enough to **compete** when launched. V2 aims to **surpass**. See [V1-FIRST-GENERATION.md](./V1-FIRST-GENERATION.md).
 
-Reproducible compete score (`GET /api/v1/v1-generation`): **79.3% complete / 20.7% remaining**. `complete=false`. DsOS is **not** in the compete bar.
+Reproducible compete score (`GET /api/v1/v1-generation`): **80.9% complete / 19.1% remaining**. `complete=false`. DsOS is **not** in the compete bar.
 
 ## Scope status
 
@@ -66,7 +66,7 @@ These states cover only each documented implemented scope. They are **not** a cl
 - **Advanced NPC society runtime** — PARTIAL; dependency: NMN plus D-O15 scale policy (needed × representation); Recast/Detour and unique full minds at arbitrary count remain; activation: Artificial-player/runtime benchmarks at population scale
 - **Audio generation and runtime** — PARTIAL; dependency: PCM mixer plus ITD/ILD spatialization and loop-seam crossfade checks now execute; measured HRTF databases and asset codecs remain; activation: Audio artifacts, loudness/loop/codec checks
 - **Advanced VFX production/runtime** — PARTIAL; dependency: CPU Stable Fluids, FNWS and RRW spectral couplings execute; GPU SPH and vendor shaders remain adapters; activation: Effect artifacts and performance gates
-- **RRW complete reality materialization** — PARTIAL; dependency: Intent/compose/present/critic/hold/days/circadian/resume/walk/season/hydrology/session/device-matrix/habitation/continuity/chronicle/live-tick/persist/unify/depth/earth/bio/sphere/sense/civic execute; always-on atomic scale, measured spectra, learned vision and hardware present remain; activation: Described intent becomes verified multi-device materialization without traditional-engine architecture
+- **RRW complete reality materialization** — PARTIAL; dependency: 30-layer construction fabric + transversal systems execute; always-on atomic scale, measured spectra, learned vision, hardware present and complete depth of every layer remain; activation: Described intent becomes verified multi-device materialization without traditional-engine architecture
 - **Hardware GPU presentation** — ADAPTER_REQUIRED; dependency: WebGPU/Vulkan/DX/Metal device; requestAdapter path exists and does not fake a device; activation: navigator.gpu.requestAdapter → device → present RRW materialization
 - **Multiplayer runtime** — PARTIAL; dependency: Authoritative tick, prediction, snapshot reconcile and adversarial reject (speed-hack/spoof/duplicate) now execute in CPU simulation; WebRTC/UDP transport remains external; activation: Network simulation and security tests
 - **CPU/GPU profiler** — PARTIAL; dependency: CPU hrtime section profiler now measures world/society work; GPU/frame telemetry remains infrastructure-specific; activation: Measured frame/resource telemetry
@@ -104,7 +104,7 @@ These gates stay visible. They do not redefine V1 as a reduced product.
 ## Supporting scores (not a substitute for the compete bar)
 
 - SNB 30-program implemented-scope score: **90.8%**
-- Compete axes: {"intelligence":{"percent":89.3,"items":5},"trust":{"percent":50,"items":4},"creation":{"percent":63.4,"items":7},"world":{"percent":91.8,"items":25},"shipping":{"percent":60.6,"items":5}}
+- Compete axes: {"intelligence":{"percent":89.3,"items":5},"trust":{"percent":50,"items":4},"creation":{"percent":63.4,"items":7},"world":{"percent":93,"items":29},"shipping":{"percent":60.6,"items":5}}
 - DsOS module: **20–30%** of itself
 
 The SNB cognitive score remains: `operational-core=1`, `foundation=0.5`, `research-program=0.25`, divided by 30. Architecture or adapters do not receive production credit.

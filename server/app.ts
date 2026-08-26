@@ -157,6 +157,7 @@ import { RrwBioService } from './services/rrw-bio/service.js'
 import { RrwSphereService } from './services/rrw-sphere/service.js'
 import { RrwSenseService } from './services/rrw-sense/service.js'
 import { RrwCivicService } from './services/rrw-civic/service.js'
+import { RrwLayersService } from './services/rrw-layers/service.js'
 import { SnbCanonService } from './services/snb-canon/service.js'
 import { SnbCollabService } from './services/snb-collab/service.js'
 import { parsePuterRegistry } from '../scripts/parse-puter-registry.js'
@@ -394,6 +395,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   const rrwSphere=new RrwSphereService(store,artifactGraph)
   const rrwSense=new RrwSenseService(store,artifactGraph)
   const rrwCivic=new RrwCivicService(store,artifactGraph)
+  const rrwLayers=new RrwLayersService(store,artifactGraph)
   const snbCanon=new SnbCanonService(store,artifactGraph)
   const snbCollab=new SnbCollabService(store,artifactGraph)
   const masterIntelligence=new SnbMasterIntelligence(store,missions,problemSolver,context,artifactGraph)
@@ -454,6 +456,7 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   capabilityFabric.registerInternalVerified({id:'ues.rrw-sphere',name:'UES RRW Spheres',version:'1.0.0',capabilities:['reality.groundwater','reality.glacier','reality.volcano','reality.ozone'],outputs:{artifact:'production.rrw-sphere'},verifier:'rrw-sphere-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.rrw-sense',name:'UES RRW Sense',version:'1.0.0',capabilities:['reality.smell','reality.taste','reality.touch','reality.nociception'],outputs:{artifact:'production.rrw-sense'},verifier:'rrw-sense-v1'})
   capabilityFabric.registerInternalVerified({id:'ues.rrw-civic',name:'UES RRW Civic',version:'1.0.0',capabilities:['reality.norms','reality.census','reality.gift','reality.extremes'],outputs:{artifact:'production.rrw-civic'},verifier:'rrw-civic-v1'})
+  capabilityFabric.registerInternalVerified({id:'ues.rrw-layers',name:'UES Reality Layer Fabric',version:'1.0.0',capabilities:['reality.layers','reality.construct','reality.observe','reality.replay'],outputs:{artifact:'production.rrw-layers'},verifier:'rrw-layers-v1'})
   const divineEngine=new DivineEngineService(store,missions,capabilityFabric,procedural3d)
   const divineOs=new DivineOsService(store,missions,capabilityFabric)
   const tools = new ToolEcosystem(store, appConfig.EXECUTION_RECEIPT_SECRET, appConfig.PHYSICAL_EXECUTION_ENABLED,approvals)
@@ -732,6 +735,8 @@ export async function buildApp(overrides: Partial<Config> = {}) {
   app.post('/api/v1/rrw/sphere/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwSphere.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/sense/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwSense.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/rrw/civic/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwCivic.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
+  app.get('/api/v1/rrw/layers/catalog',{preHandler:authenticated},async()=>rrwLayers.catalog())
+  app.post('/api/v1/rrw/layers/build',{preHandler:authenticated,config:{rateLimit:{max:3,timeWindow:'1 minute'}}},async(request,reply)=>reply.status(201).send(await rrwLayers.build(request.userId,uesAdvancedBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/canon/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCanon.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.post('/api/v1/snb/collab/compile',{preHandler:authenticated},async(request,reply)=>reply.status(201).send(await snbCollab.compile(request.userId,uesLivingBuildSchema.parse(request.body))))
   app.get('/api/v1/ues/core/capabilities',{preHandler:authenticated},async()=>uesCore.capabilities())

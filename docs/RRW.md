@@ -63,6 +63,8 @@ POST /api/v1/rrw/bio/build
 POST /api/v1/rrw/sphere/build
 POST /api/v1/rrw/sense/build
 POST /api/v1/rrw/civic/build
+GET  /api/v1/rrw/layers/catalog
+POST /api/v1/rrw/layers/build
 POST /api/v1/rrw/interpret/compile
 POST /api/v1/rrw/verify/compile
 GET  /api/v1/rrw/catalog
