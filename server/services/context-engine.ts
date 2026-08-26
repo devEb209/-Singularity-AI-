@@ -1,0 +1,7 @@
+import type { Memory } from '../domain.js'
+import type { Store } from '../repositories/store.js'
+const tokens=(text:string)=>new Set(text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/\W+/).filter(word=>word.length>2))
+export class ContextEngine{
+ constructor(private store:Store){}
+ retrieve(userId:string,query:string,projectId?:string,limit=6):Memory[]{this.store.expireKnowledgeMemoryVersions(new Date().toISOString());const queryTokens=tokens(query),memories=this.store.listMemories(userId),versions=this.store.listKnowledgeMemoryVersions(userId),activeByMemory=new Map(versions.filter(version=>version.state==='active'&&(!version.validUntil||version.validUntil>new Date().toISOString())).map(version=>[version.memoryId,version])),versionedIds=new Set(versions.map(version=>version.memoryId));return memories.filter(memory=>(!projectId||memory.projectId===projectId||memory.projectId===undefined)).flatMap(memory=>{const active=activeByMemory.get(memory.id);if(versionedIds.has(memory.id)&&!active)return[];const content=active?.content??memory.content,words=tokens(content),intersection=[...queryTokens].filter(word=>words.has(word)).length,union=new Set([...queryTokens,...words]).size,semantic=union?intersection/union:0,scope=projectId&&memory.projectId===projectId?1:0,score=intersection*2+semantic*5+memory.importance/10+scope;return score>0?[{memory:{...memory,content},score}]:[]}).sort((a,b)=>b.score-a.score).slice(0,Math.max(1,Math.min(limit,50))).map(item=>item.memory)}
+}
