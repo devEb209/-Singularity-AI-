@@ -1,0 +1,1 @@
+import{describe,expect,it}from'vitest';import{evaluationMetrics}from'./metrics.js';describe('benchmark metrics',()=>it('computes reliability dispersion and p95',()=>{const m=evaluationMetrics([{score:100,success:true,latencyMs:10},{score:50,success:false,latencyMs:30}] as any);expect(m).toMatchObject({evidence:2,successRate:.5,scoreMean:75,scoreStdDev:25,latencyP95:30})}))
