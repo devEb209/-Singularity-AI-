@@ -1,0 +1,19 @@
+name: Capability proposal
+description: Propose a real capability, adapter or verifier
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes: { label: Problem and user outcome }
+    validations: { required: true }
+  - type: textarea
+    id: existing
+    attributes: { label: Existing technologies considered }
+    validations: { required: true }
+  - type: textarea
+    id: execution
+    attributes: { label: Execution, artifact and verification plan }
+    validations: { required: true }
+  - type: textarea
+    id: dependencies
+    attributes: { label: License, infrastructure and security dependencies }

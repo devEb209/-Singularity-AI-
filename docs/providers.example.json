@@ -1,0 +1,22 @@
+[
+  {
+    "id": "my-3d-provider",
+    "baseUrl": "https://provider.example.com",
+    "tokenEnv": "MY_3D_PROVIDER_TOKEN",
+    "capabilities": ["3d.generate", "3d.image-to-3d"],
+    "timeoutMs": 120000,
+    "maxAttempts": 2,
+    "license": "Review provider terms before activation",
+    "artifactType": "model.glb"
+  },
+  {
+    "id": "my-build-provider",
+    "baseUrl": "https://build.example.com",
+    "tokenEnv": "MY_BUILD_PROVIDER_TOKEN",
+    "capabilities": ["android.build", "linux.image.build"],
+    "timeoutMs": 300000,
+    "maxAttempts": 2,
+    "license": "Review provider terms before activation",
+    "artifactType": "build.package"
+  }
+]

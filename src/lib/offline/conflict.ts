@@ -1,0 +1,1 @@
+export const mergeDisjoint=(server:Record<string,unknown>,local:Record<string,unknown>,serverChanged:string[],localChanged:string[])=>{const overlap=localChanged.filter(key=>serverChanged.includes(key));return{conflict:overlap.length>0,fields:overlap,value:overlap.length?undefined:{...server,...local}}}
